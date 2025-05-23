@@ -8,6 +8,8 @@ import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import Home from './Components/Home';
 import NavBar from './Components/Header/NavBar/NavBar';
+import Footer from './Components/Footer';
+import Mapa from './Components/Mapa';
 function App() {
   return (
     <AuthProvider>
@@ -17,6 +19,8 @@ function App() {
         <Rutas>
           <Ruta path="/" element={<Home />} />{' '}
         </Rutas>
+        <Mapa></Mapa>
+        <Footer></Footer>
       </Router>
     </AuthProvider>
   );
