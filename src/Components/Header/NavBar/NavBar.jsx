@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../../../Images/imgLogo.jpg';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+  const location = useLocation();
 
   const navLinks = [
     { to: '/', label: 'Inicio' },
@@ -17,41 +19,67 @@ const Navbar = () => {
     { to: '/contacto', label: 'Contacto' }
   ];
 
+  // Detectar scroll
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="fixed top-0 w-full bg-white shadow-md z-50">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-10 py-4">
-        {/* Logo + Tagline */}
+    <motion.nav
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white shadow-md py-2' : 'bg-white py-4'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 transition-all duration-300">
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-4">
           <img
             src={logo}
             alt="Urban Fitness"
-            className="h-24 w-24 object-cover rounded-full shadow-md"
+            className={`object-cover rounded-full shadow-md transition-all duration-300 ${
+              scrolled ? 'h-16 w-16' : 'h-24 w-24'
+            }`}
           />
         </Link>
 
         {/* Menú desktop */}
-        <div className="hidden lg:flex items-center space-x-12 uppercase text-sm font-semibold tracking-widest">
-          {navLinks.map(({ to, label }) => (
-            <Link
-              key={to}
-              to={to}
-              className="relative text-blue-700 hover:text-[#0849B5] transition-colors duration-300 group"
-            >
-              {/* Burbuja */}
-              <span className="relative z-10 group-hover:text-white font-semibold uppercase tracking-wide">
-                {label}
-              </span>{' '}
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-8 bg-[#0849B5] rounded-full transition-all duration-300 ease-in-out group-hover:w-full"></span>
-              {/* Underline animado con group-hover */}
-            </Link>
-          ))}
+        <div className="hidden lg:flex items-center space-x-10 uppercase text-sm font-semibold tracking-widest">
+          {navLinks.map(({ to, label }) => {
+            const isActive = location.pathname === to;
+            return (
+              <Link key={to} to={to} className="relative group overflow-hidden">
+                {/* Texto */}
+                <span
+                  className={`relative z-10 px-2 transition-colors duration-300 ${
+                    isActive
+                      ? 'text-white'
+                      : 'text-blue-700 group-hover:text-white'
+                  }`}
+                >
+                  {label}
+                </span>
+
+                {/* Burbuja de fondo */}
+                <span
+                  className={`absolute inset-0 bg-[#0849B5] rounded-full scale-x-0 origin-center transition-transform duration-300 ease-in-out group-hover:scale-x-100 ${
+                    isActive ? 'scale-x-100' : ''
+                  }`}
+                ></span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Botón Call to Action */}
         <div className="hidden lg:block">
           <Link
             to="/inscribite"
-            className="px-5 py-2 bg-[#0849B5] text-white rounded-full font-semibold uppercase tracking-wide hover:bg-blue-700 transition"
+            className="px-6 py-2 bg-[#0849B5] text-white rounded-full font-semibold uppercase tracking-wide hover:bg-blue-700 hover:scale-105 transition-transform duration-300"
           >
             Inscribite
           </Link>
@@ -61,7 +89,7 @@ const Navbar = () => {
         <div className="lg:hidden">
           <button
             onClick={toggleMenu}
-            className="text-gray-800 dark:text-blue-700 text-3xl"
+            className="text-blue-700 text-3xl"
             aria-label="Toggle menu"
           >
             {isOpen ? <HiOutlineX /> : <HiOutlineMenu />}
@@ -76,14 +104,18 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="lg:hidden bg-white dark:bg-gray-900 px-6 py-6 uppercase font-semibold tracking-wide text-base space-y-6"
+            className="lg:hidden bg-white px-6 py-6 uppercase font-semibold tracking-wide text-base space-y-6 shadow-md"
           >
             {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setIsOpen(false)}
-                className="text-center block text-gray-700 hover:text-[#0849B5] dark:text-white dark:hover:text-[#0849B5]"
+                className={`block text-center transition-colors duration-200 ${
+                  location.pathname === to
+                    ? 'text-white bg-[#0849B5] rounded-full py-2'
+                    : 'text-gray-700 hover:text-[#0849B5]'
+                }`}
               >
                 {label}
               </Link>
@@ -98,7 +130,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 };
 
