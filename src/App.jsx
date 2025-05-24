@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
-import Home from './Components/Home';
+import Home from './Components/Home/Home';
 import NavBar from './Components/Header/NavBar/NavBar';
 import Footer from './Components/Footer';
 import Mapa from './Components/Mapa';
