@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 export default function Hero() {
-  // Animación tipo "typewriter" para el título
+  // animacion tipo "typewriter" para el titulo
   function Typewriter({ text, speed = 100 }) {
     const [displayedText, setDisplayedText] = useState('');
     useEffect(() => {
@@ -16,7 +16,7 @@ export default function Hero() {
     return <span>{displayedText}</span>;
   }
 
-  // Contador con animación pulso suave
+  // contador con animacion pulso suave
   function Counter({ end, suffix = '', duration = 2000 }) {
     const [count, setCount] = useState(0);
 
@@ -69,7 +69,7 @@ export default function Hero() {
           className="mt-10 text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-wide uppercase"
           style={{ fontFamily: "'Montserrat Black', sans-serif" }}
         >
-          <Typewriter text="Transforma tu cuerpo y mente" speed={80} />
+          <Typewriter text="Transforma tu cuerpo y mente" speed={70} />
         </h1>
 
         <p
