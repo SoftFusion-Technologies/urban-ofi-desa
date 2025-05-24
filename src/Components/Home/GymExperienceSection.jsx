@@ -1,8 +1,40 @@
+import { useState, useEffect, useRef } from 'react';
+
 export default function GymExperienceSection() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // para que solo se active una vez
+        }
+      },
+      {
+        threshold: 0.4 // se activa cuando al menos el 30% está visible
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="max-w-7xl mx-auto px-8 py-24 flex flex-col lg:flex-row items-center gap-20">
-      {/* Izquierda: experiencia - caja con sombra y borde dinámico */}
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-12 flex flex-col items-center lg:items-start text-center lg:text-left">
+    <section
+      ref={sectionRef}
+      className="max-w-7xl mx-auto px-8 py-24 flex flex-col lg:flex-row items-center gap-20"
+    >
+      {/* Izquierda */}
+      <div
+        className={`relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-12 flex flex-col items-center lg:items-start text-center lg:text-left ${
+          isVisible ? 'slide-in-left' : 'opacity-0'
+        }`}
+      >
         <div className="absolute -top-10 -left-10 w-24 h-24 bg-gradient-to-tr from-blue-400 to-blue-600 rounded-full opacity-20 blur-3xl -z-10"></div>
         <div className="absolute -bottom-12 right-8 w-32 h-32 border-8 border-blue-300 rounded-full opacity-10 -z-10"></div>
 
@@ -27,8 +59,13 @@ export default function GymExperienceSection() {
         </p>
       </div>
 
-      {/* Derecha: características - tarjetas con iconos modernos */}
-      <div className="w-full max-w-lg flex flex-col gap-8 text-gray-900">
+      {/* Derecha */}
+      <div
+        className={`w-full max-w-lg flex flex-col gap-8 text-gray-900 ${
+          isVisible ? 'slide-in-right' : 'opacity-0'
+        } lg:translate-x-12`}
+        // en pantallas lg+ se desplaza 3rem (48px) a la derecha
+      >
         <p className=" uppercase mt-10 font-semibold text-xl tracking-wide">
           Diseñado para tu máximo rendimiento.
         </p>

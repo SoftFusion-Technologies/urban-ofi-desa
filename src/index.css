@@ -1,24 +1,31 @@
 
 @import "tailwindcss";
-
-
-
-@font-face {
-  font-family: "BigNoodle";
-  src: url('./fonts/big_noodle_titling.ttf') format('truetype'); 
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-@font-face {
-  font-family: "MessinaRegular";
-  src: url('./fonts/MessinaSans-Regular.ttf') format('truetype'); 
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.font-bignoodle {
-  font-family: BigNoodle
+.slide-in-left {
+  animation: slideInFromLeft 0.8s ease forwards;
 }
 
-.font-messina {
-  font-family: MessinaRegular;
+.slide-in-right {
+  animation: slideInFromRight 0.8s ease forwards;
 }
-
-
