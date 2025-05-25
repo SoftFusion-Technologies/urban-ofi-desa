@@ -78,10 +78,10 @@ const Navbar = () => {
         {/* Botón Call to Action */}
         <div className="hidden lg:block">
           <Link
-            to="/forma-parte"
+            to="/socio-rutina"
             className="px-6 py-2 bg-[#0849B5] text-white rounded-full font-semibold uppercase tracking-wide hover:bg-blue-700 hover:scale-105 transition-transform duration-300"
           >
-            forma parte
+            Soy Socio - Rutina
           </Link>
         </div>
 
@@ -121,11 +121,11 @@ const Navbar = () => {
               </Link>
             ))}
             <Link
-              to="/forma-parte"
+              to="/socio-rutina"
               onClick={() => setIsOpen(false)}
               className="block bg-[#0849B5] text-white text-center rounded-full py-2 font-semibold hover:bg-blue-700 transition"
             >
-              forma parte
+              Soy Socio - Rutina
             </Link>
           </motion.div>
         )}

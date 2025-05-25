@@ -66,22 +66,22 @@ export default function Hero() {
       {/* Contenido */}
       <div className="relative z-10 max-w-4xl mx-auto text-center pt-32 sm:pt-36 md:pt-40 px-4 sm:px-0 animate-fadeIn">
         <h1
-          className="mt-10 text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-wide uppercase"
-          style={{ fontFamily: "'Montserrat Black', sans-serif" }}
+          className="titulo mt-10 text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-wide uppercase"
+          // style={{ fontFamily: "'Montserrat Black', sans-serif" }}
         >
           <Typewriter text="Transforma tu cuerpo y mente" speed={70} />
         </h1>
 
         <p
-          className="text-base sm:text-lg mb-12 px-2 sm:px-0 font-light max-w-3xl mx-auto text-gray-300 tracking-wide leading-relaxed"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
+          className="cuerpo text-base sm:text-lg mb-12 px-2 sm:px-0 font-light max-w-3xl mx-auto text-gray-300 tracking-wide leading-relaxed"
+          // style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
           Liberá tu viaje Urban Fitness. Unite a la comunidad fitness más
           dinámica de la ciudad. Equipamiento de última generación, entrenadores
           expertos y programas innovadores para superar tus límites.
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-8 mb-20 px-2 sm:px-0">
+        <div className="titulo flex flex-col sm:flex-row justify-center gap-8 mb-20 px-2 sm:px-0">
           <button className="btn-outline w-full sm:w-auto">
             Empezá tu prueba gratis
           </button>
@@ -91,7 +91,7 @@ export default function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="flex flex-col sm:flex-row justify-center gap-20 text-lg font-medium tracking-wide">
+        <div className="titulo flex flex-col sm:flex-row justify-center gap-20 text-lg font-medium tracking-wide">
           <div className="animate-pulseSoft text-center">
             <Counter end={50} suffix="+" />
             <br />
@@ -170,8 +170,8 @@ export default function Hero() {
           }
 
           .btn-filled {
-            background-color: #93c5fd; /* azul claro pastel */
-            color: #1e3a8a; /* azul oscuro */
+            background-color: #094385; /* azul claro pastel */
+            color: white; /* azul oscuro */
             padding: 12px 32px;
             font-weight: 600;
             border-radius: 8px;
@@ -181,7 +181,7 @@ export default function Hero() {
             font-family: 'Montserrat', sans-serif;
           }
           .btn-filled:hover {
-            background-color: #60a5fa; /* azul medio */
+            background-color: #0a1b9b; /* azul medio */
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(96, 165, 250, 0.5);
           }
@@ -189,7 +189,7 @@ export default function Hero() {
           .counter {
             font-family: 'Montserrat Black', sans-serif;
             font-size: 2.5rem;
-            color: #60a5fa; /* azul medio */
+            color: #0951a9; /* azul medio */
           }
         `}</style>
       </div>
