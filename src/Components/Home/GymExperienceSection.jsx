@@ -97,6 +97,7 @@ export default function GymExperienceSection() {
           </div>
         </div>
       </motion.div>
+      
       {/* Derecha */}
       <div
         className={`w-full max-w-lg flex flex-col gap-8 text-white ${
