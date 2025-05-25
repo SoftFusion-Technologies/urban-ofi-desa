@@ -61,15 +61,15 @@ export default function GymExperienceSection() {
 
       {/* Derecha */}
       <div
-        className={`w-full max-w-lg flex flex-col gap-8 text-gray-900 ${
+        className={`w-full max-w-lg flex flex-col gap-8 text-white ${
           isVisible ? 'slide-in-right' : 'opacity-0'
         } lg:translate-x-12`}
         // en pantallas lg+ se desplaza 3rem (48px) a la derecha
       >
-        <p className="titulo uppercase mt-10 font-semibold text-2xl tracking-wide">
+        <p className="titulo text-white uppercase mt-10 font-semibold text-2xl tracking-wide">
           Diseñado para tu máximo rendimiento.
         </p>
-        <p className="cuerpo mb-6 text-lg leading-relaxed text-gray-800">
+        <p className="cuerpo mb-6 text-lg leading-relaxed text-blue-600">
           Nuestros planes combinan ciencia, tecnología y coaching para que
           alcances tus metas de forma única.
         </p>
@@ -144,7 +144,7 @@ export default function GymExperienceSection() {
               className="flex gap-5 items-start leading-relaxed font-semibold text-gray-800"
             >
               <div className="flex-shrink-0">{icon}</div>
-              <span>{text}</span>
+              <span className="text-white">{text}</span>
             </li>
           ))}
         </ul>

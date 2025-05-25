@@ -117,7 +117,7 @@ function Hover3DCard({ children }) {
 
 export default function UrbanActivitiesSection() {
   return (
-    <section className="relative bg-gradient-to-br from-[#0a0f2c] via-[#111d4a] to-[#0a0f2c] py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-[#0a0f2c] via-[#010206] to-[#0a0f2c] py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="stars-container">
         {stars.map((star, i) => (
           <div
