@@ -66,15 +66,15 @@ export default function GymExperienceSection() {
         } lg:translate-x-12`}
         // en pantallas lg+ se desplaza 3rem (48px) a la derecha
       >
-        <p className=" uppercase mt-10 font-semibold text-xl tracking-wide">
+        <p className="titulo uppercase mt-10 font-semibold text-2xl tracking-wide">
           Diseñado para tu máximo rendimiento.
         </p>
-        <p className="mb-6 text-lg leading-relaxed text-gray-800">
+        <p className="cuerpo mb-6 text-lg leading-relaxed text-gray-800">
           Nuestros planes combinan ciencia, tecnología y coaching para que
           alcances tus metas de forma única.
         </p>
 
-        <ul className="space-y-6">
+        <ul className="space-y-6 -mt-10">
           {[
             {
               icon: (
