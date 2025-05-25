@@ -71,6 +71,16 @@ const iconAnimations = {
   AeroBox: { scale: [1, 1.1, 1] } // zoom leve
 };
 
+// Array con datos aleatorios para cada estrella (posición, tamaño, duración animaciones)
+const stars = Array.from({ length: 35 }, () => ({
+  top: `${Math.random() * 100}%`,
+  left: `${Math.random() * 100}%`,
+  size: Math.random() * 2 + 1.5, // en px
+  animationDuration: Math.random() * 5 + 5, // segundos para órbita completa
+  twinkleDuration: Math.random() * 3 + 2, // segundos para destello
+  twinkleDelay: Math.random() * 3 // delay para destello
+}));
+
 // Componente Hover3DCard para efecto 3D en hover
 function Hover3DCard({ children }) {
   const x = useMotionValue(0);
@@ -107,12 +117,39 @@ function Hover3DCard({ children }) {
 
 export default function UrbanActivitiesSection() {
   return (
-    <section className="bg-gradient-to-br from-white via-blue-50 to-white py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight uppercase">
+    <section className="relative bg-gradient-to-br from-[#0a0f2c] via-[#111d4a] to-[#0a0f2c] py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <div className="stars-container">
+        {stars.map((star, i) => (
+          <div
+            key={i}
+            className="star-orbit"
+            style={{
+              top: star.top,
+              left: star.left,
+              width: star.size * 6 + 'px',
+              height: star.size * 6 + 'px',
+              animationDuration: `${star.animationDuration}s`,
+              animationDelay: `${Math.random() * star.animationDuration}s`
+            }}
+          >
+            <div
+              className="star"
+              style={{
+                width: star.size + 'px',
+                height: star.size + 'px',
+                animationDuration: `${star.twinkleDuration}s`,
+                animationDelay: `${star.twinkleDelay}s`
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="max-w-6xl mx-auto text-center z-10 relative">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight uppercase">
           Lo que <span className="text-blue-700">Urban</span> tiene para vos
         </h2>
-        <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
           Una comunidad, múltiples formas de entrenar. Descubrí la que va con
           vos.
         </p>
