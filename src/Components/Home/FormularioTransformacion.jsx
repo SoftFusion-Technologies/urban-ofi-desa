@@ -62,7 +62,7 @@ const FormularioTransformacion = () => {
       className="min-h-screen flex flex-col items-center justify-center p-6"
     >
       {/* Título */}
-      <h1 className="titulo mb-12 text-5xl font-extrabold text-white uppercase font-montserrat drop-shadow-lg select-none">
+      <h1 className="titulo mb-12 text:3xl sm:text-5xl font-extrabold text-white uppercase font-montserrat drop-shadow-lg select-none">
         Transformá tu entrenamiento
       </h1>
 
