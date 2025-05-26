@@ -33,27 +33,50 @@ import Footer from './Components/Footer';
 import Contacto from './Pages/Contacto';
 import NotFound from './Pages/NotFound';
 import QuienesSomos from './Pages/QuienesSomos';
-import LoginForm from './Components/login/LoginForm';
 
+// LOGIN
+import LoginForm from './Components/login/LoginForm';
+import AdminPage from './Pages/staff/AdminPage';
+import UsersGet from './Pages/MetodsGet/UserGet';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const location = useLocation();
-  const hideLayout = location.pathname === '/login'; // OCULTAMOS NAVBAR Y FOOTER EN /login
-  // const hideLayout = ['/login', '/register', '/recover'].includes(
-  //   location.pathname
-  // );
+  const hideLayoutFooter = location.pathname === '/login'; // OCULTAMOS NAVBAR Y FOOTER EN /login
+  const hideLayoutNav = ['/login', '/dashboard', '/dashboard/users'].includes(
+    location.pathname
+  );
 
   return (
     <>
-      {!hideLayout && <NavBar />}
+      {!hideLayoutNav && <NavBar />}
       <Rutas>
         <Ruta path="/" element={<Home />} />
         <Ruta path="/contacto" element={<Contacto />} />
         <Ruta path="/quienes-somos" element={<QuienesSomos />} />
+        {/* componentes del staff y login INICIO */}
         <Ruta path="/login" element={<LoginForm />} />
+        <Ruta
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <AdminPage />{' '}
+            </ProtectedRoute>
+          }
+        />
+        <Ruta
+          path="/dashboard/users"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <UsersGet />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
+        {/* componentes del staff y login FINAL */}
         <Ruta path="/*" element={<NotFound />} />
       </Rutas>
-      {!hideLayout && <Footer />}
+      {!hideLayoutFooter && <Footer />}
     </>
   );
 }
