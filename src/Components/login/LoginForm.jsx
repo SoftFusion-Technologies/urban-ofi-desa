@@ -1,6 +1,6 @@
 /*
- * Programador: Emir Segovia
- * Fecha Cración: 05 / 06 / 2024
+ * Programador: Benjamin Orellana
+ * Fecha Creación: 26 / 05 / 2025
  * Versión: 1.0
  *
  * Descripción:
@@ -8,7 +8,7 @@
  *
  * Tema: Renderizacion
  * Capa: Frontend
- * Contacto: emirvalles90f@gmail.com || 3865761910
+ * Contacto: benjamin.orellanaof@gmail.com || 3863531891
  */
 
 import React, { useState } from 'react';
@@ -57,7 +57,7 @@ const LoginForm = () => {
       setLoading(true);
 
       axios
-        .post('https://vps-4294061-x.dattaweb.com/login', values)
+        .post('http://localhost:8080/login', values)
         .then((res) => {
           if (res.data.message === 'Success') {
             login(res.data.token, values.email, res.data.level);
