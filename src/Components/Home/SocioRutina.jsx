@@ -145,7 +145,7 @@ const SocioRutina = () => {
               whileTap={{ scale: 0.95 }}
               className="mt-10 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white rounded-full font-bold shadow-lg transition-transform"
             >
-              Quiero transformar mi rutina
+              Quiero transformar mi entrenamiento
             </motion.button>
           </motion.div>
 

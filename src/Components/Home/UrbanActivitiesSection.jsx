@@ -10,6 +10,7 @@ import {
   Activity,
   Zap
 } from 'lucide-react';
+import FormularioTransformacion from './FormularioTransformacion';
 
 const activities = [
   {
@@ -60,33 +61,30 @@ const activities = [
 ];
 
 const iconAnimations = {
-  Funcional: { y: [0, -10, 0] }, // pequeño "bounce" arriba y abajo
-  Spinning: { rotate: [0, 15, -15, 15, 0] }, // rotación oscilante
-  BodyPump: { scale: [1, 1.2, 1] }, // zoom in-out
-  Zumba: { rotate: [0, 10, -10, 10, 0] }, // rotación oscilante
-  Boxeo: { x: [0, 10, -10, 10, 0] }, // movimiento horizontal de boxeo
-  Rumba: { rotate: [0, 15, -15, 15, 0] }, // rotación oscilante
-  Yoga: { scale: [1, 1.1, 1] }, // leve zoom
-  BodyGap: { y: [0, -10, 0] }, // bounce vertical
-  AeroBox: { scale: [1, 1.1, 1] } // zoom leve
+  Funcional: { y: [0, -10, 0] },
+  Spinning: { rotate: [0, 15, -15, 15, 0] },
+  BodyPump: { scale: [1, 1.2, 1] },
+  Zumba: { rotate: [0, 10, -10, 10, 0] },
+  Boxeo: { x: [0, 10, -10, 10, 0] },
+  Rumba: { rotate: [0, 15, -15, 15, 0] },
+  Yoga: { scale: [1, 1.1, 1] },
+  BodyGap: { y: [0, -10, 0] },
+  AeroBox: { scale: [1, 1.1, 1] }
 };
 
-// Array con datos aleatorios para cada estrella (posición, tamaño, duración animaciones)
 const stars = Array.from({ length: 35 }, () => ({
   top: `${Math.random() * 100}%`,
   left: `${Math.random() * 100}%`,
-  size: Math.random() * 2 + 1.5, // en px
-  animationDuration: Math.random() * 5 + 5, // segundos para órbita completa
-  twinkleDuration: Math.random() * 3 + 2, // segundos para destello
-  twinkleDelay: Math.random() * 3 // delay para destello
+  size: Math.random() * 2 + 1.5,
+  animationDuration: Math.random() * 5 + 5,
+  twinkleDuration: Math.random() * 3 + 2,
+  twinkleDelay: Math.random() * 3
 }));
 
-// Componente Hover3DCard para efecto 3D en hover
 function Hover3DCard({ children }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Girar máximo 15 grados en x y y según posición del mouse dentro del div
   const rotateX = useTransform(y, [50, -50], [-15, 15]);
   const rotateY = useTransform(x, [-50, 50], [-15, 15]);
 
@@ -190,6 +188,7 @@ export default function UrbanActivitiesSection() {
             </Hover3DCard>
           ))}
         </div>
+        <FormularioTransformacion />
       </div>
     </section>
   );
