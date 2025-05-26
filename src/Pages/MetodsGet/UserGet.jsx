@@ -20,6 +20,7 @@ import '../../Styles/staff/background.css';
 import FormAltaUser from '../../Components/Forms/FormAltaUser';
 import UserDetails from './UserGetId';
 import { useAuth } from '../../AuthContext';
+import ParticlesBackground from '../../Components/ParticlesBackground';
 
 // Componente funcional que maneja la lógica relacionada con los Users
 const UserGet = () => {
@@ -191,11 +192,12 @@ const UserGet = () => {
   return (
     <>
       <NavbarStaff />
-      <div className="dashboardbg h-contain pt-10 pb-10">
+      <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 h-contain pt-10 pb-10">
+        <ParticlesBackground></ParticlesBackground>
         <div className="bg-white rounded-lg w-11/12 mx-auto pb-2">
           <div className="pl-5 pt-5">
             <Link to="/dashboard">
-              <button className="py-2 px-5 bg-[#fc4b08] rounded-lg text-sm text-white hover:bg-orange-500">
+              <button className="py-2 px-5 bg-[#1D4ED8] rounded-lg text-sm text-white hover:bg-blue-800">
                 Volver
               </button>
             </Link>
@@ -249,83 +251,84 @@ const UserGet = () => {
             </p>
           ) : (
             <>
-              <table className="w-11/12 mx-auto text-sm shadow-md rounded-lg overflow-hidden">
-                <thead className="text-white titulo">
-                  <tr>
-                    <th className="py-3 px-4 text-left">ID</th>
-                    <th className="py-3 px-4 text-left">Usuario</th>
-                    <th className="py-3 px-4 text-left">Email</th>
-                    <th className="py-3 px-4 text-left">Rol</th>
-                    <th className="py-3 px-4 text-left">Sede</th>
-                    <th className="py-3 px-4 text-center">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {records
-                    .filter(applySedeFilter)
-                    .filter(applyLevelFilter)
-                    .map((user) => (
-                      <tr
-                        key={user.id}
-                        className="hover:bg-gray-100 border-b transition duration-200"
-                      >
-                        <td
-                          className="py-2 px-4"
-                          onClick={() => obtenerUser(user.id)}
+              <div className="w-full overflow-x-auto">
+                <table className="w-11/12 mx-auto text-sm shadow-md rounded-lg overflow-hidden min-w-[600px]">
+                  <thead className="text-white titulo">
+                    <tr>
+                      <th className="py-3 px-4 text-left">ID</th>
+                      <th className="py-3 px-4 text-left">Usuario</th>
+                      <th className="py-3 px-4 text-left">Email</th>
+                      <th className="py-3 px-4 text-left">Rol</th>
+                      <th className="py-3 px-4 text-left">Sede</th>
+                      <th className="py-3 px-4 text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {records
+                      .filter(applySedeFilter)
+                      .filter(applyLevelFilter)
+                      .map((user) => (
+                        <tr
+                          key={user.id}
+                          className="hover:bg-gray-100 border-b transition duration-200"
                         >
-                          {user.id}
-                        </td>
-                        <td
-                          className="py-2 px-4"
-                          onClick={() => obtenerUser(user.id)}
-                        >
-                          {user.name}
-                        </td>
-                        <td
-                          className="py-2 px-4"
-                          onClick={() => obtenerUser(user.id)}
-                        >
-                          {user.email}
-                        </td>
-                        <td
-                          className="py-2 px-4"
-                          onClick={() => obtenerUser(user.id)}
-                        >
-                          {user.level}
-                        </td>
-                        <td
-                          className="py-2 px-4"
-                          onClick={() => obtenerUser(user.id)}
-                        >
-                          {user.sede}
-                        </td>
-
-                        {userLevel === 'admin' ? (
-                          <td className="py-2 px-4">
-                            <div className="flex justify-center gap-2">
-                              <button
-                                onClick={() => handleEliminarUser(user.id)}
-                                type="button"
-                                className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                              >
-                                Eliminar
-                              </button>
-                              <button
-                                onClick={() => handleEditarUser(user)}
-                                type="button"
-                                className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
-                              >
-                                Editar
-                              </button>
-                            </div>
+                          <td
+                            className="py-2 px-4"
+                            onClick={() => obtenerUser(user.id)}
+                          >
+                            {user.id}
                           </td>
-                        ) : (
-                          <td className="py-2 px-4"></td>
-                        )}
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                          <td
+                            className="py-2 px-4"
+                            onClick={() => obtenerUser(user.id)}
+                          >
+                            {user.name}
+                          </td>
+                          <td
+                            className="py-2 px-4"
+                            onClick={() => obtenerUser(user.id)}
+                          >
+                            {user.email}
+                          </td>
+                          <td
+                            className="py-2 px-4"
+                            onClick={() => obtenerUser(user.id)}
+                          >
+                            {user.level}
+                          </td>
+                          <td
+                            className="py-2 px-4"
+                            onClick={() => obtenerUser(user.id)}
+                          >
+                            {user.sede}
+                          </td>
+                          {userLevel === 'admin' ? (
+                            <td className="py-2 px-4">
+                              <div className="flex justify-center gap-2">
+                                <button
+                                  onClick={() => handleEliminarUser(user.id)}
+                                  type="button"
+                                  className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                                >
+                                  Eliminar
+                                </button>
+                                <button
+                                  onClick={() => handleEditarUser(user)}
+                                  type="button"
+                                  className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
+                                >
+                                  Editar
+                                </button>
+                              </div>
+                            </td>
+                          ) : (
+                            <td className="py-2 px-4"></td>
+                          )}
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
 
               <nav className="flex justify-center items-center my-10">
                 <ul className="pagination">

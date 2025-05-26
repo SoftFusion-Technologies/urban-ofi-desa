@@ -21,6 +21,7 @@ import * as Yup from 'yup';
 import ModalSuccess from './ModalSuccess';
 import ModalError from './ModalError';
 import Alerta from '../Error';
+import ParticlesBackground from '../ParticlesBackground';
 
 // isOpen y onCLose son los metodos que recibe para abrir y cerrar el modal
 const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
@@ -158,106 +159,106 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
           {({ errors, touched, setFieldValue }) => {
             return (
               <div className="py-0 max-h-[500px] max-w-[400px] w-[400px] overflow-y-auto bg-white rounded-xl">
-                {' '}
+                <ParticlesBackground></ParticlesBackground>{' '}
                 {/* Cuando se haga el modal, sacarle el padding o ponerle uno de un solo digito */}
-                <Form className="formulario max-sm:w-[300px] bg-white ">
-                  <div className="flex justify-between">
-                    <div className="tools">
-                      <div className="circle">
-                        <span className="red toolsbox"></span>
+                <div className="w-full max-w-md mx-auto px-4">
+                  <Form className="bg-white rounded-xl shadow-md w-full">
+                    <div className="flex justify-between items-center px-4 pt-4">
+                      <div className="tools flex gap-2">
+                        <div className="circle">
+                          <span className="red toolsbox"></span>
+                        </div>
+                        <div className="circle">
+                          <span className="yellow toolsbox"></span>
+                        </div>
+                        <div className="circle">
+                          <span className="green toolsbox"></span>
+                        </div>
                       </div>
-                      <div className="circle">
-                        <span className="yellow toolsbox"></span>
-                      </div>
-                      <div className="circle">
-                        <span className="green toolsbox"></span>
+                      <div
+                        className="text-xl cursor-pointer"
+                        onClick={handleClose}
+                      >
+                        ×
                       </div>
                     </div>
-                    <div
-                      className="pr-6 pt-3 text-[20px] cursor-pointer"
-                      onClick={handleClose}
-                    >
-                      x
+
+                    {/* Campo Usuario */}
+                    <div className="mb-3 px-4">
+                      <Field
+                        id="name"
+                        type="text"
+                        className="mt-2 block w-full p-3 text-black bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Usuario"
+                        name="name"
+                        maxLength="70"
+                      />
+                      {errors.name && touched.name && (
+                        <Alerta>{errors.name}</Alerta>
+                      )}
                     </div>
-                  </div>
 
-                  <div className="mb-3 px-4">
-                    <Field
-                      id="name"
-                      type="text"
-                      className="mt-2 block w-full p-3  text-black formulario__input bg-slate-100 rounded-xl  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                      placeholder="Usuario"
-                      name="name"
-                      maxLength="70"
-                    />
-                    {errors.name && touched.name ? (
-                      <Alerta>{errors.name}</Alerta>
-                    ) : null}
-                  </div>
+                    {/* Campo Email */}
+                    <div className="mb-3 px-4">
+                      <Field
+                        id="email"
+                        type="text"
+                        className="mt-2 block w-full p-3 text-black bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Email"
+                        name="email"
+                        maxLength="70"
+                      />
+                      {errors.email && touched.email && (
+                        <Alerta>{errors.email}</Alerta>
+                      )}
+                    </div>
 
-                  <div className="mb-3 px-4">
-                    <Field
-                      id="email"
-                      type="text"
-                      className="mt-2 block w-full p-3  text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                      placeholder="Email"
-                      name="email"
-                      maxLength="70"
-                    />
-                    {errors.email && touched.email ? (
-                      <Alerta>{errors.email}</Alerta>
-                    ) : null}
-                  </div>
+                    {/* Selector Rol */}
+                    <div className="mb-4 px-4">
+                      <Field
+                        as="select"
+                        id="level"
+                        name="level"
+                        className="mt-2 block w-full p-3 text-black bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="" disabled>
+                          Tipo de Usuario:
+                        </option>
+                        <option value="admin">Administrador</option>
+                        <option value="instructor">Instructor</option>
+                        <option value="alumno">Alumno</option>
+                      </Field>
+                      {errors.level && touched.level && (
+                        <Alerta>{errors.level}</Alerta>
+                      )}
+                    </div>
 
-                  <div className="mb-4 px-4">
-                    <Field
-                      as="select"
-                      id="level"
-                      name="level"
-                      className="form-select mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                      required
-                    >
-                      <option value="" disabled>
-                        Tipo de Usuario:
-                      </option>
-                      {/* Cambio realizado por Benjamin Orellana 12/06/2024 - INICIO
-                      Se reemplaza el valor del administrador por el de Admin para que pueda tomar el level
-                      <option value="administrador">Administrador</option>
-                       */}
-                      <option value="admin">Administrador</option>
-                      {/* Se agrega nuevo rol para que los instructor puedan cargar sus Usuarios */}
-                      <option value="instructor">Instructor</option>
-                      <option value="alumno">Alumno</option>
+                    {/* Contraseña */}
+                    <div className="mb-3 px-4">
+                      <Field
+                        id="password"
+                        type="password"
+                        className="mt-2 block w-full p-3 text-black bg-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Contraseña"
+                        name="password"
+                        maxLength="16"
+                      />
+                      {errors.password && touched.password && (
+                        <Alerta>{errors.password}</Alerta>
+                      )}
+                    </div>
 
-                      {/* Cambio realizado por Benjamin Orellana 12/06/2024 - FINAL */}
-                    </Field>
-                    {errors.level && touched.level ? (
-                      <Alerta>{errors.level}</Alerta>
-                    ) : null}
-                  </div>
-
-                  <div className="mb-3 px-4">
-                    <Field
-                      id="password"
-                      type="password"
-                      className="mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                      placeholder="Contraseña"
-                      name="password"
-                      maxLength="16"
-                    />
-                    {errors.password && touched.password ? (
-                      <Alerta>{errors.password}</Alerta>
-                    ) : null}
-                  </div>
-
-                  <div className="mx-auto flex justify-center my-5">
-                    <input
-                      type="submit"
-                      value={user ? 'Actualizar' : 'Crear Usuario'}
-                      className="bg-orange-500 py-2 px-5 rounded-xl text-white font-bold hover:cursor-pointer hover:bg-[#fc4b08]  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-100"
-                    />
-                  </div>
-                </Form>
+                    {/* Botón */}
+                    <div className="flex justify-center py-4">
+                      <input
+                        type="submit"
+                        value={user ? 'Actualizar' : 'Crear Usuario'}
+                        className="bg-blue-500 py-2 px-5 rounded-xl text-white font-bold hover:cursor-pointer hover:bg-[#fc4b08] transition focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      />
+                    </div>
+                  </Form>
+                </div>
               </div>
             );
           }}
