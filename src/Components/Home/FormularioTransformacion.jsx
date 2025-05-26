@@ -57,7 +57,10 @@ const FormularioTransformacion = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+    <div
+      id="mi-seccion-destino"
+      className="min-h-screen flex flex-col items-center justify-center p-6"
+    >
       {/* Título */}
       <h1 className="titulo mb-12 text-5xl font-extrabold text-white uppercase font-montserrat drop-shadow-lg select-none">
         Transformá tu entrenamiento

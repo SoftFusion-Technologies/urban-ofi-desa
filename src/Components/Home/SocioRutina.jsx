@@ -113,6 +113,12 @@ const SocioRutina = () => {
     });
   }, [controls]);
 
+  const handleScroll = () => {
+    const target = document.getElementById('mi-seccion-destino');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <>
       <ParticlesBackground />
@@ -160,9 +166,10 @@ const SocioRutina = () => {
             </div>
 
             <motion.button
+              onClick={handleScroll}
               animate={controls}
               whileTap={{ scale: 0.95 }}
-              className="mt-10 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white rounded-full font-bold shadow-lg transition-transform"
+              className="mt-10 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white rounded-full font-bold shadow-lg transition-transform cursor-pointer"
             >
               Quiero transformar mi entrenamiento
             </motion.button>
