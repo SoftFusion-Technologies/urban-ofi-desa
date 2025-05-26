@@ -210,39 +210,25 @@ const UserGet = () => {
           </div>
 
           {/* formulario de busqueda */}
-          <form className="flex justify-center pb-5">
+          <form className="flex flex-wrap justify-center gap-3 pb-5">
             <input
               value={search}
               onChange={searcher}
               type="text"
               placeholder="Buscar usuarios"
-              className="border rounded-sm"
+              className="input-filter"
             />
-            <select
-              value={filterSede}
-              onChange={handleFilterSedeChange}
-              className="border rounded-sm ml-3"
-            >
-              <option value="">Todas las sedes</option>
-              <option value="SMT">SMT</option>
-              <option value="Monteros">Monteros</option>
-              <option value="Concepción">Concepción</option>
-              {/* Agrega más opciones según tus necesidades */}
-            </select>
-
             <select
               value={filterLevel}
               onChange={handleFilterLevelChange}
-              className="border rounded-sm ml-3"
+              className="input-filter"
             >
               <option value="">Todos los roles</option>
               <option value="admin">Administrador</option>
-              <option value="vendedor">Vendedor</option>
-              <option value="gerente">Gerente</option>
               <option value="instructor">Instructor</option>
-              {/* Agrega más opciones según tus necesidades */}
             </select>
           </form>
+
           {/* formulario de busqueda */}
 
           <div className="flex justify-center pb-10">
@@ -263,15 +249,15 @@ const UserGet = () => {
             </p>
           ) : (
             <>
-              <table className="w-11/12 mx-auto">
-                <thead className="text-white bg-[#fc4b08] ">
-                  <tr key={users.id}>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Sede</th>
-                    <th>Acciones</th>
+              <table className="w-11/12 mx-auto text-sm shadow-md rounded-lg overflow-hidden">
+                <thead className="text-white titulo">
+                  <tr>
+                    <th className="py-3 px-4 text-left">ID</th>
+                    <th className="py-3 px-4 text-left">Usuario</th>
+                    <th className="py-3 px-4 text-left">Email</th>
+                    <th className="py-3 px-4 text-left">Rol</th>
+                    <th className="py-3 px-4 text-left">Sede</th>
+                    <th className="py-3 px-4 text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -279,44 +265,68 @@ const UserGet = () => {
                     .filter(applySedeFilter)
                     .filter(applyLevelFilter)
                     .map((user) => (
-                      <tr key={user.id}>
-                        <td onClick={() => obtenerUser(user.id)}>{user.id}</td>
-                        <td onClick={() => obtenerUser(user.id)}>
+                      <tr
+                        key={user.id}
+                        className="hover:bg-gray-100 border-b transition duration-200"
+                      >
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerUser(user.id)}
+                        >
+                          {user.id}
+                        </td>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerUser(user.id)}
+                        >
                           {user.name}
                         </td>
-                        <td onClick={() => obtenerUser(user.id)}>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerUser(user.id)}
+                        >
                           {user.email}
                         </td>
-                        <td onClick={() => obtenerUser(user.id)}>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerUser(user.id)}
+                        >
                           {user.level}
                         </td>
-                        <td onClick={() => obtenerUser(user.id)}>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerUser(user.id)}
+                        >
                           {user.sede}
                         </td>
-                        {/* ACCIONES */}
-                        {(userLevel === 'admin' ||
-                          userLevel === 'administrador') && (
-                          <td className="">
-                            <button
-                              onClick={() => handleEliminarUser(user.id)}
-                              type="button"
-                              className="py-2 px-4 my-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-                            >
-                              Eliminar
-                            </button>
-                            <button
-                              onClick={() => handleEditarUser(user)} // (NUEVO)
-                              type="button"
-                              className="py-2 px-4 my-1 ml-5 bg-yellow-500 text-black rounded-md hover:bg-red-600"
-                            >
-                              Editar
-                            </button>
+
+                        {userLevel === 'admin' ? (
+                          <td className="py-2 px-4">
+                            <div className="flex justify-center gap-2">
+                              <button
+                                onClick={() => handleEliminarUser(user.id)}
+                                type="button"
+                                className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                              >
+                                Eliminar
+                              </button>
+                              <button
+                                onClick={() => handleEditarUser(user)}
+                                type="button"
+                                className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
+                              >
+                                Editar
+                              </button>
+                            </div>
                           </td>
+                        ) : (
+                          <td className="py-2 px-4"></td>
                         )}
                       </tr>
                     ))}
                 </tbody>
               </table>
+
               <nav className="flex justify-center items-center my-10">
                 <ul className="pagination">
                   <li className="page-item">

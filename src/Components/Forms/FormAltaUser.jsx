@@ -46,7 +46,6 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
       .max(255, 'El correo electrónico es demasiado largo')
       .required('El Correo Electrónico es Obligatorio'),
     level: Yup.string().required('El Nivel es Obligatorio'),
-    sede: Yup.string().required('La Sede es obligatoria'),
     password: Yup.string()
       .min(6, 'La contraseña debe tener al menos 6 caracteres')
       .required('La Contraseña es obligatoria'),
@@ -140,7 +139,8 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
             name: user ? user.name : '',
             email: user ? user.email : '',
             level: user ? user.level : '',
-            sede: user ? user.sede : '',
+            // sede: user ? user.sede : '',
+            sede: 'central',
             password: user ? user.password : '',
             state: user ? user.state : false,
             created_at: user ? user.created_at : null,
@@ -185,7 +185,7 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                     <Field
                       id="name"
                       type="text"
-                      className="mt-2 block w-full p-3  text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                      className="mt-2 block w-full p-3  text-black formulario__input bg-slate-100 rounded-xl  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
                       placeholder="Usuario"
                       name="name"
                       maxLength="70"
@@ -199,7 +199,7 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                     <Field
                       id="email"
                       type="text"
-                      className="mt-2 block w-full p-3  text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                      className="mt-2 block w-full p-3  text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
                       placeholder="Email"
                       name="email"
                       maxLength="70"
@@ -214,7 +214,7 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                       as="select"
                       id="level"
                       name="level"
-                      className="form-select mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                      className="form-select mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
                       required
                     >
                       <option value="" disabled>
@@ -225,10 +225,9 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                       <option value="administrador">Administrador</option>
                        */}
                       <option value="admin">Administrador</option>
-                      <option value="vendedor">Vendedor</option>
-                      <option value="gerente">Gerente</option>
                       {/* Se agrega nuevo rol para que los instructor puedan cargar sus Usuarios */}
                       <option value="instructor">Instructor</option>
+                      <option value="alumno">Alumno</option>
 
                       {/* Cambio realizado por Benjamin Orellana 12/06/2024 - FINAL */}
                     </Field>
@@ -241,22 +240,8 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                     <Field
                       id="password"
                       type="password"
-                      className="mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                      className="mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
                       placeholder="Contraseña"
-                      name="password"
-                      maxLength="16"
-                    />
-                    {errors.password && touched.password ? (
-                      <Alerta>{errors.password}</Alerta>
-                    ) : null}
-                  </div>
-
-                  <div className="mb-3 px-4">
-                    <Field
-                      id="password"
-                      type="password"
-                      className="mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                      placeholder="Confirmar Contraseña"
                       name="password"
                       maxLength="16"
                     />
@@ -269,7 +254,7 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                     <input
                       type="submit"
                       value={user ? 'Actualizar' : 'Crear Usuario'}
-                      className="bg-orange-500 py-2 px-5 rounded-xl text-white font-bold hover:cursor-pointer hover:bg-[#fc4b08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-100"
+                      className="bg-orange-500 py-2 px-5 rounded-xl text-white font-bold hover:cursor-pointer hover:bg-[#fc4b08]  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-100"
                     />
                   </div>
                 </Form>

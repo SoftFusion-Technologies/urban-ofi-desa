@@ -16,7 +16,7 @@ const UserDetails = ({ user, isOpen, onClose, setSelectedUser }) => {
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="flex justify-between text-[20px] pb-4 items-center">
-          <h2 className="font-bignoodle tracking-wide text-[#fc4b08]">
+          <h2 className="titulo uppercase font-bignoodle tracking-wide text-[#1D4ED8]">
             Detalles del Usuario
           </h2>
           <div
