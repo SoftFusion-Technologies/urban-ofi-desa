@@ -9,7 +9,11 @@ import ProtectedRoute from './ProtectedRoute';
 import Home from './Components/Home/Home';
 import NavBar from './Components/Header/NavBar/NavBar';
 import Footer from './Components/Footer';
-import Mapa from './Components/Mapa';
+
+// PAGINAS
+import Contacto from './Pages/Contacto';
+import NotFound from './Pages/NotFound';
+
 function App() {
   return (
     <AuthProvider>
@@ -18,8 +22,9 @@ function App() {
         <NavBar></NavBar>
         <Rutas>
           <Ruta path="/" element={<Home />} />{' '}
+          <Ruta path="/contacto" element={<Contacto />} />{' '}
+          <Ruta path="/*" element={<NotFound />} />{' '}
         </Rutas>
-        <Mapa></Mapa>
         <Footer></Footer>
       </Router>
     </AuthProvider>
