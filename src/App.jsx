@@ -13,6 +13,7 @@ import Footer from './Components/Footer';
 // PAGINAS
 import Contacto from './Pages/Contacto';
 import NotFound from './Pages/NotFound';
+import QuienesSomos from './Pages/QuienesSomos';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Rutas>
           <Ruta path="/" element={<Home />} />{' '}
           <Ruta path="/contacto" element={<Contacto />} />{' '}
+          <Ruta path="/quienes-somos" element={<QuienesSomos />} />{' '}
           <Ruta path="/*" element={<NotFound />} />{' '}
         </Rutas>
         <Footer></Footer>
