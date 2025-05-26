@@ -14,7 +14,7 @@ import Footer from './Components/Footer';
 import Contacto from './Pages/Contacto';
 import NotFound from './Pages/NotFound';
 import QuienesSomos from './Pages/QuienesSomos';
-
+import LoginForm from './Components/login/LoginForm'
 function App() {
   return (
     <AuthProvider>
@@ -25,6 +25,7 @@ function App() {
           <Ruta path="/" element={<Home />} />{' '}
           <Ruta path="/contacto" element={<Contacto />} />{' '}
           <Ruta path="/quienes-somos" element={<QuienesSomos />} />{' '}
+          <Ruta path="/login" element={<LoginForm />} /> {/* Página de Logeo */}
           <Ruta path="/*" element={<NotFound />} />{' '}
         </Rutas>
         <Footer></Footer>
