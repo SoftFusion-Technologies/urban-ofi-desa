@@ -1,7 +1,14 @@
 import { Dumbbell, ClipboardCheck, UserCheck } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
-import { useEffect } from 'react';
-import img from '../../Images/personalizado.webp';
+import { useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; // Importa estilos AOS
+
+import img1 from '../../Images/CarrouselSocioRutina/img1.webp';
+import img2 from '../../Images/CarrouselSocioRutina/img2.webp';
+import img3 from '../../Images/CarrouselSocioRutina/img3.webp';
+import img4 from '../../Images/CarrouselSocioRutina/img4.webp';
+import img5 from '../../Images/CarrouselSocioRutina/img5.webp';
 
 const ParticlesBackground = () => {
   useEffect(() => {
@@ -81,7 +88,21 @@ const ParticlesBackground = () => {
 const SocioRutina = () => {
   const controls = useAnimation();
 
+  const images = [img1, img2, img3, img4, img5];
+
+  const [index, setIndex] = useState(0);
+
   useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 3000); // cambia cada 3 segundos
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true }); // Inicializa AOS
+
     controls.start({
       boxShadow: [
         '0 0 12px 0 rgba(59, 130, 246, 0.8)',
@@ -96,15 +117,13 @@ const SocioRutina = () => {
     <>
       <ParticlesBackground />
 
-      <section className="relative py-32 px-6 text-white overflow-hidden flex justify-center">
+      <section
+        data-aos="fade-up" // También animamos la imagen hacia arriba
+        className="relative py-32 px-6 text-white overflow-hidden flex justify-center"
+      >
         <div className="max-w-7xl w-full glassmorphism p-12 rounded-3xl flex flex-col md:flex-row items-center gap-20">
-          <motion.div
-            className="md:w-1/2 space-y-10"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
+          {/* Aquí agregamos AOS para animación UP */}
+          <div data-aos="fade-up" className="md:w-1/2 space-y-10">
             <h2 className="titulo text-5xl md:text-6xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-blue-400 via-blue-700 to-white text-transparent bg-clip-text drop-shadow-lg">
               SOCIO-RUTINA
             </h2>
@@ -147,24 +166,33 @@ const SocioRutina = () => {
             >
               Quiero transformar mi entrenamiento
             </motion.button>
-          </motion.div>
+          </div>
 
           <motion.div
-            className="md:w-1/2 relative"
+            className="w-full h-[250px] md:w-[500px] md:h-[500px] relative mx-auto" // 🔧 Fijamos altura mínima para mobile
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}
             viewport={{ once: true }}
             style={{ perspective: 800 }}
+            data-aos="fade-up"
           >
-            <motion.img
-              src={img}
-              alt="Entrenamiento personalizado"
-              className="rounded-3xl shadow-2xl border-[6px] border-blue-600 hover:shadow-blue-500/50 transition-shadow duration-500"
-              whileHover={{ rotateY: 8, rotateX: 4, scale: 1.05 }}
-              transition={{ type: 'spring', stiffness: 100 }}
-              draggable={false}
-            />
+            {images.map((src, i) => (
+              <motion.img
+                key={i}
+                src={src}
+                alt={`Imagen ${i + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover rounded-3xl shadow-2xl border-[6px] border-blue-600 hover:shadow-blue-500/50 transition-shadow duration-500 ${
+                  i === index ? 'z-10' : 'z-0'
+                }`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: i === index ? 1 : 0 }}
+                whileHover={{ rotateY: 8, rotateX: 4, scale: 1.05 }}
+                transition={{ duration: 1 }}
+                draggable={false}
+                style={{ pointerEvents: i === index ? 'auto' : 'none' }}
+              />
+            ))}
             <div className="absolute -inset-1 rounded-3xl bg-blue-500 opacity-10 blur-2xl pointer-events-none" />
           </motion.div>
         </div>
