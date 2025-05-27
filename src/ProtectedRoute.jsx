@@ -1,6 +1,6 @@
 /*
- * Programador: Emir Segovia
- * Fecha Cración: 05 / 06 / 2024
+ * Programador: Benjamin Orellana
+ * Fecha Creación: 26 / 05 / 2025
  * Versión: 1.0
  *
  * Descripción:
@@ -8,7 +8,7 @@
  *
  * Tema: Renderizacion
  * Capa: Frontend
- * Contacto: emirvalles90f@gmail.com || 3865761910
+ * Contacto: benjamin.orellanaof@gmail.com || 3863531891
  */
 
 import React from 'react';

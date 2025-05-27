@@ -38,13 +38,17 @@ import QuienesSomos from './Pages/QuienesSomos';
 import LoginForm from './Components/login/LoginForm';
 import AdminPage from './Pages/staff/AdminPage';
 import UsersGet from './Pages/MetodsGet/UserGet';
+import InstructoresGet from './Pages/MetodsGet/InstructoresGet'
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const location = useLocation();
   const hideLayoutFooter = location.pathname === '/login'; // OCULTAMOS NAVBAR Y FOOTER EN /login
-  const hideLayoutNav = ['/login', '/dashboard', '/dashboard/users'].includes(
-    location.pathname
-  );
+  const hideLayoutNav = [
+    '/login',
+    '/dashboard',
+    '/dashboard/users',
+    '/dashboard/instructores'
+  ].includes(location.pathname);
 
   return (
     <>
@@ -70,6 +74,15 @@ function AppContent() {
             <ProtectedRoute>
               {' '}
               <UsersGet />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
+        <Ruta
+          path="/dashboard/instructores"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <InstructoresGet />{' '}
             </ProtectedRoute>
           }
         />{' '}
