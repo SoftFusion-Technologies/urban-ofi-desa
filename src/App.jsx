@@ -39,6 +39,7 @@ import LoginForm from './Components/login/LoginForm';
 import AdminPage from './Pages/staff/AdminPage';
 import UsersGet from './Pages/MetodsGet/UserGet';
 import InstructoresGet from './Pages/MetodsGet/InstructoresGet'
+import AlumnosGet from './Pages/MetodsGet/AlumnosGet';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const location = useLocation();
@@ -47,7 +48,8 @@ function AppContent() {
     '/login',
     '/dashboard',
     '/dashboard/users',
-    '/dashboard/instructores'
+    '/dashboard/instructores',
+    '/dashboard/students'
   ].includes(location.pathname);
 
   return (
@@ -83,6 +85,15 @@ function AppContent() {
             <ProtectedRoute>
               {' '}
               <InstructoresGet />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
+        <Ruta
+          path="/dashboard/students"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <AlumnosGet />{' '}
             </ProtectedRoute>
           }
         />{' '}

@@ -17,34 +17,37 @@ import NavbarStaff from '../staff/NavbarStaff';
 import { Link } from 'react-router-dom';
 import '../../Styles/MetodsGet/Tabla.css';
 import '../../Styles/staff/background.css';
-import FormAltaUser from '../../Components/Forms/FormAltaUser';
+import FormAltaAlumno from '../../Components/Forms/FormAltaAlumno';
 import UserDetails from './UserGetId';
 import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
+import { formatearFecha } from '../../Helpers';
 
-// Componente funcional que maneja la lógica relacionada con los Users
+// Componente funcional que maneja la lógica relacionada con los alumnos
 const AlumnosGet = () => {
   // useState que controla el modal de nuevo usuario
-  const [modalNewUser, setModalNewUser] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
-  const [modalUserDetails, setModalUserDetails] = useState(false); // Estado para controlar el modal de detalles del usuario
+  const [modalNewAlumno, setModalNewAlumno] = useState(false);
+  const [selectedAlumno, setSelectedAlumno] = useState(null); // Estado para el usuario seleccionado
+  const [modalAlumnoDetails, setModalAlumnoDetails] = useState(false); // Estado para controlar el modal de detalles del usuario
   const [filterSede, setFilterSede] = useState(''); // Estado para el filtro de sede
   const [filterLevel, setFilterLevel] = useState(''); // Estado para el filtro de level (ROL)
   const { userLevel } = useAuth();
 
   const abrirModal = () => {
-    setModalNewUser(true);
+    setModalNewAlumno(true);
   };
   const cerarModal = () => {
-    setModalNewUser(false);
-    obtenerUsers();
+    setModalNewAlumno(false);
+    obtenerAlumnos();
   };
 
   //URL estatica, luego cambiar por variable de entorno
-  const URL = 'http://localhost:8080/users/';
+  const URL = 'http://localhost:8080/students/';
 
-  // Estado para almacenar la lista de users
-  const [users, setUsers] = useState([]);
+  // Estado para almacenar la lista de alumnos
+  const [alumnos, setAlumnos] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [selectedProfesor, setSelectedProfesor] = useState('');
 
   //------------------------------------------------------
   // 1.3 Relacion al Filtrado - Inicio - Benjamin Orellana
@@ -56,19 +59,21 @@ const AlumnosGet = () => {
     setSearch(e.target.value);
   };
 
-  let results = [];
+  let results = alumnos.filter((dato) => {
+    const nameMatch = dato.nomyape.toLowerCase().includes(search.toLowerCase());
+    const dniMatch = dato.dni.toLowerCase().includes(search.toLowerCase());
+    const telefonoMatch = dato.telefono
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-  if (!search) {
-    results = users;
-  } else {
-    results = users.filter((dato) => {
-      const nameMatch = dato.name.toLowerCase().includes(search);
-      const emailMatch = dato.email.toLowerCase().includes(search);
-      const levelMatch = dato.level.toLowerCase().includes(search);
-      const idMatch = dato.id.toString().toLowerCase().includes(search); // Convertimos el ID a cadena y luego a minúsculas antes de la comparación
-      return nameMatch || emailMatch || levelMatch || idMatch;
-    });
-  }
+    const searchMatch = nameMatch || dniMatch || telefonoMatch;
+
+    const profesorMatch = selectedProfesor
+      ? dato.user_id == selectedProfesor
+      : true;
+
+    return searchMatch && profesorMatch;
+  });
 
   //------------------------------------------------------
   // 1.3 Relacion al Filtrado - Final - Benjamin Orellana
@@ -77,22 +82,40 @@ const AlumnosGet = () => {
   useEffect(() => {
     // utilizamos get para obtenerUsuarios los datos contenidos en la url
     axios.get(URL).then((res) => {
-      setUsers(res.data);
-      obtenerUsers();
+      setAlumnos(res.data);
+      obtenerAlumnos();
+      obtenerUsuarios();
     });
   }, []);
 
   // Función para obtener todos los usuarios desde la API
-  const obtenerUsers = async () => {
+  const obtenerAlumnos = async () => {
     try {
       const response = await axios.get(URL);
-      setUsers(response.data);
+      setAlumnos(response.data);
     } catch (error) {
       console.log('Error al obtener los usuarios:', error);
     }
   };
 
-  const handleEliminarUser = async (id) => {
+  const obtenerUsuarios = async () => {
+    try {
+      const res = await axios.get('http://localhost:8080/users');
+      const instructores = res.data.filter(
+        (user) => user.level === 'instructor'
+      );
+      setUsuarios(instructores);
+    } catch (error) {
+      console.log('Error al obtener profesores:', error);
+    }
+  };
+
+  const obtenerNombreProfesor = (userId) => {
+    const profesor = usuarios.find((u) => u.id === userId);
+    return profesor ? profesor.name : 'Sin asignar';
+  };
+
+  const handleEliminarAlumno = async (id) => {
     const confirmacion = window.confirm('¿Seguro que desea eliminar?');
     if (confirmacion) {
       try {
@@ -101,30 +124,25 @@ const AlumnosGet = () => {
           method: 'DELETE'
         });
         await respuesta.json();
-        const arrayUsers = users.filter((user) => user.id !== id);
+        const arrayalumnos = alumnos.filter((user) => user.id !== id);
 
-        setUsers(arrayUsers);
+        setAlumnos(arrayalumnos);
       } catch (error) {
         console.log(error);
       }
     }
   };
 
-  const obtenerUser = async (id) => {
+  const obtenerAlumno = async (id) => {
     try {
       const url = `${URL}${id}`;
       const respuesta = await fetch(url);
       const resultado = await respuesta.json();
-      setSelectedUser(resultado);
-      setModalUserDetails(true); // Abre el modal de detalles del usuario
+      setSelectedAlumno(resultado);
+      setModalAlumnoDetails(true); // Abre el modal de detalles del usuario
     } catch (error) {
-      console.log('Error al obtener el usuario:', error);
+      console.log('Error al obtener el alumno:', error);
     }
-  };
-
-  // Función para manejar el cambio en el filtro de sede
-  const handleFilterSedeChange = (event) => {
-    setFilterSede(event.target.value);
   };
 
   const applySedeFilter = (user) => {
@@ -133,11 +151,6 @@ const AlumnosGet = () => {
     }
     const sede = user.sede || ''; // Asignar una cadena vacía si `user.sede` es `null` o `undefined`
     return sede.toLowerCase().includes(filterSede.toLowerCase());
-  };
-
-  // Función para manejar el cambio en el filtro de level (ROL)
-  const handleFilterLevelChange = (event) => {
-    setFilterLevel(event.target.value);
   };
 
   // Función para aplicar el filtro por level (ROL)
@@ -158,14 +171,14 @@ const AlumnosGet = () => {
   };
 
   // Llamada a la función para obtener los usuarios ordenados de forma creciente
-  const sortedUsers = ordenarIntegranteAlfabeticamente(results);
+  const sortedalumnos = ordenarIntegranteAlfabeticamente(results);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 60;
   const lastIndex = currentPage * itemsPerPage;
   const firstIndex = lastIndex - itemsPerPage;
-  const records = sortedUsers.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(sortedUsers.length / itemsPerPage);
+  const records = sortedalumnos.slice(firstIndex, lastIndex);
+  const nPage = Math.ceil(sortedalumnos.length / itemsPerPage);
   const numbers = [...Array(nPage + 1).keys()].slice(1);
 
   function prevPage() {
@@ -184,10 +197,14 @@ const AlumnosGet = () => {
     }
   }
 
-  const handleEditarUser = (user) => {
+  const handleEditarAlumno = (user) => {
     // (NUEVO)
-    setSelectedUser(user);
-    setModalNewUser(true);
+    setSelectedAlumno(user);
+    setModalNewAlumno(true);
+  };
+
+  const handleProfesorChange = (e) => {
+    setSelectedProfesor(e.target.value);
   };
   return (
     <>
@@ -202,9 +219,10 @@ const AlumnosGet = () => {
               </button>
             </Link>
           </div>
+
           <div className="flex justify-center text-white">
             <h1 className="pb-5">
-              Listado de Usuarios: &nbsp;
+              Listado de Alumnos: &nbsp;
               <span className="text-center">
                 Cantidad de registros: {results.length}
               </span>
@@ -217,20 +235,23 @@ const AlumnosGet = () => {
               value={search}
               onChange={searcher}
               type="text"
-              placeholder="Buscar usuarios"
+              placeholder="Buscar Alumnos"
               className="input-filter text-white"
             />
+            {/* Filtro por profesor */}
             <select
-              value={filterLevel}
-              onChange={handleFilterLevelChange}
-              className="input-filter text-white"
+              value={selectedProfesor}
+              onChange={handleProfesorChange}
+              className="input-filter text-black"
             >
-              <option value="">Todos los roles</option>
-              <option value="admin">Administrador</option>
-              <option value="instructor">Instructor</option>
+              <option value="">Todos los Profesores</option>
+              {usuarios.map((prof) => (
+                <option key={prof.id} value={prof.id}>
+                  {prof.name}
+                </option>
+              ))}
             </select>
           </form>
-
           {/* formulario de busqueda */}
 
           <div className="flex justify-center pb-10">
@@ -239,15 +260,15 @@ const AlumnosGet = () => {
                 onClick={abrirModal}
                 className="bg-[#58b35e] hover:bg-[#4e8a52] text-white py-2 px-4 rounded transition-colors duration-100 z-10"
               >
-                Nuevo Usuario
+                Nuevo Alumno
               </button>
             </Link>
           </div>
 
           {Object.keys(results).length === 0 ? (
-            <p className="text-center pb-10">
-              El Usuario NO Existe ||{' '}
-              <span className="text-span"> Usuario: {results.length}</span>
+            <p className="text-center pb-10 text-white">
+              El Alumno NO Existe ||{' '}
+              <span className="text-span"> Alumno: {results.length}</span>
             </p>
           ) : (
             <>
@@ -256,76 +277,91 @@ const AlumnosGet = () => {
                   <thead className="text-white titulo">
                     <tr>
                       <th className="py-3 px-4 text-left">ID</th>
-                      <th className="py-3 px-4 text-left">Usuario</th>
-                      <th className="py-3 px-4 text-left">Email</th>
-                      <th className="py-3 px-4 text-left">Rol</th>
-                      <th className="py-3 px-4 text-left">Sede</th>
+                      <th className="py-3 px-4 text-left">Profesor</th>
+                      <th className="py-3 px-4 text-left">Nombre y Apellido</th>
+                      <th className="py-3 px-4 text-left">DNI</th>
+                      <th className="py-3 px-4 text-left">Teléfono</th>
+                      <th className="py-3 px-4 text-left">Objetivo</th>
+                      <th className="py-3 px-4 text-left">Fecha Creación</th>
                       <th className="py-3 px-4 text-center">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {records
-                      .filter(applySedeFilter)
-                      .filter(applyLevelFilter)
-                      .map((user) => (
-                        <tr
-                          key={user.id}
-                          className="hover:bg-gray-100 border-b transition duration-200"
+                    {results.map((alumno) => (
+                      <tr
+                        key={alumno.id}
+                        className="hover:bg-gray-100 border-b transition duration-200"
+                      >
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerAlumno(alumno.id)}
                         >
-                          <td
-                            className="py-2 px-4"
-                            onClick={() => obtenerUser(user.id)}
-                          >
-                            {user.id}
+                          {alumno.id}
+                        </td>
+                        <td className="py-2 px-4">
+                          {obtenerNombreProfesor(alumno.user_id)}
+                        </td>
+                        <td
+                          className="py-2 px-4 "
+                          onClick={() => obtenerAlumno(alumno.id)}
+                        >
+                          {alumno.nomyape}
+                        </td>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerAlumno(alumno.id)}
+                        >
+                          {alumno.dni}
+                        </td>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerAlumno(alumno.id)}
+                        >
+                          {alumno.telefono}
+                        </td>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerAlumno(alumno.id)}
+                        >
+                          {alumno.objetivo}
+                        </td>
+                        <td
+                          className="py-2 px-4"
+                          onClick={() => obtenerAlumno(alumno.id)}
+                        >
+                          {formatearFecha(alumno.created_at)}
+                        </td>
+                        {userLevel === 'admin' ? (
+                          <td className="py-2 px-4">
+                            <div className="flex justify-center gap-2">
+                              <button
+                                onClick={() => handleEliminarAlumno(alumno.id)}
+                                type="button"
+                                className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                              >
+                                Eliminar
+                              </button>
+                              <button
+                                onClick={() => handleEditarAlumno(alumno)}
+                                type="button"
+                                className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
+                              >
+                                Editar
+                              </button>
+                            </div>
+                            <button
+                              onClick={() => handleEliminarAlumno(alumno.id)}
+                              type="button"
+                              className="px-3 py-1 ml-20 mt-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                            >
+                              Ver Perfil
+                            </button>
                           </td>
-                          <td
-                            className="py-2 px-4"
-                            onClick={() => obtenerUser(user.id)}
-                          >
-                            {user.name}
-                          </td>
-                          <td
-                            className="py-2 px-4"
-                            onClick={() => obtenerUser(user.id)}
-                          >
-                            {user.email}
-                          </td>
-                          <td
-                            className="py-2 px-4"
-                            onClick={() => obtenerUser(user.id)}
-                          >
-                            {user.level}
-                          </td>
-                          <td
-                            className="py-2 px-4"
-                            onClick={() => obtenerUser(user.id)}
-                          >
-                            {user.sede}
-                          </td>
-                          {userLevel === 'admin' ? (
-                            <td className="py-2 px-4">
-                              <div className="flex justify-center gap-2">
-                                <button
-                                  onClick={() => handleEliminarUser(user.id)}
-                                  type="button"
-                                  className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                                >
-                                  Eliminar
-                                </button>
-                                <button
-                                  onClick={() => handleEditarUser(user)}
-                                  type="button"
-                                  className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
-                                >
-                                  Editar
-                                </button>
-                              </div>
-                            </td>
-                          ) : (
-                            <td className="py-2 px-4"></td>
-                          )}
-                        </tr>
-                      ))}
+                        ) : (
+                          <td className="py-2 px-4"></td>
+                        )}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -363,22 +399,14 @@ const AlumnosGet = () => {
             </>
           )}
           {/* Modal para abrir formulario de clase gratis */}
-          <FormAltaUser
-            isOpen={modalNewUser}
+          <FormAltaAlumno
+            isOpen={modalNewAlumno}
             onClose={cerarModal}
-            user={selectedUser}
-            setSelectedUser={setSelectedUser}
+            user={selectedAlumno}
+            setSelectedUser={setSelectedAlumno}
           />
         </div>
       </div>
-      {selectedUser && (
-        <UserDetails
-          user={selectedUser}
-          setSelectedUser={setSelectedUser}
-          isOpen={modalUserDetails}
-          onClose={() => setModalUserDetails(false)}
-        />
-      )}
     </>
   );
 };

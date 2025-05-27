@@ -74,7 +74,7 @@ const AdminPage = () => {
               userLevel === 'gerente' ||
               userLevel === 'vendedor') && (
               <div className="bg-white font-bignoodle w-[250px] h-[100px] text-[20px] lg:w-[400px] lg:h-[150px] lg:text-[30px] mx-auto flex justify-center items-center rounded-tr-xl rounded-bl-xl">
-                <Link to="/dashboard/novedades">
+                <Link to="/dashboard/students">
                   <button className="btnstaff">Alumnos</button>
                 </Link>
               </div>
