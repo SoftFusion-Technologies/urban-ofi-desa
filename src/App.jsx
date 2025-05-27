@@ -40,6 +40,7 @@ import AdminPage from './Pages/staff/AdminPage';
 import UsersGet from './Pages/MetodsGet/UserGet';
 import InstructoresGet from './Pages/MetodsGet/InstructoresGet'
 import AlumnosGet from './Pages/MetodsGet/AlumnosGet';
+import EstadisticasIns from './Pages/MetodsGet/EstadisticasIns';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const location = useLocation();
@@ -49,7 +50,8 @@ function AppContent() {
     '/dashboard',
     '/dashboard/users',
     '/dashboard/instructores',
-    '/dashboard/students'
+    '/dashboard/students',
+    '/dashboard/estadisticas'
   ].includes(location.pathname);
 
   return (
@@ -94,6 +96,15 @@ function AppContent() {
             <ProtectedRoute>
               {' '}
               <AlumnosGet />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
+        <Ruta
+          path="/dashboard/estadisticas"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <EstadisticasIns />{' '}
             </ProtectedRoute>
           }
         />{' '}
