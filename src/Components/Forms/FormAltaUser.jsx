@@ -254,7 +254,7 @@ const FormAltaUser = ({ isOpen, onClose, user, setSelectedUser }) => {
                       <input
                         type="submit"
                         value={user ? 'Actualizar' : 'Crear Usuario'}
-                        className="bg-blue-500 py-2 px-5 rounded-xl text-white font-bold hover:cursor-pointer hover:bg-[#fc4b08] transition focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        className="bg-blue-500 py-2 px-5 rounded-xl text-white font-bold hover:cursor-pointer hover:bg-[#1D4ED8] transition focus:outline-none focus:ring-2 focus:ring-blue-300"
                       />
                     </div>
                   </Form>

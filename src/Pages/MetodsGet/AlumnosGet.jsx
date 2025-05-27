@@ -4,7 +4,7 @@
  * Versión: 1.0
  *
  * Descripción:
- * Este archivo (UserGet.jsx) es el componente el cual renderiza los datos de los usuarios
+ * Este archivo (AlumnosGet.jsx) es el componente el cual renderiza los datos de los usuarios
  * Estos datos llegan cuando se da de alta un nuevo usuario
  *
  * Tema: Configuración
@@ -23,7 +23,7 @@ import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
 
 // Componente funcional que maneja la lógica relacionada con los Users
-const UserGet = () => {
+const AlumnosGet = () => {
   // useState que controla el modal de nuevo usuario
   const [modalNewUser, setModalNewUser] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
@@ -383,4 +383,4 @@ const UserGet = () => {
   );
 };
 
-export default UserGet;
+export default AlumnosGet;

@@ -20,6 +20,7 @@ import '../../Styles/MetodsGet/Tabla.css';
 import '../../Styles/staff/background.css';
 import { useAuth } from '../../AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ParticlesBackground from '../../Components/ParticlesBackground';
 
 const InstructoresGet = () => {
   // Estado para almacenar la lista de personas
@@ -123,17 +124,18 @@ const InstructoresGet = () => {
   return (
     <>
       <NavbarStaff />
-      <div className="dashboardbg h-contain pt-10 pb-10">
+      <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 h-contain pt-10 pb-10">
+        <ParticlesBackground></ParticlesBackground>
         <div className=" rounded-lg w-11/12 mx-auto pb-2">
-          <div className="bg-white mb-5">
+          <div className=" mb-5">
             <div className="pl-5 pt-5">
               <Link to="/dashboard">
-                <button className="py-2 px-5 bg-[#fc4b08] rounded-lg text-sm text-white hover:bg-orange-500">
+                <button className="py-2 px-5 bg-[#1D4ED8] rounded-lg text-sm text-white hover:bg-blue-800">
                   Volver
                 </button>
               </Link>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center text-white">
               <h1 className="pb-5">
                 Listado de Instructores: &nbsp;
                 <span className="text-center">
@@ -143,15 +145,15 @@ const InstructoresGet = () => {
             </div>
 
             {/* formulario de busqueda */}
-            <form className="flex justify-center pb-5">
+            <form className="flex flex-wrap justify-center gap-3 pb-5">
               <input
                 value={search}
                 onChange={searcher}
                 type="text"
-                placeholder="Buscar Instructor"
-                className="border rounded-sm"
+                placeholder="Buscar usuarios"
+                className="input-filter text-white"
               />
-              <select
+              {/* <select
                 value={filterSede}
                 onChange={handleFilterSedeChange}
                 className="border rounded-sm ml-3"
@@ -160,7 +162,7 @@ const InstructoresGet = () => {
                 <option value="SMT">SMT</option>
                 <option value="Monteros">Monteros</option>
                 <option value="Concepción">Concepción</option>
-              </select>
+              </select> */}
             </form>
             {/* formulario de busqueda */}
           </div>
@@ -176,7 +178,7 @@ const InstructoresGet = () => {
                   <div key={instructor.id} className="bg-white p-6 rounded-md">
                     <h2 className="btnstaff">
                       {/* Instructor:{' '} */}
-                      <span className="bg-white font-bignoodle w-[250px] h-[100px] text-[20px] lg:w-[400px] lg:h-[150px] lg:text-[30px] mx-auto flex justify-center items-center rounded-tr-xl rounded-bl-xl">
+                      <span className="titulo bg-white font-bignoodle w-[250px] h-[100px] text-[20px] lg:w-[400px] lg:h-[150px] lg:text-[30px] mx-auto flex justify-center items-center rounded-tr-xl rounded-bl-xl">
                         {instructor.name}
                       </span>
                     </h2>
@@ -195,7 +197,7 @@ const InstructoresGet = () => {
                       userLevel === 'gerente' ||
                       userLevel === 'administrador') && (
                       <button
-                        style={{ ...styles.button, backgroundColor: '#fc4b08' }}
+                        style={{ ...styles.button, backgroundColor: '#1D4ED8' }}
                         onClick={() => handleEnviarEmail(instructor)}
                       >
                         Ver Alumnos
