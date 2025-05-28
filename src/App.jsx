@@ -131,6 +131,15 @@ function AppContent() {
             </ProtectedRoute>
           }
         />{' '}
+        <Ruta
+          path="/miperfil/student/:id"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <PerfilAlumno />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
         {/* componentes del staff y login FINAL */}
         <Ruta path="/*" element={<NotFound />} />
       </Rutas>

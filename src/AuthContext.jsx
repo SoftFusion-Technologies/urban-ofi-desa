@@ -1,6 +1,6 @@
 /*
- * Programador: Emir Segovia
- * Fecha Cración: 05 / 06 / 2024
+ * Programador: Benjamin Orellana
+ * Fecha Creación: 26 / 05 / 2025
  * Versión: 1.0
  *
  * Descripción:
@@ -8,7 +8,7 @@
  *
  * Tema: Renderizacion
  * Capa: Frontend
- * Contacto: emirvalles90f@gmail.com || 3865761910
+ * Contacto: benjamin.orellanaof@gmail.com || 3863531891
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
@@ -16,64 +16,59 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Definir estados locales para el token de autenticación y el nombre de usuario
+  // Estados locales para el token, nombre, nivel, nombre y apellido y el id del alumno
   const [authToken, setAuthToken] = useState(null);
   const [userName, setUserName] = useState('');
   const [userLevel, setUserLevel] = useState('');
   const [nomyape, setNomyape] = useState(''); // nombre y apellido alumno
+  const [alumnoId, setAlumnoId] = useState(null); // id alumno
 
   useEffect(() => {
-    // Obtener el token y el nombre de usuario desde el localStorage
+    // Recuperar datos desde localStorage
     const token = localStorage.getItem('authToken');
     const username = localStorage.getItem('userName');
     const level = localStorage.getItem('userLevel');
     const alumnoNomyape = localStorage.getItem('nomyape');
-    // Si hay un token en el localStorage, establecerlo en el estado local
-    if (token) {
-      setAuthToken(token);
-    }
-    // Si hay un nombre de usuario en el localStorage, establecerlo en el estado local
-    if (username) {
-      setUserName(username);
-    }
-    if (level) {
-      setUserLevel(level);
-    }
-    if (alumnoNomyape) {
-      setNomyape(alumnoNomyape);
-    }
-  }, []); // El array vacío asegura que este efecto se ejecute solo una vez al montar el componente
+    const alumnoIdStored = localStorage.getItem('alumnoId');
+
+    if (token) setAuthToken(token);
+    if (username) setUserName(username);
+    if (level) setUserLevel(level);
+    if (alumnoNomyape) setNomyape(alumnoNomyape);
+    if (alumnoIdStored) setAlumnoId(alumnoIdStored);
+  }, []);
 
   const login = (token, username, level) => {
-    // Establecer el token y el nombre de usuario en el estado local
     setAuthToken(token);
     setUserName(username);
     setUserLevel(level);
-    // Guardar el token y el nombre de usuario en el localStorage
     localStorage.setItem('authToken', token);
     localStorage.setItem('userName', username);
     localStorage.setItem('userLevel', level);
   };
 
-  // Función login para alumno (que guarda nomyape)
-  const loginAlumno = (token, alumnoNombreApellido) => {
+  // Login para alumno: guarda token, nomyape y id
+  const loginAlumno = (token, alumnoNombreApellido, id) => {
     setAuthToken(token);
     setNomyape(alumnoNombreApellido);
+    setAlumnoId(id);
     localStorage.setItem('authToken', token);
     localStorage.setItem('nomyape', alumnoNombreApellido);
+    localStorage.setItem('alumnoId', id);
   };
 
   const logout = () => {
-    // Limpiar el token y el nombre de usuario del estado local
     setAuthToken(null);
     setUserName('');
     setUserLevel('');
     setNomyape('');
-    // Remover el token y el nombre de usuario del localStorage
+    setAlumnoId(null);
+
     localStorage.removeItem('authToken');
     localStorage.removeItem('userName');
     localStorage.removeItem('userLevel');
     localStorage.removeItem('nomyape');
+    localStorage.removeItem('alumnoId');
   };
 
   return (
@@ -83,6 +78,7 @@ export const AuthProvider = ({ children }) => {
         userName,
         userLevel,
         nomyape,
+        alumnoId,
         login,
         loginAlumno,
         logout

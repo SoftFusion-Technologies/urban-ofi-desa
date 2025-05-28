@@ -75,8 +75,8 @@ const LoginForm = () => {
           setLoading(false);
           if (res.data.message === 'Success') {
             if (isAlumno) {
-              loginAlumno(res.data.token, res.data.nomyape);
-              navigate('/dashboard');
+              loginAlumno(res.data.token, res.data.nomyape, res.data.id); // guardar el id
+              navigate(`/miperfil/student/${res.data.id}`); // redirigir con id
             } else {
               login(res.data.token, values.email, res.data.level);
               navigate('/dashboard');

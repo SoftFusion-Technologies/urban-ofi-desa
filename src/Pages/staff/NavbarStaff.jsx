@@ -11,7 +11,7 @@ const NavbarStaff = () => {
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
   const { logout, userName, nomyape } = useAuth(); // agrego nomyape
-  const navigate = useNavigate(); // redirigimos a /login
+  const navigate = useNavigate();
 
   const { userLevel } = useAuth();
 
@@ -43,11 +43,7 @@ const NavbarStaff = () => {
 
   const handleLogout = () => {
     logout();
-    if (location.pathname.includes('miperfil')) {
-      navigate('/');
-    } else {
-      navigate('/login');
-    }
+    navigate('/inicio');
   };
 
   const Links = [
@@ -63,27 +59,12 @@ const NavbarStaff = () => {
       title: 'Usuarios',
       roles: ['admin', 'administrador']
     }
-    // {
-    //   id: 3,
-    //   href: 'dashboard/ask',
-    //   title: 'Preguntas Frecuentes',
-    //   roles: ['vendedor', 'admin', 'administrador', 'gerente']
-    // },
-    // {
-    //   id: 4,
-    //   href: 'dashboard/task',
-    //   title: 'Programar Tarea',
-    //   roles: ['admin', 'administrador', 'vendedor', 'gerente']
-    // },
-    // {
-    //   id: 5,
-    //   href: 'dashboard/admagrupadores',
-    //   title: 'Adm. Agrupadores',
-    //   roles: ['admin']
-    // }
   ];
 
-  const filteredLinks = Links.filter((link) => link.roles.includes(userLevel));
+  const filteredLinks =
+    userLevel === 'alumno'
+      ? []
+      : Links.filter((link) => link.roles.includes(userLevel));
 
   return (
     <>

@@ -9,7 +9,10 @@ const useLayoutVisibility = () => {
   const hideLayoutFooter = path === '/login';
 
   const hideLayoutNav =
-    path === '/login' || path === '/soyalumno' || path.startsWith('/dashboard');
+    path === '/login' ||
+    path === '/soyalumno' ||
+    path.startsWith('/dashboard') ||
+    path.startsWith('/miperfil');
 
   return { hideLayoutFooter, hideLayoutNav };
 };
