@@ -315,7 +315,7 @@ const UserGet = () => {
                                 <button
                                   onClick={() => handleEditarUser(user)}
                                   type="button"
-                                  className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
+                                  className="px-3 py-1 text-sm bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 transition"
                                 >
                                   Editar
                                 </button>

@@ -58,7 +58,7 @@ const AdminPage = () => {
         <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800">
           <ParticlesBackground></ParticlesBackground>
           <div className="titulo xl:px-0 sm:px-16 px-6 max-w-7xl mx-auto grid grid-cols-2 max-sm:grid-cols-1 max-md:gap-y-10 md:gap-10 py-28 sm:pt-44 lg:pt-28 md:w-5/6 ">
-            {(userLevel === 'admin' ||
+            {/* {(userLevel === 'admin' ||
               userLevel === 'administrador' ||
               userLevel === 'instructor' ||
               userLevel === 'gerente') && (
@@ -67,8 +67,8 @@ const AdminPage = () => {
                   <button className="btnstaff">Instructores</button>
                 </Link>
               </div>
-              )}
-            
+              )} */}
+
             {(userLevel === 'admin' ||
               userLevel === 'administrador' ||
               userLevel === 'gerente' ||
@@ -80,6 +80,16 @@ const AdminPage = () => {
               </div>
             )}
 
+            {(userLevel === 'admin' ||
+              userLevel === 'administrador' ||
+              userLevel === 'instructor' ||
+              userLevel === 'gerente') && (
+              <div className="bg-white font-bignoodle w-[250px] h-[100px] text-[20px] lg:w-[400px] lg:h-[150px] lg:text-[30px] mx-auto flex justify-center items-center rounded-tr-xl rounded-bl-xl">
+                <Link to="/dashboard/students-pendientes">
+                  <button className="btnstaff">Pendientes</button>
+                </Link>
+              </div>
+            )}
             {(userLevel === 'admin' ||
               userLevel === 'administrador' ||
               userLevel === 'gerente' ||

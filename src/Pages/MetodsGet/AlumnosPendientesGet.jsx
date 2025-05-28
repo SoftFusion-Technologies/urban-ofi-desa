@@ -4,7 +4,7 @@
  * Versión: 1.0
  *
  * Descripción:
- * Este archivo (AlumnosGet.jsx) es el componente el cual renderiza los datos de los usuarios
+ * Este archivo (AlumnosPendientesGet.jsx) es el componente el cual renderiza los datos de los usuarios
  * Estos datos llegan cuando se da de alta un nuevo usuario
  *
  * Tema: Configuración
@@ -17,37 +17,33 @@ import NavbarStaff from '../staff/NavbarStaff';
 import { Link } from 'react-router-dom';
 import '../../Styles/MetodsGet/Tabla.css';
 import '../../Styles/staff/background.css';
-import FormAltaAlumno from '../../Components/Forms/FormAltaAlumno';
-import UserDetails from './UserGetId';
 import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
 import { formatearFecha } from '../../Helpers';
 
 // Componente funcional que maneja la lógica relacionada con los alumnos
-const AlumnosGet = () => {
+const AlumnosPendientesGet = () => {
   // useState que controla el modal de nuevo usuario
-  const [modalNewAlumno, setModalNewAlumno] = useState(false);
-  const [selectedAlumno, setSelectedAlumno] = useState(null); // Estado para el usuario seleccionado
   const [modalAlumnoDetails, setModalAlumnoDetails] = useState(false); // Estado para controlar el modal de detalles del usuario
-  const [filterSede, setFilterSede] = useState(''); // Estado para el filtro de sede
-  const [filterLevel, setFilterLevel] = useState(''); // Estado para el filtro de level (ROL)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
+  const [profesorAsignado, setProfesorAsignado] = useState('');
+
   const { userLevel } = useAuth();
 
-  const abrirModal = () => {
-    setModalNewAlumno(true);
-  };
-  const cerarModal = () => {
-    setModalNewAlumno(false);
-    obtenerAlumnos();
-  };
-
   //URL estatica, luego cambiar por variable de entorno
-  const URL = 'http://localhost:8080/students/';
+  const URL = 'http://localhost:8080/students-pendientes/';
 
   // Estado para almacenar la lista de alumnos
   const [alumnos, setAlumnos] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [selectedProfesor, setSelectedProfesor] = useState('');
+
+  const abrirModalAutorizar = (alumno) => {
+    setAlumnoSeleccionado(alumno);
+    setProfesorAsignado(''); // Reiniciar selección
+    setModalOpen(true);
+  };
 
   //------------------------------------------------------
   // 1.3 Relacion al Filtrado - Inicio - Benjamin Orellana
@@ -187,9 +183,20 @@ const AlumnosGet = () => {
     setModalNewAlumno(true);
   };
 
-  const handleProfesorChange = (e) => {
-    setSelectedProfesor(e.target.value);
+  const handleConfirmarAutorizar = async () => {
+    try {
+      await axios.post(`${URL}migrar/${alumnoSeleccionado.id}`, {
+        user_id: profesorAsignado
+      });
+      alert('Alumno autorizado correctamente');
+      setModalOpen(false);
+      obtenerAlumnos();
+    } catch (error) {
+      console.error('Error al autorizar alumno:', error);
+      alert('Error al autorizar alumno');
+    }
   };
+
   return (
     <>
       <NavbarStaff />
@@ -222,32 +229,8 @@ const AlumnosGet = () => {
               placeholder="Buscar Alumnos"
               className="input-filter text-white"
             />
-            {/* Filtro por profesor */}
-            <select
-              value={selectedProfesor}
-              onChange={handleProfesorChange}
-              className="input-filter text-black"
-            >
-              <option value="">Todos los Profesores</option>
-              {usuarios.map((prof) => (
-                <option key={prof.id} value={prof.id}>
-                  {prof.name}
-                </option>
-              ))}
-            </select>
           </form>
           {/* formulario de busqueda */}
-
-          <div className="flex justify-center pb-10">
-            <Link to="#">
-              <button
-                onClick={abrirModal}
-                className="bg-[#58b35e] hover:bg-[#4e8a52] text-white py-2 px-4 rounded transition-colors duration-100 z-10"
-              >
-                Nuevo Alumno
-              </button>
-            </Link>
-          </div>
 
           {Object.keys(results).length === 0 ? (
             <p className="text-center pb-10 text-white">
@@ -267,6 +250,7 @@ const AlumnosGet = () => {
                       <th className="py-3 px-4 text-left">Teléfono</th>
                       <th className="py-3 px-4 text-left">Objetivo</th>
                       <th className="py-3 px-4 text-left">Fecha Creación</th>
+                      <th className="py-3 px-4 text-left">Estado</th>
                       <th className="py-3 px-4 text-center">Acciones</th>
                     </tr>
                   </thead>
@@ -315,6 +299,22 @@ const AlumnosGet = () => {
                         >
                           {formatearFecha(alumno.created_at)}
                         </td>
+                        <td className="py-2 px-4">
+                          <span
+                            className={`uppercase font-semibold ${
+                              alumno.estado === 'pendiente'
+                                ? 'text-red-600'
+                                : alumno.estado === 'en revision'
+                                ? 'text-yellow-600'
+                                : alumno.estado === 'autorizado'
+                                ? 'text-green-600'
+                                : 'text-black'
+                            }`}
+                          >
+                            {alumno.estado}
+                          </span>
+                        </td>
+
                         {userLevel === 'admin' ? (
                           <td className="py-2 px-4">
                             <div className="flex justify-center gap-2">
@@ -325,21 +325,23 @@ const AlumnosGet = () => {
                               >
                                 Eliminar
                               </button>
+
                               <button
                                 onClick={() => handleEditarAlumno(alumno)}
                                 type="button"
-                                className="px-3 py-1 text-sm bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 transition"
+                                className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
                               >
                                 Editar
                               </button>
+
+                              <button
+                                onClick={() => abrirModalAutorizar(alumno)}
+                                type="button"
+                                className="px-3 py-1 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                              >
+                                Autorizar
+                              </button>
                             </div>
-                            <button
-                              onClick={() => handleEliminarAlumno(alumno.id)}
-                              type="button"
-                              className="px-3 py-1 ml-20 mt-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                            >
-                              Ver Perfil
-                            </button>
                           </td>
                         ) : (
                           <td className="py-2 px-4"></td>
@@ -382,16 +384,51 @@ const AlumnosGet = () => {
               </nav>
             </>
           )}
-          <FormAltaAlumno
-            isOpen={modalNewAlumno}
-            onClose={cerarModal}
-            user={selectedAlumno}
-            setSelectedUser={setSelectedAlumno}
-          />
+          {modalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-md w-[90%] max-w-md">
+                <h2 className="titulo uppercase text-center text-xl font-bold mb-4">
+                  Asignar Profesor
+                </h2>
+
+                <label className="block mb-2 font-medium">
+                  Selecciona un profesor:
+                </label>
+                <select
+                  value={profesorAsignado}
+                  onChange={(e) => setProfesorAsignado(e.target.value)}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                >
+                  <option value="">-- Seleccionar --</option>
+                  {usuarios.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={() => setModalOpen(false)}
+                    className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleConfirmarAutorizar}
+                    disabled={!profesorAsignado}
+                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                  >
+                    Confirmar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-export default AlumnosGet;
+export default AlumnosPendientesGet;

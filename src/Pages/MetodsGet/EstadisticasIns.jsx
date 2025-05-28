@@ -9,7 +9,7 @@ import ParticlesBackground from '../../Components/ParticlesBackground';
 const EstadisticaCard = ({ titulo, contenido }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/3 m-2 text-center">
-      <h3 className="text-xl font-bold text-black">{titulo}</h3>
+      <h3 className="text-xl font-bold text-blue-600">{titulo}</h3>
       <p className="text-3xl font-extrabold text-blue-700 mt-2">
         <CountUp start={0} end={contenido} duration={2.5} separator="," />
       </p>
