@@ -18,7 +18,6 @@ import { Link } from 'react-router-dom';
 import '../../Styles/MetodsGet/Tabla.css';
 import '../../Styles/staff/background.css';
 import FormAltaAlumno from '../../Components/Forms/FormAltaAlumno';
-import UserDetails from './UserGetId';
 import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
 import { formatearFecha } from '../../Helpers';

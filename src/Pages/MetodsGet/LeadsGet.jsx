@@ -158,7 +158,7 @@ const UserGet = () => {
           </div>
           <div className="flex justify-center text-white">
             <h1 className="pb-5">
-              Listado de Usuarios: &nbsp;
+              Listado de Leads: &nbsp;
               <span className="text-center">
                 Cantidad de registros: {results.length}
               </span>
@@ -171,15 +171,18 @@ const UserGet = () => {
               value={search}
               onChange={searcher}
               type="text"
-              placeholder="Buscar usuarios"
+              placeholder="Buscar Leads"
               className="input-filter text-white"
             />
           </form>
           {/* formulario de busqueda */}
           {Object.keys(results).length === 0 ? (
-            <p className="text-center pb-10">
-              El Usuario NO Existe ||{' '}
-              <span className="text-span"> Usuario: {results.length}</span>
+            <p className="text-center pb-10 text-white">
+              El Lead NO Existe ||{' '}
+              <span className="text-span text-white">
+                {' '}
+                Lead: {results.length}
+              </span>
             </p>
           ) : (
             <>
@@ -237,7 +240,7 @@ const UserGet = () => {
                           <td className="py-2 px-4">
                             <div className="flex justify-center gap-2">
                               <button
-                                onClick={() => handleEliminarLeads(user.id)}
+                                onClick={() => handleEliminarLeads(lead.id)}
                                 type="button"
                                 className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                               >
