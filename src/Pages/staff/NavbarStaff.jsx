@@ -10,7 +10,7 @@ import NotificationBell from './NotificationBell';
 const NavbarStaff = () => {
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
-  const { logout, userName } = useAuth(); // utilizamos la funcion logout de authcontext
+  const { logout, userName, nomyape } = useAuth(); // agrego nomyape
   const navigate = useNavigate(); // redirigimos a /login
 
   const { userLevel } = useAuth();
@@ -18,18 +18,36 @@ const NavbarStaff = () => {
   const [displayUserName, setDisplayUserName] = useState('');
 
   useEffect(() => {
-    if (userName && userName.includes('@')) {
-      const atIndex = userName.indexOf('@');
-      const usernameWithoutDomain = userName.substring(0, atIndex);
-      setDisplayUserName(usernameWithoutDomain);
-    } else {
-      setDisplayUserName(userName);
+    // Priorizar nomyape si existe (es para soyalumno)
+    if (nomyape) {
+      const primerNombre = nomyape.trim().split(' ')[0];
+      setDisplayUserName(primerNombre);
+      return;
     }
-  }, [userName]);
+
+    // Si no hay nomyape, usamos userName (login normal)
+    if (!userName) {
+      setDisplayUserName('');
+      return;
+    }
+
+    if (userName.includes('@')) {
+      const atIndex = userName.indexOf('@');
+      setDisplayUserName(userName.substring(0, atIndex));
+      return;
+    }
+
+    const primerNombreUser = userName.trim().split(' ')[0];
+    setDisplayUserName(primerNombreUser);
+  }, [userName, nomyape]);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    if (location.pathname.includes('miperfil')) {
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
   };
 
   const Links = [
@@ -44,7 +62,7 @@ const NavbarStaff = () => {
       href: 'dashboard/users',
       title: 'Usuarios',
       roles: ['admin', 'administrador']
-    },
+    }
     // {
     //   id: 3,
     //   href: 'dashboard/ask',

@@ -315,35 +315,63 @@ const AlumnosGet = () => {
                         >
                           {formatearFecha(alumno.created_at)}
                         </td>
-                        {userLevel === 'admin' ? (
-                          <td className="py-2 px-4">
-                            <div className="flex justify-center gap-2">
-                              <button
-                                onClick={() => handleEliminarAlumno(alumno.id)}
-                                type="button"
-                                className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                              >
-                                Eliminar
-                              </button>
-                              <button
-                                onClick={() => handleEditarAlumno(alumno)}
-                                type="button"
-                                className="px-3 py-1 text-sm bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 transition"
-                              >
-                                Editar
-                              </button>
-                            </div>
-                            <button
-                              onClick={() => handleEliminarAlumno(alumno.id)}
-                              type="button"
-                              className="px-3 py-1 ml-20 mt-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                            >
-                              Ver Perfil
-                            </button>
-                          </td>
-                        ) : (
-                          <td className="py-2 px-4"></td>
-                        )}
+                        <td className="py-2 px-4">
+                          <div className="flex flex-col md:flex-row items-center justify-center gap-2">
+                            {userLevel === 'admin' ? (
+                              <>
+                                <button
+                                  onClick={() =>
+                                    handleEliminarAlumno(alumno.id)
+                                  }
+                                  type="button"
+                                  className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition w-full md:w-auto"
+                                >
+                                  Eliminar
+                                </button>
+                                <button
+                                  onClick={() => handleEditarAlumno(alumno)}
+                                  type="button"
+                                  className="px-4 py-2 text-sm bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 transition w-full md:w-auto"
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  onClick={() => handleVerPerfil(alumno.id)}
+                                  type="button"
+                                  className="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition w-full md:w-auto"
+                                >
+                                  Ver Perfil
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={() => handleEditarAlumno(alumno)}
+                                  type="button"
+                                  className="px-4 py-2 text-sm bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 transition w-full md:w-auto"
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  onClick={() => handleVerPerfil(alumno.id)}
+                                  type="button"
+                                  className="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition w-full md:w-auto"
+                                >
+                                  Ver Perfil
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleProgramarRutina(alumno.id)
+                                  }
+                                  type="button"
+                                  className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-full md:w-auto"
+                                >
+                                  Programar Rutina
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

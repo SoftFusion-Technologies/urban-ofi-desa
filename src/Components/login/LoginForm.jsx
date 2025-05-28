@@ -19,17 +19,23 @@ import Validation from './LoginValidation';
 import axios from 'axios';
 import '../../Styles/login.css';
 import { useAuth } from '../../AuthContext';
+import { useLocation } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
 const LoginForm = () => {
+  const location = useLocation();
+  const isAlumno = location.pathname === '/soyalumno';
+
   const [values, setValues] = useState({
     email: '',
-    password: ''
+    password: '',
+    telefono: '',
+    dni: ''
   });
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginAlumno } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -47,21 +53,34 @@ const LoginForm = () => {
       [event.target.name]: event.target.value
     }));
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    const validationErrors = Validation(values);
+    const validationErrors = Validation(values, location.pathname);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       setLoading(true);
 
+      const endpoint = isAlumno
+        ? 'http://localhost:8080/loginAlumno'
+        : 'http://localhost:8080/login';
+
+      const payload = isAlumno
+        ? { telefono: values.telefono, dni: values.dni }
+        : { email: values.email, password: values.password };
+
       axios
-        .post('http://localhost:8080/login', values)
+        .post(endpoint, payload)
         .then((res) => {
+          setLoading(false);
           if (res.data.message === 'Success') {
-            login(res.data.token, values.email, res.data.level);
-            navigate('/dashboard');
+            if (isAlumno) {
+              loginAlumno(res.data.token, res.data.nomyape);
+              navigate('/miperfil');
+            } else {
+              login(res.data.token, values.email, res.data.level);
+              navigate('/dashboard');
+            }
           } else {
             setModalMessage('Usuario o Contraseña incorrectos');
             setIsModalOpen(true);
@@ -73,7 +92,6 @@ const LoginForm = () => {
         });
     }
   };
-
   return (
     <div className="h-screen w-full">
       <div className="loginbg h-screen w-full flex justify-between items-center mx-auto">
@@ -88,29 +106,32 @@ const LoginForm = () => {
               </h1>
             </div>
 
+            {/* Campo de correo o teléfono */}
             <div className="mb-3 px-4">
               <input
-                id="email"
-                type="email"
+                id={isAlumno ? 'telefono' : 'email'}
+                type={isAlumno ? 'text' : 'email'}
                 className="mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                placeholder="Correo Electrónico"
-                name="email"
+                placeholder={isAlumno ? 'Teléfono' : 'Correo Electrónico'}
+                name={isAlumno ? 'telefono' : 'email'}
                 onChange={handleInput}
               />
-              {errors.email && <Alerta>{errors.email}</Alerta>}
+              {isAlumno
+                ? errors.telefono && <Alerta>{errors.telefono}</Alerta>
+                : errors.email && <Alerta>{errors.email}</Alerta>}
             </div>
 
+            {/* Campo de contraseña o DNI */}
             <div className="mb-3 px-4">
               <div className="relative flex items-center">
                 <input
-                  id="password"
+                  id={isAlumno ? 'dni' : 'password'}
                   type={showPassword ? 'text' : 'password'}
                   className="mt-2 block w-full p-3 text-black formulario__input bg-slate-100 rounded-xl focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                  placeholder="Contraseña"
-                  name="password"
+                  placeholder={isAlumno ? 'Contraseña' : 'Contraseña'}
+                  name={isAlumno ? 'dni' : 'password'}
                   onChange={handleInput}
                 />
-
                 <button
                   className="absolute right-0 mr-4 text-sm text-gray-500 hover:text-gray-700 focus:outline-none"
                   type="button"
@@ -120,7 +141,9 @@ const LoginForm = () => {
                   {showPassword ? 'Ocultar' : 'Mostrar'}
                 </button>
               </div>
-              {errors.password && <Alerta>{errors.password}</Alerta>}
+              {isAlumno
+                ? errors.dni && <Alerta>{errors.dni}</Alerta>
+                : errors.password && <Alerta>{errors.password}</Alerta>}
             </div>
 
             <div className="mx-auto flex justify-center my-5">

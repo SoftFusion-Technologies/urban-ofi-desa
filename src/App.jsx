@@ -19,12 +19,13 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Routes as Rutas,
-  Route as Ruta,
-  useLocation
+  Route as Ruta
 } from 'react-router-dom'; // IMPORTAMOS useLocation PARA OCULTAR COMPONENTES
 
 import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
+import useLayoutVisibility from './Hooks/useLayoutVisibility';
+
 import Home from './Components/Home/Home';
 import NavBar from './Components/Header/NavBar/NavBar';
 import Footer from './Components/Footer';
@@ -44,18 +45,7 @@ import EstadisticasIns from './Pages/MetodsGet/EstadisticasIns';
 import AlumnosPendientesGet from './Pages/MetodsGet/AlumnosPendientesGet';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
-  const location = useLocation();
-  const hideLayoutFooter = location.pathname === '/login'; // OCULTAMOS NAVBAR Y FOOTER EN /login
-
-  const hideLayoutNav = [
-    '/login',
-    '/dashboard',
-    '/dashboard/users',
-    '/dashboard/instructores',
-    '/dashboard/students',
-    '/dashboard/estadisticas',
-    '/dashboard/students-pendientes'
-  ].includes(location.pathname);
+  const { hideLayoutFooter, hideLayoutNav } = useLayoutVisibility();
 
   return (
     <>
@@ -66,6 +56,7 @@ function AppContent() {
         <Ruta path="/quienes-somos" element={<QuienesSomos />} />
         {/* componentes del staff y login INICIO */}
         <Ruta path="/login" element={<LoginForm />} />
+        <Ruta path="/soyalumno" element={<LoginForm />} />
         <Ruta
           path="/dashboard"
           element={
