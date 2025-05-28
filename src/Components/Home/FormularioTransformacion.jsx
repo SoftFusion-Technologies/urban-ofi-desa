@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import axios from 'axios';
 
 const FormularioTransformacion = () => {
   const [form, setForm] = useState({ nombre: '', tel: '', mensaje: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const URL = 'http://localhost:8080/leads';
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -18,7 +17,6 @@ const FormularioTransformacion = () => {
     const newErrors = {};
     if (!form.nombre.trim()) newErrors.nombre = 'El nombre es obligatorio';
     if (!form.tel.trim()) newErrors.tel = 'El teléfono es obligatorio';
-    // Opcional: validación básica de teléfono, por ejemplo mínimo 6 caracteres
     else if (form.tel.trim().length < 6) newErrors.tel = 'Teléfono inválido';
     if (!form.mensaje.trim()) newErrors.mensaje = 'El mensaje es obligatorio';
     return newErrors;
@@ -35,15 +33,20 @@ const FormularioTransformacion = () => {
 
     setLoading(true);
     try {
-      // Aquí haces el post cuando tengas backend listo
-      // await axios.post('/api/contacto', form);
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+      });
 
-      // Simulo delay para demo
-      await new Promise((res) => setTimeout(res, 1500));
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
 
       setSubmitted(true);
     } catch (error) {
-      // manejar error, mostrar mensaje, etc.
       alert('Hubo un error al enviar. Por favor intenta más tarde.');
     } finally {
       setLoading(false);
@@ -61,12 +64,10 @@ const FormularioTransformacion = () => {
       id="mi-seccion-destino"
       className="min-h-screen flex flex-col items-center justify-center p-6"
     >
-      {/* Título */}
       <h1 className="titulo mb-12 text:4xl sm:text-5xl font-extrabold text-white uppercase font-montserrat drop-shadow-lg select-none">
         Transformá tu entrenamiento
       </h1>
 
-      {/* Form Container */}
       <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl p-10 max-w-lg w-full shadow-lg shadow-blue-400/50">
         <AnimatePresence mode="wait">
           {submitted ? (
@@ -99,7 +100,6 @@ const FormularioTransformacion = () => {
               className="flex flex-col gap-8"
               noValidate
             >
-              {/* Floating Label Inputs */}
               {['nombre', 'tel', 'mensaje'].map((field) => {
                 const isTextarea = field === 'mensaje';
                 const label =
@@ -165,7 +165,6 @@ const FormularioTransformacion = () => {
                         errors[field] ? 'bg-red-500' : 'bg-blue-600'
                       }`}
                     />
-                    {/* Mensaje de error */}
                     {errors[field] && (
                       <p className="text-red-500 mt-1 text-sm font-montserrat">
                         {errors[field]}
@@ -175,7 +174,6 @@ const FormularioTransformacion = () => {
                 );
               })}
 
-              {/* Submit Button */}
               <motion.button
                 type="submit"
                 whileHover={{
