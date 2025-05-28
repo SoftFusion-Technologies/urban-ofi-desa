@@ -76,7 +76,7 @@ const LoginForm = () => {
           if (res.data.message === 'Success') {
             if (isAlumno) {
               loginAlumno(res.data.token, res.data.nomyape);
-              navigate('/miperfil');
+              navigate('/dashboard');
             } else {
               login(res.data.token, values.email, res.data.level);
               navigate('/dashboard');

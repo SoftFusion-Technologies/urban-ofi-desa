@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }) => {
     if (alumnoNomyape) {
       setNomyape(alumnoNomyape);
     }
-    console.log(alumnoNomyape);
   }, []); // El array vacío asegura que este efecto se ejecute solo una vez al montar el componente
 
   const login = (token, username, level) => {
