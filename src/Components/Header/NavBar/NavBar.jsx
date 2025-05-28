@@ -3,12 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../../../Images/imgLogo.jpg';
+import FormAltaAlumnoPendiente from '../../Forms/FormAltaAlumnoPendiente';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
   const location = useLocation();
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   const navLinks = [
     { to: '/', label: 'Inicio' },
@@ -77,12 +79,12 @@ const Navbar = () => {
 
         {/* Botón Call to Action */}
         <div className="hidden lg:block">
-          <Link
-            to="/socio-rutina"
+          <button
+            onClick={() => setIsContactOpen(true)}
             className="px-6 py-2 bg-[#0849B5] text-white rounded-full font-semibold uppercase tracking-wide hover:bg-blue-700 hover:scale-105 transition-transform duration-300"
           >
             Soy Socio - Rutina
-          </Link>
+          </button>
         </div>
 
         {/* Menú móvil */}
@@ -120,16 +122,19 @@ const Navbar = () => {
                 {label}
               </Link>
             ))}
-            <Link
-              to="/socio-rutina"
-              onClick={() => setIsOpen(false)}
-              className="block bg-[#0849B5] text-white text-center rounded-full py-2 font-semibold hover:bg-blue-700 transition"
+            <button
+              onClick={() => setIsContactOpen(true)}
+              className="block mx-auto px-6 py-2 bg-[#0849B5] text-white rounded-full font-semibold uppercase tracking-wide hover:bg-blue-700 hover:scale-105 transition-transform duration-300"
             >
               Soy Socio - Rutina
-            </Link>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
+      <FormAltaAlumnoPendiente
+        open={isContactOpen}
+        setIsOpen={setIsContactOpen}
+      />
     </motion.nav>
   );
 };
