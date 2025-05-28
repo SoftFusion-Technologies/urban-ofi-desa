@@ -51,7 +51,7 @@ const NavbarStaff = () => {
       id: 1,
       href: 'dashboard',
       title: 'Dashboard',
-      roles: ['gerente', 'admin', 'vendedor', 'administrador'] // Benjamin Orellana INI / 12/06/2024 /nueva forma de gestionar los accesos
+      roles: ['admin', 'instructor'] // Benjamin Orellana INI / 12/06/2024 /nueva forma de gestionar los accesos
     },
     {
       id: 2,
