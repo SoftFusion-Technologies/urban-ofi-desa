@@ -21,6 +21,7 @@ import FormAltaAlumno from '../../Components/Forms/FormAltaAlumno';
 import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
 import { formatearFecha } from '../../Helpers';
+import { useNavigate } from 'react-router-dom';
 
 // Componente funcional que maneja la lógica relacionada con los alumnos
 const AlumnosGet = () => {
@@ -28,9 +29,8 @@ const AlumnosGet = () => {
   const [modalNewAlumno, setModalNewAlumno] = useState(false);
   const [selectedAlumno, setSelectedAlumno] = useState(null); // Estado para el usuario seleccionado
   const [modalAlumnoDetails, setModalAlumnoDetails] = useState(false); // Estado para controlar el modal de detalles del usuario
-  const [filterSede, setFilterSede] = useState(''); // Estado para el filtro de sede
-  const [filterLevel, setFilterLevel] = useState(''); // Estado para el filtro de level (ROL)
   const { userLevel } = useAuth();
+  const navigate = useNavigate();
 
   const abrirModal = () => {
     setModalNewAlumno(true);
@@ -189,6 +189,11 @@ const AlumnosGet = () => {
   const handleProfesorChange = (e) => {
     setSelectedProfesor(e.target.value);
   };
+
+  function handleVerPerfil(id) {
+    navigate(`/dashboard/student/${id}`);
+  }
+
   return (
     <>
       <NavbarStaff />

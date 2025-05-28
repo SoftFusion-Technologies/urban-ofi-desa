@@ -44,6 +44,7 @@ import AlumnosGet from './Pages/MetodsGet/AlumnosGet';
 import EstadisticasIns from './Pages/MetodsGet/EstadisticasIns';
 import AlumnosPendientesGet from './Pages/MetodsGet/AlumnosPendientesGet';
 import LeadsGet from './Pages/MetodsGet/LeadsGet';
+import PerfilAlumno from './Pages/MetodsGet/AlumnoPerfil/PerfilAlumno';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const { hideLayoutFooter, hideLayoutNav } = useLayoutVisibility();
@@ -118,6 +119,15 @@ function AppContent() {
             <ProtectedRoute>
               {' '}
               <LeadsGet />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
+        <Ruta
+          path="/dashboard/student/:id"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <PerfilAlumno />{' '}
             </ProtectedRoute>
           }
         />{' '}

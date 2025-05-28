@@ -135,7 +135,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
           <div className="md:col-span-5 animate-on-scroll">
-            <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent">
+            <h2 className="titulo text-4xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent">
               Urban Fitness
             </h2>
             <p className="text-lg mb-8 leading-relaxed text-gray-300">
