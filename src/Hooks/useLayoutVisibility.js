@@ -4,18 +4,12 @@ import { useLocation } from 'react-router-dom';
 const useLayoutVisibility = () => {
   const location = useLocation();
 
-  const hideLayoutFooter = location.pathname === '/login';
+  const path = location.pathname;
 
-  const hideLayoutNav = [
-    '/login',
-    '/dashboard',
-    '/dashboard/users',
-    '/dashboard/instructores',
-    '/dashboard/students',
-    '/dashboard/estadisticas',
-    '/dashboard/students-pendientes',
-    '/soyalumno'
-  ].includes(location.pathname);
+  const hideLayoutFooter = path === '/login';
+
+  const hideLayoutNav =
+    path === '/login' || path === '/soyalumno' || path.startsWith('/dashboard');
 
   return { hideLayoutFooter, hideLayoutNav };
 };

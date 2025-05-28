@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import '../../Styles/MetodsGet/Tabla.css';
 import '../../Styles/staff/background.css';
 import FormAltaUser from '../../Components/Forms/FormAltaUser';
-import UserDetails from './UserGetId';
+import UserDetails from './GetIds/UserGetId';
 import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
 
@@ -362,7 +362,6 @@ const UserGet = () => {
               </nav>
             </>
           )}
-          {/* Modal para abrir formulario de clase gratis */}
           <FormAltaUser
             isOpen={modalNewUser}
             onClose={cerarModal}

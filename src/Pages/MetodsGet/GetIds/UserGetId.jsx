@@ -1,5 +1,5 @@
 import React from 'react';
-import "../../Styles/MetodsGet/GetUserId.css";
+import "../../../Styles/MetodsGet/GetUserId.css";
 
 const UserDetails = ({ user, isOpen, onClose, setSelectedUser }) => {
   if (!isOpen) {
