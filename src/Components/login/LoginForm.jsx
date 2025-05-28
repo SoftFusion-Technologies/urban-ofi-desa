@@ -11,7 +11,7 @@
  * Contacto: benjamin.orellanaof@gmail.com || 3863531891
  */
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Modal from 'react-modal';
 import Alerta from '../Error';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,12 @@ import { useLocation } from 'react-router-dom';
 Modal.setAppElement('#root');
 
 const LoginForm = () => {
+  useEffect(() => {
+    const element = document.getElementById('login');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
   const location = useLocation();
   const isAlumno = location.pathname === '/soyalumno';
 
@@ -93,7 +99,7 @@ const LoginForm = () => {
     }
   };
   return (
-    <div className="h-screen w-full">
+    <div id='login' className="h-screen w-full">
       <div className="loginbg h-screen w-full flex justify-between items-center mx-auto">
         <div className="py-5 bg-white rounded-xl mx-auto">
           <form

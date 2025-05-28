@@ -15,7 +15,7 @@ const Navbar = () => {
   const navLinks = [
     { to: '/', label: 'Inicio' },
     { to: '/clases', label: 'Clases' },
-    { to: '/productos', label: 'Productos' },
+    { to: '/soyalumno', label: 'Soy Alumno' },
     { to: '/party-urban', label: 'Party Urban' },
     { to: '/quienes-somos', label: '¿Quiénes Somos?' },
     { to: '/contacto', label: 'Contacto' }
