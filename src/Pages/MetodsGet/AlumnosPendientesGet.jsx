@@ -325,15 +325,6 @@ const AlumnosPendientesGet = () => {
                               >
                                 Eliminar
                               </button>
-
-                              <button
-                                onClick={() => handleEditarAlumno(alumno)}
-                                type="button"
-                                className="px-3 py-1 text-sm bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition"
-                              >
-                                Editar
-                              </button>
-
                               <button
                                 onClick={() => abrirModalAutorizar(alumno)}
                                 type="button"
