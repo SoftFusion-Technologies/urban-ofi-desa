@@ -11,7 +11,9 @@ import {
 import NavbarStaff from '../../staff/NavbarStaff';
 import ParticlesBackground from '../../../Components/ParticlesBackground';
 import axios from 'axios';
-
+import { useAuth } from '../../../AuthContext';
+import Modal from '../../../Components/Modal';
+import FormCrearRutina from '../AlumnoPerfil/FormCrearRutina';
 function PerfilAlumno() {
   const { id } = useParams();
   const [alumno, setAlumno] = useState(null);
@@ -19,6 +21,10 @@ function PerfilAlumno() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [mostrarCrearRutina, setMostrarCrearRutina] = useState(false);
+  const [mostrarProgramarRutina, setMostrarProgramarRutina] = useState(false);
+  const { userLevel } = useAuth();
 
   // Fetch alumno por id
   useEffect(() => {
@@ -119,6 +125,29 @@ function PerfilAlumno() {
             {alumno.nomyape}
           </h2>
 
+          {(userLevel === 'admin' || userLevel === 'instructor') && (
+            <div className="mt-6 mb-6 flex justify-around">
+              <button
+                onClick={() => {
+                  setMostrarCrearRutina(true);
+                  setMostrarProgramarRutina(false);
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Crear rutina
+              </button>
+              <button
+                onClick={() => {
+                  setMostrarProgramarRutina(true);
+                  setMostrarCrearRutina(false);
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Programar rutina
+              </button>
+            </div>
+          )}
+
           <div className="space-y-4 text-gray-700 text-lg">
             <p className="flex items-center gap-3">
               <FaChalkboardTeacher className="text-blue-500" />
@@ -170,6 +199,14 @@ function PerfilAlumno() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={mostrarCrearRutina}
+        title="Crear nueva rutina"
+        onCancel={() => setMostrarCrearRutina(false)}
+        colorIcon="green"
+      >
+        <FormCrearRutina onClose={() => setMostrarCrearRutina(false)} />
+      </Modal>
     </>
   );
 }

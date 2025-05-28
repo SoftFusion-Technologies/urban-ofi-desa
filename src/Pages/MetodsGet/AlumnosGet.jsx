@@ -363,15 +363,6 @@ const AlumnosGet = () => {
                                 >
                                   Ver Perfil
                                 </button>
-                                <button
-                                  onClick={() =>
-                                    handleProgramarRutina(alumno.id)
-                                  }
-                                  type="button"
-                                  className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-full md:w-auto"
-                                >
-                                  Programar Rutina
-                                </button>
                               </>
                             )}
                           </div>
