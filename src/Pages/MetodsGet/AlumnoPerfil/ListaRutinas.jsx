@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../../AuthContext';
 
 const diasSemana = [
   'Domingo',
@@ -24,7 +25,8 @@ function ListaRutinas({ studentId }) {
   const [rutinas, setRutinas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const { userLevel } = useAuth();
+  const URL = 'http://localhost:8080/routines/';
   const hoy = new Date();
   const nombreDiaHoy = diasSemana[hoy.getDay()];
 
@@ -295,30 +297,35 @@ function ListaRutinas({ studentId }) {
                                         >
                                           Ver video
                                         </button>
-                                        <button
-                                          onClick={() => {
-                                            setEditando({
-                                              routineId: rutina.id,
-                                              exerciseId: ej.id,
-                                              lineaIndex: idx
-                                            });
-                                            setTextoEditado(ejercicio);
-                                          }}
-                                          className="text-green-600 hover:underline"
-                                        >
-                                          Editar
-                                        </button>
-                                        <button
-                                          onClick={() =>
-                                            handleEliminarLinea(
-                                              rutina.id,
-                                              ej.id,
-                                              idx
-                                            )
-                                          }
-                                        >
-                                          Eliminar
-                                        </button>
+                                        {(userLevel === 'admin' ||
+                                          userLevel === 'instructor') && (
+                                          <>
+                                            <button
+                                              onClick={() => {
+                                                setEditando({
+                                                  routineId: rutina.id,
+                                                  exerciseId: ej.id,
+                                                  lineaIndex: idx
+                                                });
+                                                setTextoEditado(ejercicio);
+                                              }}
+                                              className="text-green-600 hover:underline"
+                                            >
+                                              Editar
+                                            </button>
+                                            <button
+                                              onClick={() =>
+                                                handleEliminarLinea(
+                                                  rutina.id,
+                                                  ej.id,
+                                                  idx
+                                                )
+                                              }
+                                            >
+                                              Eliminar
+                                            </button>
+                                          </>
+                                        )}
                                       </div>
                                     </>
                                   )}

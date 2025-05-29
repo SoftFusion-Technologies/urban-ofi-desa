@@ -15,6 +15,8 @@ import { useAuth } from '../../../AuthContext';
 import Modal from '../../../Components/Modal';
 import FormCrearRutina from '../AlumnoPerfil/FormCrearRutina';
 import ListaRutinas from './ListaRutinas';
+import ProtectedRoutine from './ProtectedRoutine';
+
 function PerfilAlumno() {
   const { id } = useParams();
   const [alumno, setAlumno] = useState(null);
@@ -65,7 +67,6 @@ function PerfilAlumno() {
     const profesor = usuarios.find((u) => u.id === userId);
     return profesor ? profesor.name : 'Sin asignar';
   };
-
 
   if (loading) {
     return (
@@ -205,7 +206,9 @@ function PerfilAlumno() {
 
             {/* Rutinas (ocupa el resto del espacio) */}
             <div className="flex-1 mt-10">
-              <ListaRutinas studentId={id} />
+              <ProtectedRoutine>
+                <ListaRutinas studentId={id} />
+              </ProtectedRoutine>
             </div>
           </div>
         </div>
@@ -217,9 +220,7 @@ function PerfilAlumno() {
         onCancel={() => setMostrarCrearRutina(false)}
         colorIcon="green"
       >
-        <FormCrearRutina
-          onClose={() => setMostrarCrearRutina(false)}
-        />
+        <FormCrearRutina onClose={() => setMostrarCrearRutina(false)} />
       </Modal>
     </>
   );
