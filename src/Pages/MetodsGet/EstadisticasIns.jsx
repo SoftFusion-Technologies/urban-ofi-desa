@@ -19,6 +19,8 @@ const EstadisticaCard = ({ titulo, contenido }) => {
 
 const EstadisticasIns = () => {
   const [alumnosPorProfesor, setAlumnosPorProfesor] = useState([]);
+  const [rutinasPorProfesor, setRutinasPorProfesor] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const [currentYear] = useState(new Date().getFullYear()); // Año actual
@@ -67,6 +69,7 @@ const EstadisticasIns = () => {
     if (selectedMonth && selectedYear) {
       // fetchTotalAlumnosP(selectedMonth, selectedYear);
       fetchAlumnosPorProfesor();
+      fetchRutinasPorProfesor();
     }
   }, [selectedMonth, selectedYear]);
 
@@ -78,6 +81,23 @@ const EstadisticasIns = () => {
       setAlumnosPorProfesor(response.data);
     } catch (error) {
       console.error('Error al obtener alumnos por profesor:', error);
+    }
+  };
+
+  const fetchRutinasPorProfesor = async () => {
+    try {
+      const response = await axios.get(
+        `${URL}/estadisticas/rutinas-por-profesor`,
+        {
+          params: {
+            mes: selectedMonth,
+            anio: selectedYear
+          }
+        }
+      );
+      setRutinasPorProfesor(response.data);
+    } catch (error) {
+      console.error('Error al obtener rutinas por profesor:', error);
     }
   };
 
@@ -146,6 +166,25 @@ const EstadisticasIns = () => {
         </div>
 
         <hr className="border-t border-white w-full my-4" />
+
+        {/* Título de "Total de Rutinas" */}
+        <h1 className="titulo text-5xl font-bold text-white mb-8 text-center mt-10 uppercase">
+          Total de Rutinas por Profesor
+        </h1>
+
+        <div className="flex flex-wrap justify-center w-full gap-6">
+          {rutinasPorProfesor.length === 0 ? (
+            <p className="text-white text-xl">No hay datos disponibles.</p>
+          ) : (
+            rutinasPorProfesor.map((stat) => (
+              <EstadisticaCard
+                key={stat.profesor_id}
+                titulo={`Profesor: ${stat.profesor_nombre}`}
+                contenido={stat.total_rutinas}
+              />
+            ))
+          )}
+        </div>
       </div>
     </>
   );

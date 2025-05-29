@@ -107,6 +107,12 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
     }
   };
 
+const eliminarEjercicio = (index) => {
+  const nuevos = [...ejercicios];
+  nuevos.splice(index, 1);
+  setEjercicios(nuevos);
+};
+
   return (
     <div className="p-6 sm:p-8 bg-white shadow-md rounded-xl max-w-3xl mx-auto mt-10 w-full">
       <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900">
@@ -170,6 +176,12 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none"
                 rows={3}
               />
+              <button
+                onClick={() => eliminarEjercicio(index)}
+                className="text-red-500 hover:text-red-700 text-sm mt-2"
+              >
+                Eliminar
+              </button>
             </div>
           ))}
         </div>
