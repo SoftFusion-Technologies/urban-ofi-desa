@@ -30,6 +30,23 @@ function PerfilAlumno() {
   const [mostrarProgramarRutina, setMostrarProgramarRutina] = useState(false);
   const { userLevel } = useAuth();
 
+  const fetchRutinas = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/rutinasporstudient?studentId=${id}`
+      );
+      setRutinas(res.data);
+    } catch (err) {
+      setError('Error al cargar rutinas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRutinas();
+  });
+
   // Fetch alumno por id
   useEffect(() => {
     async function fetchAlumno() {
@@ -207,7 +224,7 @@ function PerfilAlumno() {
             {/* Rutinas (ocupa el resto del espacio) */}
             <div className="flex-1 mt-10">
               {/* <ProtectedRoutine> */}
-                <ListaRutinas studentId={id} />
+              <ListaRutinas studentId={id} />
               {/* </ProtectedRoutine> */}
             </div>
           </div>

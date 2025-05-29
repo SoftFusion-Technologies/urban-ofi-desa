@@ -31,19 +31,20 @@ function ListaRutinas({ studentId }) {
   const hoy = new Date();
   const nombreDiaHoy = diasSemana[hoy.getDay()];
 
+  const fetchRutinas = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/routines?student_id=${studentId}`
+      );
+      setRutinas(res.data);
+    } catch (err) {
+      setError('Error al cargar rutinas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchRutinas = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:8080/routines?student_id=${studentId}`
-        );
-        setRutinas(res.data);
-      } catch (err) {
-        setError('Error al cargar rutinas');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchRutinas();
   }, [studentId]);
 
@@ -213,6 +214,7 @@ function ListaRutinas({ studentId }) {
     try {
       const res = await axios.delete(`${URL}${routineId}/${musculo}`);
       alert(res.data.message);
+      fetchRutinas()
     } catch (err) {
       console.error(err);
       alert('Error al eliminar ejercicios del músculo.');
