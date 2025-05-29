@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Modal from '../../../Components/Modal'; // Asegúrate de importar tu Modal actualizado
+import { useRef } from 'react';
 
 const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
   const { id: studentId } = useParams();
@@ -13,12 +14,21 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
 
   const URL = 'http://localhost:8080/';
 
+  const contenedorEjerciciosRef = useRef(null);
+
   const handleAgregarEjercicio = () => {
     if (ejercicios.length >= 10) return; // Límite de 10 ejercicios
     setEjercicios([
       ...ejercicios,
       { musculo: '', descripcion: '', orden: ejercicios.length + 1 }
     ]);
+    // Pequeño timeout para que el DOM actualice antes de hacer scroll
+    setTimeout(() => {
+      if (contenedorEjerciciosRef.current) {
+        contenedorEjerciciosRef.current.scrollTop =
+          contenedorEjerciciosRef.current.scrollHeight;
+      }
+    }, 100);
   };
 
   const handleEjercicioChange = (index, campo, valor) => {
@@ -29,6 +39,21 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Validar fecha
+    if (!fecha) {
+      alert('Por favor, ingresa la fecha de la rutina.');
+      return;
+    }
+
+    // Validar que no haya ejercicios vacíos
+    for (let i = 0; i < ejercicios.length; i++) {
+      const ej = ejercicios[i];
+      if (!ej.musculo.trim() || !ej.descripcion.trim()) {
+        alert(`Por favor, completa todos los campos del ejercicio #${i + 1}.`);
+        return;
+      }
+    }
 
     try {
       // Obtener mes y anio desde la fecha seleccionada
@@ -75,7 +100,7 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
 
         // Cerrar modal
         onClose();
-      }, 3000);
+      }, 1500);
     } catch (error) {
       console.error(error);
       alert('Error al crear la rutina: ' + error.message);
@@ -97,7 +122,10 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
           className="border border-gray-300 rounded px-3 py-2 mb-4 w-full"
         />
 
-        <div className="max-h-[400px] overflow-y-auto pr-2">
+        <div
+          ref={contenedorEjerciciosRef}
+          className="max-h-[400px] overflow-y-auto pr-2"
+        >
           {ejercicios.map((ej, index) => (
             <div key={index} className="mb-4 border-b pb-4">
               <label className="block font-medium">Músculo</label>

@@ -123,7 +123,7 @@ function ListaRutinas({ studentId, actualizar }) {
 
       // Llamar a la API con la descripción completa actualizada
       await axios.put(
-        `http://localhost:8080/routines/${routineId}/routines_exercises/${exerciseId}`,
+        `${URL}${routineId}/routines_exercises/${exerciseId}`,
         { descripcion: descripcionActualizada }
       );
 
@@ -175,7 +175,7 @@ function ListaRutinas({ studentId, actualizar }) {
 
       // Actualizar la descripción en backend (PUT)
       await axios.put(
-        `http://localhost:8080/routines/${routineId}/routines_exercises/${exerciseId}`,
+        `${URL}${routineId}/routines_exercises/${exerciseId}`,
         { descripcion: descripcionActualizada }
       );
 
@@ -200,6 +200,23 @@ function ListaRutinas({ studentId, actualizar }) {
       alert('Error al eliminar la línea');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEditarMusculo = async (routineId, oldMuscle) => {
+    const newMuscle = prompt(`Editar músculo "${oldMuscle}":`, oldMuscle);
+    if (!newMuscle || newMuscle.trim() === '' || newMuscle === oldMuscle)
+      return;
+
+    try {
+      const res = await axios.put(`${URL}${routineId}/muscle/${oldMuscle}`, {
+        newMuscle
+      });
+      alert(res.data.message);
+      fetchRutinas(); // Actualizar vista
+    } catch (err) {
+      console.error(err);
+      alert('Error al editar el nombre del músculo.');
     }
   };
 
@@ -232,7 +249,10 @@ function ListaRutinas({ studentId, actualizar }) {
           No hay rutinas cargadas para hoy
         </p>
       ) : (
-        <div className="space-y-6">
+        <div
+          className="space-y-6 overflow-y-auto"
+          style={{ maxHeight: '460px' }} // <-- límite de altura con scroll vertical
+        >
           {rutinasHoy.map((rutina) => {
             // Para agrupar ejercicios por músculo dentro de cada rutina
             const ejerciciosPorMusculo = {};
@@ -258,14 +278,24 @@ function ListaRutinas({ studentId, actualizar }) {
 
                         {(userLevel === 'admin' ||
                           userLevel === 'instructor') && (
-                          <button
-                            onClick={() =>
-                              handleEliminarMusculo(rutina.id, musculo)
-                            }
-                            className="bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded text-xs font-medium"
-                          >
-                            🗑️ Eliminar grupo
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                handleEditarMusculo(rutina.id, musculo)
+                              }
+                              className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 px-2 py-1 rounded text-xs font-medium"
+                            >
+                              ✏️ Editar Músculo
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleEliminarMusculo(rutina.id, musculo)
+                              }
+                              className="bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded text-xs font-medium"
+                            >
+                              🗑️ Eliminar Músculo
+                            </button>
+                          </div>
                         )}
                       </div>
                       <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
@@ -296,26 +326,38 @@ function ListaRutinas({ studentId, actualizar }) {
                                   className="flex justify-between items-center"
                                 >
                                   {esEditando ? (
-                                    <input
-                                      type="text"
-                                      value={textoEditado}
-                                      autoFocus
-                                      onChange={(e) =>
-                                        setTextoEditado(e.target.value)
-                                      }
-                                      onBlur={() =>
-                                        handleGuardarEdicion(
-                                          rutina.id,
-                                          ej.id,
-                                          idx,
-                                          textoEditado
-                                        )
-                                      }
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter') e.target.blur();
-                                      }}
-                                      className="border rounded px-2 py-1 flex-grow"
-                                    />
+                                    <div className="flex items-center w-full space-x-2">
+                                      <input
+                                        type="text"
+                                        value={textoEditado}
+                                        autoFocus
+                                        onChange={(e) =>
+                                          setTextoEditado(e.target.value)
+                                        }
+                                        className="border rounded px-2 py-1 flex-grow"
+                                      />
+                                      <button
+                                        onClick={() =>
+                                          handleGuardarEdicion(
+                                            rutina.id,
+                                            ej.id,
+                                            idx,
+                                            textoEditado
+                                          )
+                                        }
+                                        className="text-green-600 hover:text-green-800 text-lg"
+                                        title="Guardar"
+                                      >
+                                        ✅
+                                      </button>
+                                      <button
+                                        onClick={() => setEditando(null)}
+                                        className="text-red-600 hover:text-red-800 text-lg"
+                                        title="Cancelar"
+                                      >
+                                        ❌
+                                      </button>
+                                    </div>
                                   ) : (
                                     <>
                                       <span>{ejercicio}</span>

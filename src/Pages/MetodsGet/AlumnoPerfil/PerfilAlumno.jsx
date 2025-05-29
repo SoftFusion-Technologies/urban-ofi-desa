@@ -101,10 +101,8 @@ function PerfilAlumno() {
   return (
     <>
       <NavbarStaff />
-
       <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 min-h-screen pt-10 pb-10">
         <ParticlesBackground />
-
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-start md:gap-6">
             {/* Perfil Alumno (card fija) */}
@@ -118,17 +116,18 @@ function PerfilAlumno() {
                     alt="Avatar Alumno"
                     className="w-32 h-32 rounded-full object-cover border-4 border-green-400"
                   />
-                  <button
+                  {/* de momento quitamos el boton editar, aun no se puede cargar img */}
+                  {/* <button
                     className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 border-2 border-white shadow-lg"
                     title="Editar imagen (próximamente)"
                     disabled
                   >
                     <FaEdit size={18} />
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
-              <h2 className="text-3xl font-extrabold text-center mt-6 mb-4 text-gray-800">
+              <h2 className="titulo uppercase text-3xl font-extrabold text-center mt-6 mb-4 text-gray-800">
                 {alumno.nomyape}
               </h2>
 
@@ -139,7 +138,7 @@ function PerfilAlumno() {
                       setMostrarCrearRutina(true);
                       setMostrarProgramarRutina(false);
                     }}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                   >
                     Crear rutina
                   </button>
