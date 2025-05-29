@@ -33,9 +33,7 @@ function ListaRutinas({ studentId, actualizar }) {
 
   const fetchRutinas = async () => {
     try {
-      const res = await axios.get(
-        `${URL}?student_id=${studentId}`
-      );
+      const res = await axios.get(`${URL}?student_id=${studentId}`);
       setRutinas(res.data);
     } catch (err) {
       setError('Error al cargar rutinas');
@@ -122,10 +120,9 @@ function ListaRutinas({ studentId, actualizar }) {
       const descripcionActualizada = lineas.join('\n').trim();
 
       // Llamar a la API con la descripción completa actualizada
-      await axios.put(
-        `${URL}/${routineId}/routines_exercises/${exerciseId}`,
-        { descripcion: descripcionActualizada }
-      );
+      await axios.put(`${URL}/${routineId}/routines_exercises/${exerciseId}`, {
+        descripcion: descripcionActualizada
+      });
 
       // Actualizar el estado local
       setRutinas((prevRutinas) =>
@@ -174,10 +171,9 @@ function ListaRutinas({ studentId, actualizar }) {
       const descripcionActualizada = lineas.join(' ').trim();
 
       // Actualizar la descripción en backend (PUT)
-      await axios.put(
-        `${URL}/${routineId}/routines_exercises/${exerciseId}`,
-        { descripcion: descripcionActualizada }
-      );
+      await axios.put(`${URL}/${routineId}/routines_exercises/${exerciseId}`, {
+        descripcion: descripcionActualizada
+      });
 
       // Actualizar estado local
       setRutinas((prevRutinas) =>
@@ -300,117 +296,116 @@ function ListaRutinas({ studentId, actualizar }) {
                       </div>
                       <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
                         {ejercicios.map((ej) =>
-                          ej.descripcion
-                            .split(/\n|(?=\d+\s?[xX]\s?\d+)/g)
-                            .map((linea, idx) => {
-                              const ejercicio = linea.trim();
-                              if (!ejercicio) return null;
+                          // Solo dividimos por saltos de línea reales (Windows y Unix)
+                          ej.descripcion.split(/\r?\n/).map((linea, idx) => {
+                            const ejercicio = linea.trim();
+                            if (!ejercicio) return null;
 
-                              // Para editar, guardamos el texto completo del ejercicio
-                              // Si el ejercicio está en edición, mostramos input, sino texto + botones
-                              const esEditando =
-                                editando &&
-                                editando.routineId === rutina.id &&
-                                editando.exerciseId === ej.id &&
-                                editando.lineaIndex === idx;
+                            // Para editar, guardamos el texto completo del ejercicio
+                            // Si el ejercicio está en edición, mostramos input, sino texto + botones
+                            const esEditando =
+                              editando &&
+                              editando.routineId === rutina.id &&
+                              editando.exerciseId === ej.id &&
+                              editando.lineaIndex === idx;
 
-                              // Limpiar texto para búsqueda (solo si no está editando)
-                              let busqueda = limpiarBusqueda(ejercicio);
-                              if (busqueda.split(' ').length < 3) {
-                                busqueda = musculo + ' ' + busqueda;
-                              }
+                            // Limpiar texto para búsqueda (solo si no está editando)
+                            let busqueda = limpiarBusqueda(ejercicio);
+                            if (busqueda.split(' ').length < 3) {
+                              busqueda = musculo + ' ' + busqueda;
+                            }
 
-                              return (
-                                <li
-                                  key={idx}
-                                  className="flex justify-between items-center"
-                                >
-                                  {esEditando ? (
-                                    <div className="flex items-center w-full space-x-2">
-                                      <input
-                                        type="text"
-                                        value={textoEditado}
-                                        autoFocus
-                                        onChange={(e) =>
-                                          setTextoEditado(e.target.value)
-                                        }
-                                        className="border rounded px-2 py-1 flex-grow"
-                                      />
+                            return (
+                              <li
+                                key={idx}
+                                className="flex justify-between items-center"
+                              >
+                                {esEditando ? (
+                                  <div className="flex items-center w-full space-x-2">
+                                    <input
+                                      type="text"
+                                      value={textoEditado}
+                                      autoFocus
+                                      onChange={(e) =>
+                                        setTextoEditado(e.target.value)
+                                      }
+                                      className="border rounded px-2 py-1 flex-grow"
+                                    />
+                                    <button
+                                      onClick={() =>
+                                        handleGuardarEdicion(
+                                          rutina.id,
+                                          ej.id,
+                                          idx,
+                                          textoEditado
+                                        )
+                                      }
+                                      className="text-green-600 hover:text-green-800 text-lg"
+                                      title="Guardar"
+                                    >
+                                      ✅
+                                    </button>
+                                    <button
+                                      onClick={() => setEditando(null)}
+                                      className="text-red-600 hover:text-red-800 text-lg"
+                                      title="Cancelar"
+                                    >
+                                      ❌
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <span>{ejercicio}</span>
+                                    <div className="flex space-x-4">
                                       <button
                                         onClick={() =>
-                                          handleGuardarEdicion(
-                                            rutina.id,
-                                            ej.id,
-                                            idx,
-                                            textoEditado
+                                          window.open(
+                                            `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                                              busqueda
+                                            )}`,
+                                            '_blank'
                                           )
                                         }
-                                        className="text-green-600 hover:text-green-800 text-lg"
-                                        title="Guardar"
+                                        className="text-blue-600 hover:underline"
                                       >
-                                        ✅
+                                        Ver video
                                       </button>
-                                      <button
-                                        onClick={() => setEditando(null)}
-                                        className="text-red-600 hover:text-red-800 text-lg"
-                                        title="Cancelar"
-                                      >
-                                        ❌
-                                      </button>
+                                      {(userLevel === 'admin' ||
+                                        userLevel === 'instructor') && (
+                                        <>
+                                          <button
+                                            onClick={() => {
+                                              setEditando({
+                                                routineId: rutina.id,
+                                                exerciseId: ej.id,
+                                                lineaIndex: idx
+                                              });
+                                              setTextoEditado(ejercicio);
+                                            }}
+                                            className="text-yellow-600 hover:underline"
+                                          >
+                                            Editar
+                                          </button>
+                                          <button
+                                            className="text-red-600 hover:underline"
+                                            onClick={() =>
+                                              handleEliminarLinea(
+                                                rutina.id,
+                                                ej.id,
+                                                idx
+                                              )
+                                            }
+                                          >
+                                            Eliminar
+                                          </button>
+                                        </>
+                                      )}
                                     </div>
-                                  ) : (
-                                    <>
-                                      <span>{ejercicio}</span>
-                                      <div className="flex space-x-4">
-                                        <button
-                                          onClick={() =>
-                                            window.open(
-                                              `https://www.youtube.com/results?search_query=${encodeURIComponent(
-                                                busqueda
-                                              )}`,
-                                              '_blank'
-                                            )
-                                          }
-                                          className="text-blue-600 hover:underline"
-                                        >
-                                          Ver video
-                                        </button>
-                                        {(userLevel === 'admin' ||
-                                          userLevel === 'instructor') && (
-                                          <>
-                                            <button
-                                              onClick={() => {
-                                                setEditando({
-                                                  routineId: rutina.id,
-                                                  exerciseId: ej.id,
-                                                  lineaIndex: idx
-                                                });
-                                                setTextoEditado(ejercicio);
-                                              }}
-                                              className="text-yellow-600 hover:underline"
-                                            >
-                                              Editar
-                                            </button>
-                                            <button
-                                              className="text-red-600 hover:underline"
-                                              onClick={() =>
-                                                handleEliminarLinea(
-                                                  rutina.id,
-                                                  ej.id,
-                                                  idx
-                                                )
-                                              }
-                                            >
-                                              Eliminar
-                                            </button>
-                                          </>
-                                        )}
-                                      </div>
-                                    </>
-                                  )}
-                                </li>
-                              );
-                            })
+                                  </>
+                                )}
+                              </li>
+                            );
+                          })
                         )}
                       </ul>
                     </div>
