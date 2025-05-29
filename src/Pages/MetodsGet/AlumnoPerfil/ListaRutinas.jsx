@@ -26,7 +26,7 @@ function ListaRutinas({ studentId, actualizar }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { userLevel } = useAuth();
-  const URL = 'http://localhost:8080/routines/';
+  const URL = 'http://localhost:8080/routines';
 
   const hoy = new Date();
   const nombreDiaHoy = diasSemana[hoy.getDay()];
@@ -34,7 +34,7 @@ function ListaRutinas({ studentId, actualizar }) {
   const fetchRutinas = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8080/routines?student_id=${studentId}`
+        `${URL}?student_id=${studentId}`
       );
       setRutinas(res.data);
     } catch (err) {
@@ -123,7 +123,7 @@ function ListaRutinas({ studentId, actualizar }) {
 
       // Llamar a la API con la descripción completa actualizada
       await axios.put(
-        `${URL}${routineId}/routines_exercises/${exerciseId}`,
+        `${URL}/${routineId}/routines_exercises/${exerciseId}`,
         { descripcion: descripcionActualizada }
       );
 
@@ -175,7 +175,7 @@ function ListaRutinas({ studentId, actualizar }) {
 
       // Actualizar la descripción en backend (PUT)
       await axios.put(
-        `${URL}${routineId}/routines_exercises/${exerciseId}`,
+        `${URL}/${routineId}/routines_exercises/${exerciseId}`,
         { descripcion: descripcionActualizada }
       );
 
@@ -209,7 +209,7 @@ function ListaRutinas({ studentId, actualizar }) {
       return;
 
     try {
-      const res = await axios.put(`${URL}${routineId}/muscle/${oldMuscle}`, {
+      const res = await axios.put(`${URL}/${routineId}/muscle/${oldMuscle}`, {
         newMuscle
       });
       alert(res.data.message);
@@ -229,7 +229,7 @@ function ListaRutinas({ studentId, actualizar }) {
       return;
 
     try {
-      const res = await axios.delete(`${URL}${routineId}/${musculo}`);
+      const res = await axios.delete(`${URL}/${routineId}/${musculo}`);
       alert(res.data.message);
       fetchRutinas();
     } catch (err) {
