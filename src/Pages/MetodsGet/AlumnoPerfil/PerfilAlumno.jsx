@@ -206,9 +206,9 @@ function PerfilAlumno() {
 
             {/* Rutinas (ocupa el resto del espacio) */}
             <div className="flex-1 mt-10">
-              <ProtectedRoutine>
+              {/* <ProtectedRoutine> */}
                 <ListaRutinas studentId={id} />
-              </ProtectedRoutine>
+              {/* </ProtectedRoutine> */}
             </div>
           </div>
         </div>

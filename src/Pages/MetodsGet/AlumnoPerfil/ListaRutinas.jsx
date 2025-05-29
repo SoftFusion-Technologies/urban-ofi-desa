@@ -27,6 +27,7 @@ function ListaRutinas({ studentId }) {
   const [error, setError] = useState(null);
   const { userLevel } = useAuth();
   const URL = 'http://localhost:8080/routines/';
+
   const hoy = new Date();
   const nombreDiaHoy = diasSemana[hoy.getDay()];
 
@@ -163,7 +164,7 @@ function ListaRutinas({ studentId }) {
       if (!ejercicio) throw new Error('Ejercicio no encontrado');
 
       // Dividir la descripción en líneas o valores (por espacio o salto de línea)
-      let lineas = ejercicio.descripcion.split(/\s+/); // divide por espacio
+      let lineas = ejercicio.descripcion.split(/\n|(?=\d+\s?[xX]\s?\d+)/g);
 
       // Eliminar la línea (valor) por índice
       lineas.splice(lineaIndex, 1);
@@ -201,14 +202,33 @@ function ListaRutinas({ studentId }) {
     }
   };
 
+  const handleEliminarMusculo = async (routineId, musculo) => {
+    if (
+      !window.confirm(
+        `¿Eliminar todos los ejercicios del músculo "${musculo}"?`
+      )
+    )
+      return;
+
+    try {
+      const res = await axios.delete(`${URL}${routineId}/${musculo}`);
+      alert(res.data.message);
+    } catch (err) {
+      console.error(err);
+      alert('Error al eliminar ejercicios del músculo.');
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-100 rounded-lg max-w-2xl mx-auto">
-      <h2 className="text-4xl font-bold mb-6 text-center text-gray-800">
+      <h2 className="titulo text-4xl font-bold mb-6 text-center text-gray-800">
         {nombreDiaHoy.toUpperCase()}
       </h2>
 
       {rutinasHoy.length === 0 ? (
-        <p className="text-center text-gray-500">No hay rutinas para hoy</p>
+        <p className="text-center text-gray-500">
+          No hay rutinas cargadas para hoy
+        </p>
       ) : (
         <div className="space-y-6">
           {rutinasHoy.map((rutina) => {
@@ -229,9 +249,23 @@ function ListaRutinas({ studentId }) {
                       key={musculo}
                       className="bg-white p-4 rounded shadow mb-6"
                     >
-                      <h3 className="font-bold text-lg text-indigo-600 mb-2">
-                        {musculo.toUpperCase()}
-                      </h3>
+                      <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-bold text-lg text-indigo-600">
+                          {musculo.toUpperCase()}
+                        </h3>
+
+                        {(userLevel === 'admin' ||
+                          userLevel === 'instructor') && (
+                          <button
+                            onClick={() =>
+                              handleEliminarMusculo(rutina.id, musculo)
+                            }
+                            className="bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded text-xs font-medium"
+                          >
+                            🗑️ Eliminar grupo
+                          </button>
+                        )}
+                      </div>
                       <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
                         {ejercicios.map((ej) =>
                           ej.descripcion
@@ -309,11 +343,12 @@ function ListaRutinas({ studentId }) {
                                                 });
                                                 setTextoEditado(ejercicio);
                                               }}
-                                              className="text-green-600 hover:underline"
+                                              className="text-yellow-600 hover:underline"
                                             >
                                               Editar
                                             </button>
                                             <button
+                                              className="text-red-600 hover:underline"
                                               onClick={() =>
                                                 handleEliminarLinea(
                                                   rutina.id,
