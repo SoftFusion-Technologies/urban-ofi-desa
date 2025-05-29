@@ -21,7 +21,7 @@ function PerfilAlumno() {
   const { id } = useParams();
   const [alumno, setAlumno] = useState(null);
   const [usuarios, setUsuarios] = useState([]);
-  const [rutinas, setRutinas] = useState([]);
+  const [recargarRutinas, setRecargarRutinas] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,23 +29,6 @@ function PerfilAlumno() {
   const [mostrarCrearRutina, setMostrarCrearRutina] = useState(false);
   const [mostrarProgramarRutina, setMostrarProgramarRutina] = useState(false);
   const { userLevel } = useAuth();
-
-  const fetchRutinas = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:8080/rutinasporstudient?studentId=${id}`
-      );
-      setRutinas(res.data);
-    } catch (err) {
-      setError('Error al cargar rutinas');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRutinas();
-  });
 
   // Fetch alumno por id
   useEffect(() => {
@@ -224,7 +207,7 @@ function PerfilAlumno() {
             {/* Rutinas (ocupa el resto del espacio) */}
             <div className="flex-1 mt-10">
               {/* <ProtectedRoutine> */}
-              <ListaRutinas studentId={id} />
+              <ListaRutinas studentId={id} actualizar={recargarRutinas} />
               {/* </ProtectedRoutine> */}
             </div>
           </div>
@@ -237,7 +220,14 @@ function PerfilAlumno() {
         onCancel={() => setMostrarCrearRutina(false)}
         colorIcon="green"
       >
-        <FormCrearRutina onClose={() => setMostrarCrearRutina(false)} />
+        <FormCrearRutina
+          // creo que ya no es necesario studentId={id}
+          onClose={() => setMostrarCrearRutina(false)}
+          onRutinaCreada={() => {
+            setRecargarRutinas((prev) => !prev); // 🚨 alterna el valor para forzar efecto
+            setMostrarCrearRutina(false);
+          }}
+        />
       </Modal>
     </>
   );

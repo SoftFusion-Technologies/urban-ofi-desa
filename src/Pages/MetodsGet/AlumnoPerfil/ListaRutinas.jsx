@@ -18,7 +18,7 @@ function parseFechaSinZona(fechaStr) {
   return new Date(anio, mes - 1, dia); // mes es 0-based
 }
 
-function ListaRutinas({ studentId }) {
+function ListaRutinas({ studentId, actualizar }) {
   const [editando, setEditando] = useState(null);
   const [textoEditado, setTextoEditado] = useState('');
   const [loadingEdit, setLoadingEdit] = useState(false);
@@ -46,7 +46,7 @@ function ListaRutinas({ studentId }) {
 
   useEffect(() => {
     fetchRutinas();
-  }, [studentId]);
+  }, [studentId, actualizar]);
 
   if (loading) return <p>Cargando rutinas...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -214,7 +214,7 @@ function ListaRutinas({ studentId }) {
     try {
       const res = await axios.delete(`${URL}${routineId}/${musculo}`);
       alert(res.data.message);
-      fetchRutinas()
+      fetchRutinas();
     } catch (err) {
       console.error(err);
       alert('Error al eliminar ejercicios del músculo.');

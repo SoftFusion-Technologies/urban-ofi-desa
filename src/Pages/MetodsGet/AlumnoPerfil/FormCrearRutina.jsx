@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Modal from '../../../Components/Modal'; // Asegúrate de importar tu Modal actualizado
 
-const FormCrearRutina = ({ onCreated }) => {
+const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
   const { id: studentId } = useParams();
   const [fecha, setFecha] = useState('');
   const [ejercicios, setEjercicios] = useState([
@@ -26,6 +26,7 @@ const FormCrearRutina = ({ onCreated }) => {
     nuevos[index][campo] = valor;
     setEjercicios(nuevos);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -59,13 +60,22 @@ const FormCrearRutina = ({ onCreated }) => {
 
       // 3. Enviar ejercicios asociados
       await axios.post(`${URL}routine_exercises`, ejerciciosParaEnviar);
-      if (onCreated) onCreated(); // Aviso que se creó una rutina
+      // 4. Mostrar mensaje de éxito
+      setModalSuccess(true);
 
-      setModalSuccess(true); // Mostrar modal de éxito
+      // 5. Esperar unos segundos, luego limpiar y cerrar
+      setTimeout(() => {
+        setModalSuccess(false);
+        // Limpiar campos
+        setFecha('');
+        setEjercicios([{ musculo: '', descripcion: '', orden: 1 }]);
 
-      // Limpiar campos
-      setFecha(''); // o valor inicial que uses
-      setEjercicios([]); // vaciar array de ejercicios
+        // Callback para recargar rutinas
+        if (onRutinaCreada) onRutinaCreada();
+
+        // Cerrar modal
+        onClose();
+      }, 3000);
     } catch (error) {
       console.error(error);
       alert('Error al crear la rutina: ' + error.message);
