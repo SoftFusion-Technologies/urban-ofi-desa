@@ -14,10 +14,12 @@ import axios from 'axios';
 import { useAuth } from '../../../AuthContext';
 import Modal from '../../../Components/Modal';
 import FormCrearRutina from '../AlumnoPerfil/FormCrearRutina';
+import ListaRutinas from './ListaRutinas';
 function PerfilAlumno() {
   const { id } = useParams();
   const [alumno, setAlumno] = useState(null);
   const [usuarios, setUsuarios] = useState([]);
+  const [rutinas, setRutinas] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -64,6 +66,7 @@ function PerfilAlumno() {
     return profesor ? profesor.name : 'Sin asignar';
   };
 
+
   if (loading) {
     return (
       <>
@@ -98,114 +101,125 @@ function PerfilAlumno() {
     <>
       <NavbarStaff />
 
-      <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 h-contain pt-10 pb-10">
+      <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 min-h-screen pt-10 pb-10">
         <ParticlesBackground />
-        <div className="max-w-md ml-0 bg-white shadow-xl rounded-xl p-8 mt-10">
-          <div className="flex justify-center relative">
-            {/* Avatar con ícono de lápiz */}
-            <div className="relative">
-              <img
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  alumno.nomyape
-                )}&background=4ade80&color=fff&size=128`}
-                alt="Avatar Alumno"
-                className="w-32 h-32 rounded-full object-cover border-4 border-green-400"
-              />
-              <button
-                className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 border-2 border-white shadow-lg"
-                title="Editar imagen (próximamente)"
-                disabled
-              >
-                <FaEdit size={18} />
-              </button>
+
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-start md:gap-6">
+            {/* Perfil Alumno (card fija) */}
+            <div className="w-full md:max-w-md mx-auto md:mx-0 bg-white shadow-xl rounded-xl p-8 mt-10">
+              <div className="flex justify-center relative">
+                <div className="relative">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      alumno.nomyape
+                    )}&background=4ade80&color=fff&size=128`}
+                    alt="Avatar Alumno"
+                    className="w-32 h-32 rounded-full object-cover border-4 border-green-400"
+                  />
+                  <button
+                    className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 border-2 border-white shadow-lg"
+                    title="Editar imagen (próximamente)"
+                    disabled
+                  >
+                    <FaEdit size={18} />
+                  </button>
+                </div>
+              </div>
+
+              <h2 className="text-3xl font-extrabold text-center mt-6 mb-4 text-gray-800">
+                {alumno.nomyape}
+              </h2>
+
+              {(userLevel === 'admin' || userLevel === 'instructor') && (
+                <div className="mt-6 mb-6 flex flex-col sm:flex-row justify-around gap-4">
+                  <button
+                    onClick={() => {
+                      setMostrarCrearRutina(true);
+                      setMostrarProgramarRutina(false);
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Crear rutina
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMostrarProgramarRutina(true);
+                      setMostrarCrearRutina(false);
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Programar rutina
+                  </button>
+                </div>
+              )}
+
+              <div className="space-y-4 text-gray-700 text-lg">
+                <p className="flex items-center gap-3">
+                  <FaChalkboardTeacher className="text-blue-500" />
+                  <span>
+                    <strong>Profesor:</strong>{' '}
+                    {obtenerNombreProfesor(alumno.user_id) || 'No disponible'}
+                  </span>
+                </p>
+                <p className="flex items-center gap-3">
+                  <FaPhone className="text-blue-500" />
+                  <span>
+                    <strong>Teléfono:</strong>{' '}
+                    {alumno.telefono || 'No disponible'}
+                  </span>
+                </p>
+                <p className="flex items-center gap-3">
+                  <FaIdCard className="text-blue-500" />
+                  <span>
+                    <strong>DNI:</strong> {alumno.dni || 'No disponible'}
+                  </span>
+                </p>
+                <p className="flex items-center gap-3">
+                  <FaBullseye className="text-blue-500" />
+                  <span>
+                    <strong>Objetivo:</strong>{' '}
+                    {alumno.objetivo || 'No especificado'}
+                  </span>
+                </p>
+                <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
+                  <FaCalendarAlt />
+                  <span>
+                    Creado:{' '}
+                    {alumno.created_at
+                      ? new Date(alumno.created_at).toLocaleDateString()
+                      : 'N/A'}
+                  </span>
+                </p>
+                <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
+                  <FaCalendarAlt />
+                  <span>
+                    Actualizado:{' '}
+                    {alumno.updated_at
+                      ? new Date(alumno.updated_at).toLocaleDateString()
+                      : 'N/A'}
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-extrabold text-center mt-6 mb-4 text-gray-800">
-            {alumno.nomyape}
-          </h2>
-
-          {(userLevel === 'admin' || userLevel === 'instructor') && (
-            <div className="mt-6 mb-6 flex justify-around">
-              <button
-                onClick={() => {
-                  setMostrarCrearRutina(true);
-                  setMostrarProgramarRutina(false);
-                }}
-                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Crear rutina
-              </button>
-              <button
-                onClick={() => {
-                  setMostrarProgramarRutina(true);
-                  setMostrarCrearRutina(false);
-                }}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Programar rutina
-              </button>
+            {/* Rutinas (ocupa el resto del espacio) */}
+            <div className="flex-1 mt-10">
+              <ListaRutinas studentId={id} />
             </div>
-          )}
-
-          <div className="space-y-4 text-gray-700 text-lg">
-            <p className="flex items-center gap-3">
-              <FaChalkboardTeacher className="text-blue-500" />
-              <span>
-                <strong>Profesor:</strong>{' '}
-                {obtenerNombreProfesor(alumno.user_id) || 'No disponible'}
-              </span>
-            </p>
-            <p className="flex items-center gap-3">
-              <FaPhone className="text-blue-500" />
-              <span>
-                <strong>Teléfono:</strong> {alumno.telefono || 'No disponible'}
-              </span>
-            </p>
-            <p className="flex items-center gap-3">
-              <FaIdCard className="text-blue-500" />
-              <span>
-                <strong>DNI:</strong> {alumno.dni || 'No disponible'}
-              </span>
-            </p>
-
-            <p className="flex items-center gap-3">
-              <FaBullseye className="text-blue-500" />
-              <span>
-                <strong>Objetivo:</strong>{' '}
-                {alumno.objetivo || 'No especificado'}
-              </span>
-            </p>
-
-            <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
-              <FaCalendarAlt />
-              <span>
-                Creado:{' '}
-                {alumno.created_at
-                  ? new Date(alumno.created_at).toLocaleDateString()
-                  : 'N/A'}
-              </span>
-            </p>
-
-            <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
-              <FaCalendarAlt />
-              <span>
-                Actualizado:{' '}
-                {alumno.updated_at
-                  ? new Date(alumno.updated_at).toLocaleDateString()
-                  : 'N/A'}
-              </span>
-            </p>
           </div>
         </div>
       </div>
+
       <Modal
         isOpen={mostrarCrearRutina}
         title="Crear nueva rutina"
         onCancel={() => setMostrarCrearRutina(false)}
         colorIcon="green"
       >
-        <FormCrearRutina onClose={() => setMostrarCrearRutina(false)} />
+        <FormCrearRutina
+          onClose={() => setMostrarCrearRutina(false)}
+        />
       </Modal>
     </>
   );

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Modal from '../../../Components/Modal'; // Asegúrate de importar tu Modal actualizado
 
-const FormCrearRutina = () => {
+const FormCrearRutina = ({ onCreated }) => {
   const { id: studentId } = useParams();
   const [fecha, setFecha] = useState('');
   const [ejercicios, setEjercicios] = useState([
@@ -59,6 +59,7 @@ const FormCrearRutina = () => {
 
       // 3. Enviar ejercicios asociados
       await axios.post(`${URL}routine_exercises`, ejerciciosParaEnviar);
+      if (onCreated) onCreated(); // Aviso que se creó una rutina
 
       setModalSuccess(true); // Mostrar modal de éxito
 
