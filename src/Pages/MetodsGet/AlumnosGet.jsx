@@ -29,9 +29,10 @@ const AlumnosGet = () => {
   const [modalNewAlumno, setModalNewAlumno] = useState(false);
   const [selectedAlumno, setSelectedAlumno] = useState(null); // Estado para el usuario seleccionado
   const [modalAlumnoDetails, setModalAlumnoDetails] = useState(false); // Estado para controlar el modal de detalles del usuario
-  const { userLevel } = useAuth();
+  const { userId, userLevel } = useAuth();
   const navigate = useNavigate();
 
+  console.log(userId);
   const abrirModal = () => {
     setModalNewAlumno(true);
   };
@@ -87,11 +88,25 @@ const AlumnosGet = () => {
     });
   }, []);
 
-  // Función para obtener todos los usuarios desde la API
   const obtenerAlumnos = async () => {
     try {
-      const response = await axios.get(URL);
-      setAlumnos(response.data);
+      const response = await axios.get(URL); // traer todos los alumnos
+      let alumnosFiltrados = [];
+
+      if (userLevel === 'admin') {
+        // Admin ve todos
+        alumnosFiltrados = response.data;
+      } else if (userLevel === 'instructor') {
+        // Instructor ve solo sus alumnos (los que tengan user_id === userId)
+        alumnosFiltrados = response.data.filter(
+          (alumno) => alumno.user_id === userId
+        );
+      } else {
+        // Otros casos, por ejemplo el alumno mismo o ninguno
+        alumnosFiltrados = [];
+      }
+
+      setAlumnos(alumnosFiltrados);
     } catch (error) {
       console.log('Error al obtener los usuarios:', error);
     }
@@ -227,18 +242,20 @@ const AlumnosGet = () => {
               className="input-filter text-white"
             />
             {/* Filtro por profesor */}
-            <select
-              value={selectedProfesor}
-              onChange={handleProfesorChange}
-              className="input-filter text-black"
-            >
-              <option value="">Todos los Profesores</option>
-              {usuarios.map((prof) => (
-                <option key={prof.id} value={prof.id}>
-                  {prof.name}
-                </option>
-              ))}
-            </select>
+            {userLevel === 'admin' && (
+              <select
+                value={selectedProfesor}
+                onChange={handleProfesorChange}
+                className="input-filter text-black"
+              >
+                <option value="">Todos los Profesores</option>
+                {usuarios.map((prof) => (
+                  <option key={prof.id} value={prof.id}>
+                    {prof.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </form>
           {/* formulario de busqueda */}
 

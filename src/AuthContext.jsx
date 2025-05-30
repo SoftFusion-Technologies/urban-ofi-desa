@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
   // Estados locales para el token, nombre, nivel, nombre y apellido y el id del alumno
   const [authToken, setAuthToken] = useState(null);
   const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState(null); // <-- nuevo estado para el id del usuario
   const [userLevel, setUserLevel] = useState('');
   const [nomyape, setNomyape] = useState(''); // nombre y apellido alumno
   const [alumnoId, setAlumnoId] = useState(null); // id alumno
@@ -27,21 +28,24 @@ export const AuthProvider = ({ children }) => {
     // Recuperar datos desde localStorage
     const token = localStorage.getItem('authToken');
     const username = localStorage.getItem('userName');
+    const idStored = localStorage.getItem('userId'); // <--- recupero el userId
     const level = localStorage.getItem('userLevel');
     const alumnoNomyape = localStorage.getItem('nomyape');
     const alumnoIdStored = localStorage.getItem('alumnoId');
 
     if (token) setAuthToken(token);
     if (username) setUserName(username);
+    if (idStored) setUserId(idStored);
     if (level) setUserLevel(level);
     if (alumnoNomyape) setNomyape(alumnoNomyape);
     if (alumnoIdStored) setAlumnoId(alumnoIdStored);
   }, []);
 
-  const login = (token, username, level) => {
+  const login = (token, username, level, id) => {
     setAuthToken(token);
     setUserName(username);
     setUserLevel(level);
+    setUserId(id);
     localStorage.setItem('authToken', token);
     localStorage.setItem('userName', username);
     localStorage.setItem('userLevel', level);
@@ -60,12 +64,14 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setAuthToken(null);
     setUserName('');
+    setUserId(null);
     setUserLevel('');
     setNomyape('');
     setAlumnoId(null);
 
     localStorage.removeItem('authToken');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userId');
     localStorage.removeItem('userLevel');
     localStorage.removeItem('nomyape');
     localStorage.removeItem('alumnoId');
@@ -76,6 +82,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         authToken,
         userName,
+        userId,
         userLevel,
         nomyape,
         alumnoId,

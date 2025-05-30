@@ -315,9 +315,9 @@ const AlumnosPendientesGet = () => {
                           </span>
                         </td>
 
-                        {userLevel === 'admin' ? (
-                          <td className="py-2 px-4">
-                            <div className="flex justify-center gap-2">
+                        <td className="py-2 px-4">
+                          <div className="flex justify-center gap-2">
+                            {userLevel === 'admin' && (
                               <button
                                 onClick={() => handleEliminarAlumno(alumno.id)}
                                 type="button"
@@ -325,6 +325,9 @@ const AlumnosPendientesGet = () => {
                               >
                                 Eliminar
                               </button>
+                            )}
+                            {(userLevel === 'admin' ||
+                              userLevel === 'instructor') && (
                               <button
                                 onClick={() => abrirModalAutorizar(alumno)}
                                 type="button"
@@ -332,11 +335,9 @@ const AlumnosPendientesGet = () => {
                               >
                                 Autorizar
                               </button>
-                            </div>
-                          </td>
-                        ) : (
-                          <td className="py-2 px-4"></td>
-                        )}
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

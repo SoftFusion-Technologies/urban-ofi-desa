@@ -11,7 +11,7 @@
  * Contacto: benjamin.orellanaof@gmail.com || 3863531891
  */
 
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import Alerta from '../Error';
 import { useNavigate } from 'react-router-dom';
@@ -84,7 +84,7 @@ const LoginForm = () => {
               loginAlumno(res.data.token, res.data.nomyape, res.data.id); // guardar el id
               navigate(`/miperfil/student/${res.data.id}`); // redirigir con id
             } else {
-              login(res.data.token, values.email, res.data.level);
+              login(res.data.token, values.email, res.data.level, res.data.id);
               navigate('/dashboard');
             }
           } else {
@@ -99,7 +99,7 @@ const LoginForm = () => {
     }
   };
   return (
-    <div id='login' className="h-screen w-full">
+    <div id="login" className="h-screen w-full">
       <div className="loginbg h-screen w-full flex justify-between items-center mx-auto">
         <div className="py-5 bg-white rounded-xl mx-auto">
           <form
