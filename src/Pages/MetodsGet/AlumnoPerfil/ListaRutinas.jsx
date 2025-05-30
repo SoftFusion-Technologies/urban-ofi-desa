@@ -424,23 +424,40 @@ function ListaRutinas({ studentId, actualizar }) {
                                     </div>
                                   ) : (
                                     <>
-                                      <span>
+                                      <span className="flex-grow">
                                         {formatearLineaEnJSX(ejercicio)}
                                       </span>
-                                      <div className="flex space-x-4">
-                                        <button
-                                          onClick={() =>
-                                            window.open(
-                                              `https://www.youtube.com/results?search_query=${encodeURIComponent(
-                                                busqueda
-                                              )}`,
-                                              '_blank'
-                                            )
-                                          }
-                                          className="text-blue-600 hover:underline"
-                                        >
-                                          Ver video
-                                        </button>
+                                      <div className="flex space-x-4 ml-4 flex-shrink-0">
+                                        {userLevel === '' && (
+                                          <>
+                                            <button
+                                              onClick={() =>
+                                                window.open(
+                                                  `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                                                    busqueda
+                                                  )}`,
+                                                  '_blank'
+                                                )
+                                              }
+                                              className="text-blue-600 hover:underline"
+                                            >
+                                              Ver video
+                                            </button>
+                                            <button
+                                              className="text-red-600 hover:underline"
+                                              onClick={() =>
+                                                handleEliminarLinea(
+                                                  rutina.id,
+                                                  ej.id,
+                                                  idx
+                                                )
+                                              }
+                                            >
+                                              Necesito Ayuda
+                                            </button>
+                                          </>
+                                        )}
+
                                         {(userLevel === 'admin' ||
                                           userLevel === 'instructor') && (
                                           <>
