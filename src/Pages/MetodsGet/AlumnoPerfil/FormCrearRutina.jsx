@@ -16,10 +16,14 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
   ).padStart(2, '0')}/${hoy.getFullYear()}`;
 
   const [fecha, setFecha] = useState(fechaInput);
-  
+
   const [ejercicios, setEjercicios] = useState([
     { musculo: '', descripcion: '', orden: 1 }
   ]);
+
+  const [desde, setDesde] = useState('');
+  const [hasta, setHasta] = useState('');
+
   const [modalSuccess, setModalSuccess] = useState(false);
 
   const URL = 'http://localhost:8080/';
@@ -71,6 +75,13 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
       const mes = fechaObj.getMonth() + 1;
       const anio = fechaObj.getFullYear();
 
+      // Obtener fecha actual en formato yyyy-mm-dd
+      const fechaHoy = new Date().toISOString().split('T')[0];
+
+      // Si no se selecciona ninguna fecha, usar la actual
+      const fechaDesde = desde || fechaHoy;
+      const fechaHasta = hasta || fechaHoy;
+
       // 1. Crear rutina
       const rutinaResponse = await axios.post(`${URL}routines`, {
         student_id: parseInt(studentId),
@@ -91,7 +102,9 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
         routine_id,
         musculo: ej.musculo,
         descripcion: ej.descripcion,
-        orden: ej.orden
+        orden: ej.orden,
+        desde: fechaDesde,
+        hasta: fechaHasta
       }));
 
       // 3. Enviar ejercicios asociados
@@ -186,6 +199,40 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none"
                 rows={3}
               />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="desde"
+                    className="block mb-2 text-sm font-semibold text-gray-700"
+                  >
+                    Desde
+                  </label>
+                  <input
+                    id="desde"
+                    type="date"
+                    value={desde}
+                    onChange={(e) => setDesde(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="hasta"
+                    className="block mb-2 text-sm font-semibold text-gray-700"
+                  >
+                    Hasta
+                  </label>
+                  <input
+                    id="hasta"
+                    type="date"
+                    value={hasta}
+                    onChange={(e) => setHasta(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                </div>
+              </div>
+
               <button
                 onClick={() => eliminarEjercicio(index)}
                 className="text-red-500 hover:text-red-700 text-sm mt-2"

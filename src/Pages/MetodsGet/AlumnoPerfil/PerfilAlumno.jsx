@@ -16,6 +16,7 @@ import Modal from '../../../Components/Modal';
 import FormCrearRutina from '../AlumnoPerfil/FormCrearRutina';
 import ListaRutinas from './ListaRutinas';
 import ProtectedRoutine from './ProtectedRoutine';
+import RutinasConDuracion from './RutinasConDuracion';
 
 function PerfilAlumno() {
   const { id } = useParams();
@@ -142,15 +143,6 @@ function PerfilAlumno() {
                   >
                     Crear rutina
                   </button>
-                  <button
-                    onClick={() => {
-                      setMostrarProgramarRutina(true);
-                      setMostrarCrearRutina(false);
-                    }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Programar rutina
-                  </button>
                 </div>
               )}
 
@@ -207,6 +199,12 @@ function PerfilAlumno() {
             <div className="flex-1 mt-10">
               {/* <ProtectedRoutine> */}
               <ListaRutinas studentId={id} actualizar={recargarRutinas} />
+              {/* </ProtectedRoutine> */}
+            </div>
+            {/* Rutinas con duracion (ocupa el resto del espacio) */}
+            <div className="flex-1 mt-10">
+              {/* <ProtectedRoutine> */}
+              <RutinasConDuracion studentId={id} />
               {/* </ProtectedRoutine> */}
             </div>
           </div>

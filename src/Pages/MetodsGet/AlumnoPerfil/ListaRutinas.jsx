@@ -242,6 +242,7 @@ function ListaRutinas({ studentId, actualizar }) {
     }
   };
 
+  
   function agruparLineas(lineas) {
     const agrupadas = [];
     let buffer = '';
