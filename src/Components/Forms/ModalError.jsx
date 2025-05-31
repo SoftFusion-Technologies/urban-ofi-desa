@@ -1,32 +1,100 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import logoUrban from '../../Images/staff/imgLogo.jpg';
 
-const ModalError = ({ isVisible, onClose }) => {
+const ModalError = ({ isVisible, onClose, textoModal }) => {
+  const [show, setShow] = useState(false);
+  const modalRef = useRef(null);
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (isVisible) {
+      setShow(true);
+      setTimeout(() => {
+        if (closeButtonRef.current) closeButtonRef.current.focus();
+      }, 100);
+    } else {
+      setShow(false);
+    }
+  }, [isVisible]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!isVisible) return null;
 
+  const handleOverlayClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onClose();
+    }
+  };
+
+  const mensaje =
+    textoModal ??
+    'Lamentablemente no se pudo recibir tu información, por favor, intenta nuevamente recargando la página, y si el problema persiste, comunicate a nuestro WhatsApp.';
+
   return (
-    <div className="h-screen w-full fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-[100] ">
-      <div className="w-[400px] max-sm:w-[300px] flex flex-col">
-        {/* <button className='text-white text-xl place-self-end' onClick={() => onClose()}>X</button> */}
-        <div className="top-10 lg:h-[200px] lg:max-h-[300px] bg-white p-2 rounded-xl">
-          <div className="">
-            <img
-              src={logoUrban}
-              alt="logo"
-              width={150}
-              className="pt-4 mx-auto"
+    <div
+      onClick={handleOverlayClick}
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{
+        background:
+          'radial-gradient(circle, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 80%)',
+        backdropFilter: 'blur(6px)'
+      }}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        ref={modalRef}
+        className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6 relative transition-all duration-300 ease-out"
+        style={{
+          opacity: show ? 1 : 0,
+          transform: show ? 'translateY(0)' : 'translateY(-10px)'
+        }}
+      >
+        <button
+          ref={closeButtonRef}
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+          aria-label="Cerrar modal"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 8.586l4.95-4.95a1 1 0 011.415 1.415L11.414 10l4.95 4.95a1 1 0 01-1.415 1.415L10 11.414l-4.95 4.95a1 1 0 01-1.415-1.415L8.586 10 3.636 5.05a1 1 0 011.415-1.415L10 8.586z"
+              clipRule="evenodd"
             />
-          </div>
-          <hr className="mt-2 w-5/6 mx-auto" />
-          <p className="p-2 text-center font-messina text-slate-600">
-            Lamentablemente no se pudo recibir tu información, por favor,
-            intenta nuevamente recargando la página, y si el problema persiste,
-            comunicate a nuestro WhatsApp.
-          </p>
+          </svg>
+        </button>
+
+        <div className="mb-4 flex justify-center">
+          <img
+            src={logoUrban}
+            alt="Logo Urban"
+            className="w-28 sm:w-32 h-auto object-contain"
+            loading="lazy"
+          />
         </div>
+
+        <hr className="border-gray-200 mb-4" />
+
+        <p className="uppercase titulo text-center text-blue-600 text-base leading-relaxed font-sans px-2">
+          {mensaje}
+        </p>
       </div>
     </div>
   );
-}
+};
 
-export default ModalError
+export default ModalError;

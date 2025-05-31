@@ -22,6 +22,7 @@ import { useAuth } from '../../AuthContext';
 import ParticlesBackground from '../../Components/ParticlesBackground';
 import { formatearFecha } from '../../Helpers';
 import { useNavigate } from 'react-router-dom';
+import NotificationsHelps from './NotificationsHelps';
 
 // Componente funcional que maneja la lógica relacionada con los alumnos
 const AlumnosGet = () => {
@@ -430,6 +431,7 @@ const AlumnosGet = () => {
           />
         </div>
       </div>
+      <NotificationsHelps instructorId={userId}></NotificationsHelps>
     </>
   );
 };

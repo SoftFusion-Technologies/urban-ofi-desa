@@ -3,10 +3,20 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Modal from '../../../Components/Modal'; // Asegúrate de importar tu Modal actualizado
 import { useRef } from 'react';
+import { useAuth } from '../../../AuthContext';
 
 const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
   const { id: studentId } = useParams();
-  const [fecha, setFecha] = useState('');
+  const { userId } = useAuth();
+
+  const hoy = new Date();
+  const fechaInput = hoy.toISOString().slice(0, 10);
+  const fechaTexto = `${String(hoy.getDate()).padStart(2, '0')}/${String(
+    hoy.getMonth() + 1
+  ).padStart(2, '0')}/${hoy.getFullYear()}`;
+
+  const [fecha, setFecha] = useState(fechaInput);
+  
   const [ejercicios, setEjercicios] = useState([
     { musculo: '', descripcion: '', orden: 1 }
   ]);
@@ -64,6 +74,7 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
       // 1. Crear rutina
       const rutinaResponse = await axios.post(`${URL}routines`, {
         student_id: parseInt(studentId),
+        instructor_id: userId,
         mes,
         anio,
         fecha
@@ -107,11 +118,11 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
     }
   };
 
-const eliminarEjercicio = (index) => {
-  const nuevos = [...ejercicios];
-  nuevos.splice(index, 1);
-  setEjercicios(nuevos);
-};
+  const eliminarEjercicio = (index) => {
+    const nuevos = [...ejercicios];
+    nuevos.splice(index, 1);
+    setEjercicios(nuevos);
+  };
 
   return (
     <div className="p-6 sm:p-8 bg-white shadow-md rounded-xl max-w-3xl mx-auto mt-10 w-full">
@@ -135,7 +146,6 @@ const eliminarEjercicio = (index) => {
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
           />
         </div>
-
         <div
           ref={contenedorEjerciciosRef}
           className="max-h-[400px] overflow-y-auto pr-2 space-y-6"

@@ -20,6 +20,9 @@ const EstadisticaCard = ({ titulo, contenido }) => {
 const EstadisticasIns = () => {
   const [alumnosPorProfesor, setAlumnosPorProfesor] = useState([]);
   const [rutinasPorProfesor, setRutinasPorProfesor] = useState([]);
+  const [ayudasResueltasPorProfesor, setAyudasResueltasPorProfesor] = useState(
+    []
+  );
 
   const [loading, setLoading] = useState(true);
 
@@ -70,6 +73,7 @@ const EstadisticasIns = () => {
       // fetchTotalAlumnosP(selectedMonth, selectedYear);
       fetchAlumnosPorProfesor();
       fetchRutinasPorProfesor();
+      fetchAyudasResueltasPorProfesor();
     }
   }, [selectedMonth, selectedYear]);
 
@@ -98,6 +102,24 @@ const EstadisticasIns = () => {
       setRutinasPorProfesor(response.data);
     } catch (error) {
       console.error('Error al obtener rutinas por profesor:', error);
+    }
+  };
+
+  const fetchAyudasResueltasPorProfesor = async () => {
+    try {
+      const response = await axios.get(
+        `${URL}/estadisticas/ayudas-por-profesor`,
+        {
+          params: {
+            mes: selectedMonth,
+            anio: selectedYear
+            // instructor_id no se envía para obtener stats de todos
+          }
+        }
+      );
+      setAyudasResueltasPorProfesor(response.data);
+    } catch (error) {
+      console.error('Error al obtener ayudas resueltas:', error);
     }
   };
 
@@ -181,6 +203,26 @@ const EstadisticasIns = () => {
                 key={stat.profesor_id}
                 titulo={`Profesor: ${stat.profesor_nombre}`}
                 contenido={stat.total_rutinas}
+              />
+            ))
+          )}
+        </div>
+
+        <hr className="border-t border-white w-full my-4" />
+
+        <h1 className="titulo text-5xl font-bold text-white mb-8 text-center mt-10 uppercase">
+          Ayudas Resueltas por Profesor
+        </h1>
+
+        <div className="flex flex-wrap justify-center w-full gap-6">
+          {ayudasResueltasPorProfesor.length === 0 ? (
+            <p className="text-white text-xl">No hay datos disponibles.</p>
+          ) : (
+            ayudasResueltasPorProfesor.map((stat) => (
+              <EstadisticaCard
+                key={stat.profesor_id}
+                titulo={`Profesor: ${stat.profesor_nombre}`}
+                contenido={stat.total_ayudas} // O el campo que te devuelva tu backend
               />
             ))
           )}

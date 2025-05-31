@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../../AuthContext';
-
+import ModalSuccess from '../../../Components/Forms/ModalSuccess';
+import ModalError from '../../../Components/Forms/ModalError';
 const diasSemana = [
   'Domingo',
   'Lunes',
@@ -25,8 +26,15 @@ function ListaRutinas({ studentId, actualizar }) {
   const [rutinas, setRutinas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userLevel } = useAuth();
+  const { nomyape, userId, userLevel } = useAuth();
   const URL = 'http://localhost:8080/routines';
+
+  // GLOBALES PARA GESTIONAR LOS MODALES DE ERROR
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalTexto, setModalTexto] = useState('');
+  const [modalErrorVisible, setModalErrorVisible] = useState(false);
+  const [modalErrorTexto, setModalErrorTexto] = useState('');
+  // GLOBALES PARA GESTIONAR LOS MODALES DE ERROR
 
   const hoy = new Date();
   const nombreDiaHoy = diasSemana[hoy.getDay()];
@@ -301,6 +309,49 @@ function ListaRutinas({ studentId, actualizar }) {
     return <span>📌 {ejercicio.trim()}</span>;
   }
 
+  const handleNecesitoAyuda = async (routineId, exerciseId, exerciseName) => {
+    try {
+      const mensaje = `El alumno ${nomyape} necesita ayuda con ${exerciseName}`;
+      const response = await axios.post(
+        `http://localhost:8080/routine_requests`,
+        {
+          student_id: studentId,
+          routine_id: routineId,
+          exercise_id: exerciseId,
+          mensaje: mensaje
+        }
+      );
+      setModalTexto('Solicitud registrada. Pronto un profesor te ayudará.');
+      setModalVisible(true);
+      // alert('Solicitud registrada. Pronto un profesor te ayudará.');
+    } catch (error) {
+      if (error.response) {
+        const mensaje = error.response.data.mensajeError;
+
+        if (
+          mensaje ===
+          'Ya existe una solicitud pendiente para este ejercicio con el mismo mensaje'
+        ) {
+          setModalErrorTexto(
+            'Ya solicitaste ayuda para este ejercicio. Por favor, esperá al instructor.'
+          );
+          setModalErrorVisible(true);
+        } else if (mensaje === 'Faltan campos obligatorios') {
+          setModalErrorTexto(
+            'Por favor completá todos los campos antes de enviar.'
+          );
+          setModalErrorVisible(true);
+        } else {
+          setModalErrorTexto('Error: ' + mensaje);
+          setModalErrorVisible(true);
+        }
+      } else {
+        setModalErrorTexto('Error al enviar la solicitud. Intenta nuevamente.');
+        setModalErrorVisible(true);
+      }
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-100 rounded-lg max-w-xl mx-auto">
       <h2 className="titulo text-4xl font-bold mb-6 text-center text-gray-800">
@@ -446,10 +497,10 @@ function ListaRutinas({ studentId, actualizar }) {
                                             <button
                                               className="text-red-600 hover:underline"
                                               onClick={() =>
-                                                handleEliminarLinea(
+                                                handleNecesitoAyuda(
                                                   rutina.id,
                                                   ej.id,
-                                                  idx
+                                                  ejercicio
                                                 )
                                               }
                                             >
@@ -505,6 +556,16 @@ function ListaRutinas({ studentId, actualizar }) {
           })}
         </div>
       )}
+      <ModalSuccess
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        textoModal={modalTexto}
+      />
+      <ModalError
+        isVisible={modalErrorVisible}
+        onClose={() => setModalErrorVisible(false)}
+        textoModal={modalErrorTexto}
+      />
     </div>
   );
 }
