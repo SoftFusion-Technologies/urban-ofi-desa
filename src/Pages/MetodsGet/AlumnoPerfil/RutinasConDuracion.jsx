@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useAuth } from '../../../AuthContext';
 import ModalSuccess from '../../../Components/Forms/ModalSuccess';
 import ModalError from '../../../Components/Forms/ModalError';
+import ModalFeedback from './Feedbacks/ModalFeedback';
+
 const diasSemana = [
   'Domingo',
   'Lunes',
@@ -31,6 +33,9 @@ function RutinasConDuracion({ studentId }) {
   const [error, setError] = useState(null);
   const { nomyape, userId, userLevel } = useAuth();
 
+    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+    const [rutinaFeedbackId, setRutinaFeedbackId] = useState(null);
+  
   const URL = 'http://localhost:8080/routines';
 
   // GLOBALES PARA GESTIONAR LOS MODALES DE ERROR
@@ -596,6 +601,21 @@ function RutinasConDuracion({ studentId }) {
                         )
                       )}
                     </ul>
+                    {userLevel === '' && (
+                      <button
+                        type="button"
+                        aria-label={`Dar feedback para la rutina ${
+                          rutina.nombre || rutina.id
+                        }`}
+                        className="mt-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
+                        onClick={() => {
+                          setRutinaFeedbackId(rutina.id);
+                          setFeedbackModalOpen(true);
+                        }}
+                      >
+                        Dar Feedback
+                      </button>
+                    )}
                   </div>
                 )
               )}
@@ -612,6 +632,12 @@ function RutinasConDuracion({ studentId }) {
         isVisible={modalErrorVisible}
         onClose={() => setModalErrorVisible(false)}
         textoModal={modalErrorTexto}
+      />
+      <ModalFeedback
+        isVisible={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        rutinaId={rutinaFeedbackId}
+        studentId={studentId}
       />
     </div>
   );

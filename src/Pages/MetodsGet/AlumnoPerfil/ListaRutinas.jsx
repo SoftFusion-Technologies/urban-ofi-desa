@@ -554,23 +554,24 @@ function ListaRutinas({ studentId, actualizar }) {
                           )
                         )}
                       </ul>
+                      {userLevel === '' && (
+                        <button
+                          type="button"
+                          aria-label={`Dar feedback para la rutina ${
+                            rutina.nombre || rutina.id
+                          }`}
+                          className="mt-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
+                          onClick={() => {
+                            setRutinaFeedbackId(rutina.id);
+                            setFeedbackModalOpen(true);
+                          }}
+                        >
+                          Dar Feedback
+                        </button>
+                      )}
                     </div>
                   )
                 )}
-
-                <button
-                  type="button"
-                  aria-label={`Dar feedback para la rutina ${
-                    rutina.nombre || rutina.id
-                  }`}
-                  className="mt-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-                  onClick={() => {
-                    setRutinaFeedbackId(rutina.id);
-                    setFeedbackModalOpen(true);
-                  }}
-                >
-                  Dar Feedback
-                </button>
               </div>
             );
           })}
