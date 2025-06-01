@@ -17,6 +17,7 @@ import FormCrearRutina from '../AlumnoPerfil/FormCrearRutina';
 import ListaRutinas from './ListaRutinas';
 import ProtectedRoutine from './ProtectedRoutine';
 import RutinasConDuracion from './RutinasConDuracion';
+import { useNavigate } from 'react-router-dom';
 
 function PerfilAlumno() {
   const { id } = useParams();
@@ -30,6 +31,8 @@ function PerfilAlumno() {
   const [mostrarCrearRutina, setMostrarCrearRutina] = useState(false);
   const [mostrarProgramarRutina, setMostrarProgramarRutina] = useState(false);
   const { userLevel } = useAuth();
+
+  const navigate = useNavigate();
 
   // Fetch alumno por id
   useEffect(() => {
@@ -68,6 +71,13 @@ function PerfilAlumno() {
     const profesor = usuarios.find((u) => u.id === userId);
     return profesor ? profesor.name : 'Sin asignar';
   };
+
+  const obtenerIdProfesor = (userId) => {
+    const profesor = usuarios.find((u) => u.id === userId);
+    return profesor ? profesor.id : null; // null si no lo encuentra
+    console.log(userId);
+  };
+
 
   if (loading) {
     return (
@@ -142,6 +152,19 @@ function PerfilAlumno() {
                     className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                   >
                     Crear rutina
+                  </button>
+                  <button
+                    onClick={() => {
+                      const instructorId = obtenerIdProfesor(alumno.user_id);
+                      if (instructorId) {
+                        navigate(`/dashboard/feedbacks/${instructorId}`);
+                      } else {
+                        alert('No se encontró el ID del instructor');
+                      }
+                    }}
+                    className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Ver Feedbacks
                   </button>
                 </div>
               )}
