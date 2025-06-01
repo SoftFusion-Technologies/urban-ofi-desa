@@ -23,6 +23,7 @@ const EstadisticasIns = () => {
   const [ayudasResueltasPorProfesor, setAyudasResueltasPorProfesor] = useState(
     []
   );
+  const [feedbacksPorProfesor, setFeedbacksPorProfesor] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -74,6 +75,7 @@ const EstadisticasIns = () => {
       fetchAlumnosPorProfesor();
       fetchRutinasPorProfesor();
       fetchAyudasResueltasPorProfesor();
+      fetchFeedbacksPorProfesor();
     }
   }, [selectedMonth, selectedYear]);
 
@@ -123,6 +125,25 @@ const EstadisticasIns = () => {
     }
   };
 
+  const fetchFeedbacksPorProfesor = async () => {
+    setFeedbacksPorProfesor([]); // Limpia antes de traer nuevos
+    try {
+      const response = await axios.get(
+        `${URL}/estadisticas/feedbacks-por-profesor`,
+        {
+          params: {
+            mes: selectedMonth,
+            anio: selectedYear
+          }
+        }
+      );
+      setFeedbacksPorProfesor(response.data);
+    } catch (error) {
+      console.error('Error al obtener feedbacks por profesor:', error);
+      setFeedbacksPorProfesor([]); // Asegura que no se muestren datos antiguos
+    }
+  };
+  
   // Función para retroceder al mes anterior
   const handlePreviousMonth = () => {
     if (selectedMonth === 1) {
@@ -223,6 +244,26 @@ const EstadisticasIns = () => {
                 key={stat.profesor_id}
                 titulo={`Profesor: ${stat.profesor_nombre}`}
                 contenido={stat.total_ayudas} // O el campo que te devuelva tu backend
+              />
+            ))
+          )}
+        </div>
+
+        <hr className="border-t border-white w-full my-4" />
+
+        <h1 className="titulo text-5xl font-bold text-white mb-8 text-center mt-10 uppercase">
+          Feedbacks por Profesor
+        </h1>
+
+        <div className="flex flex-wrap justify-center w-full gap-6">
+          {feedbacksPorProfesor.length === 0 ? (
+            <p className="text-white text-xl">No hay datos disponibles.</p>
+          ) : (
+            feedbacksPorProfesor.map((stat) => (
+              <EstadisticaCard
+                key={stat.profesor_id}
+                titulo={`Profesor: ${stat.profesor_nombre}`}
+                contenido={stat.total_feedbacks} // O el campo que te devuelva tu backend
               />
             ))
           )}
