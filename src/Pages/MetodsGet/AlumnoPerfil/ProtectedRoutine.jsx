@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Watermark from 'react-watermark-component';
+// import Watermark from 'react-watermark-component';
 
 const ProtectedRoutine = ({ studentName, children }) => {
   const [isObscured, setIsObscured] = useState(false);

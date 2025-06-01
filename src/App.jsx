@@ -45,7 +45,7 @@ import EstadisticasIns from './Pages/MetodsGet/EstadisticasIns';
 import AlumnosPendientesGet from './Pages/MetodsGet/AlumnosPendientesGet';
 import LeadsGet from './Pages/MetodsGet/LeadsGet';
 import PerfilAlumno from './Pages/MetodsGet/AlumnoPerfil/PerfilAlumno';
-import FeedbackPage from './Pages/MetodsGet/AlumnoPerfil/FeedbackPage';
+import FeedbackPage from './Pages/MetodsGet/AlumnoPerfil/Feedbacks/FeedbackPage';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const { hideLayoutFooter, hideLayoutNav } = useLayoutVisibility();
@@ -142,14 +142,13 @@ function AppContent() {
           }
         />{' '}
         <Ruta
-          path="/dashboard/feedbacks/:id"
+          path="/dashboard/feedbacks"
           element={
             <ProtectedRoute>
-              {' '}
-              <FeedbackPage />{' '}
+              <FeedbackPage />
             </ProtectedRoute>
           }
-        />{' '}
+        />
         {/* componentes del staff y login FINAL */}
         <Ruta path="/*" element={<NotFound />} />
       </Rutas>

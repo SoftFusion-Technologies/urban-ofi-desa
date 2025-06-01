@@ -78,7 +78,6 @@ function PerfilAlumno() {
     console.log(userId);
   };
 
-
   if (loading) {
     return (
       <>
@@ -156,10 +155,14 @@ function PerfilAlumno() {
                   <button
                     onClick={() => {
                       const instructorId = obtenerIdProfesor(alumno.user_id);
-                      if (instructorId) {
-                        navigate(`/dashboard/feedbacks/${instructorId}`);
+                      const studentId = id;
+
+                      if (instructorId && studentId) {
+                        navigate(
+                          `/dashboard/feedbacks?instructor_id=${instructorId}&student_id=${studentId}`
+                        );
                       } else {
-                        alert('No se encontró el ID del instructor');
+                        alert('Faltan datos para ver los feedbacks');
                       }
                     }}
                     className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

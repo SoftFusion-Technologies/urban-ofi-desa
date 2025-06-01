@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../../../AuthContext';
 import ModalSuccess from '../../../Components/Forms/ModalSuccess';
 import ModalError from '../../../Components/Forms/ModalError';
-import ModalFeedback from './ModalFeedback';
+import ModalFeedback from './Feedbacks/ModalFeedback';
 
 const diasSemana = [
   'Domingo',
