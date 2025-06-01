@@ -18,6 +18,8 @@ import ListaRutinas from './ListaRutinas';
 import ProtectedRoutine from './ProtectedRoutine';
 import RutinasConDuracion from './RutinasConDuracion';
 import { useNavigate } from 'react-router-dom';
+import StudentGoalModal from './StudentProgress/StudentGoalModal';
+import StudentGoalsProgress from './StudentProgress/StudentGoalsProgress';
 
 function PerfilAlumno() {
   const { id } = useParams();
@@ -193,13 +195,13 @@ function PerfilAlumno() {
                     <strong>DNI:</strong> {alumno.dni || 'No disponible'}
                   </span>
                 </p>
-                <p className="flex items-center gap-3">
+                {/* <p className="flex items-center gap-3">
                   <FaBullseye className="text-blue-500" />
                   <span>
                     <strong>Objetivo:</strong>{' '}
                     {alumno.objetivo || 'No especificado'}
                   </span>
-                </p>
+                </p> */}
                 <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
                   <FaCalendarAlt />
                   <span>
@@ -235,6 +237,7 @@ function PerfilAlumno() {
             </div>
           </div>
         </div>
+        {/* <StudentGoalsProgress studentId={id}></StudentGoalsProgress> */}
       </div>
 
       <Modal
@@ -252,6 +255,7 @@ function PerfilAlumno() {
           }}
         />
       </Modal>
+      {userLevel === '' && <StudentGoalModal studentId={id}></StudentGoalModal>}
     </>
   );
 }
