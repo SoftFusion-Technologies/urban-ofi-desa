@@ -73,7 +73,7 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
       {/* Contenido principal */}
       <div className="flex-1 w-full">
         <h3 className="text-xl font-bold text-blue-700 mb-4 text-center md:text-left tracking-wide">
-          Objetivo {goal.objetivo}
+          Objetivo: {goal.objetivo}
         </h3>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-gray-700 text-sm md:text-base">

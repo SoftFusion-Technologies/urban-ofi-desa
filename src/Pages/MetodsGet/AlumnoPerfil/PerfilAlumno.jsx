@@ -240,9 +240,15 @@ function PerfilAlumno() {
             </div>
           </div>
         </div>
+        <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
+          OBJETIVO
+        </h2>
         <div className="px-4 md:px-46">
           <StudentMonthlyGoalDetail studentId={id} />
         </div>
+        <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
+          ESTADÍSTICAS
+        </h2>
       </div>
 
       <Modal
