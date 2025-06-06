@@ -240,7 +240,9 @@ function PerfilAlumno() {
             </div>
           </div>
         </div>
-        <StudentMonthlyGoalDetail studentId={id}></StudentMonthlyGoalDetail>
+        <div className="px-4 md:px-46">
+          <StudentMonthlyGoalDetail studentId={id} />
+        </div>
       </div>
 
       <Modal

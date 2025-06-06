@@ -1,5 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon
+} from '@heroicons/react/24/solid';
+
+const statusColors = {
+  COMPLETADO: 'text-green-600 bg-green-100',
+  EN_PROGRESO: 'text-yellow-600 bg-yellow-100',
+  NO_CUMPLIDO: 'text-red-600 bg-red-100'
+};
+
+const statusIcons = {
+  COMPLETADO: <CheckCircleIcon className="w-6 h-6" />,
+  EN_PROGRESO: <ClockIcon className="w-6 h-6" />,
+  NO_CUMPLIDO: <XCircleIcon className="w-6 h-6" />
+};
 
 const StudentMonthlyGoalDetail = ({ studentId }) => {
   const [goal, setGoal] = useState(null);
@@ -33,70 +50,79 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
       </div>
     );
 
+  const estado = goal.estado || 'EN_PROGRESO'; // Mueve esta línea aquí, después de la validación
+
   return (
-    <div className="max-w-xl mx-auto mt-8 p-5 bg-white rounded-lg shadow-sm border border-gray-200">
-      <h2 className="text-xl font-semibold text-indigo-700 mb-4 text-center">
-        Objetivo Mensual
-      </h2>
-
-      {/* Información básica */}
-      <div className="flex justify-between text-sm text-gray-600 mb-4">
-        <div>
-          <div>
-            <span className="font-medium">ID:</span> {goal.id}
-          </div>
-          <div>
-            <span className="font-medium">Estudiante:</span> {goal.student_id}
-          </div>
-        </div>
-        <div className="text-right">
-          <div>
-            <span className="font-medium">Mes:</span> {goal.mes}
-          </div>
-          <div>
-            <span className="font-medium">Año:</span> {goal.anio}
-          </div>
-        </div>
+    <div
+      className="max-w-md mx-auto mt-6 p-6 bg-white rounded-xl shadow-lg border border-gray-200
+             flex flex-col md:flex-row items-center gap-6 transition-transform duration-200
+             hover:scale-[1.02]"
+      style={{ marginLeft: '1rem' }} // Mover un poco a la izquierda
+    >
+      {/* Indicador de Estado */}
+      <div
+        className={`flex flex-col items-center justify-center rounded-full p-5 ${statusColors[estado]}
+                shrink-0 w-20 h-20 md:w-24 md:h-24`}
+      >
+        <div className="w-10 h-10 md:w-14 md:h-14">{statusIcons[estado]}</div>
+        <span className="mt-2 font-semibold text-xs md:text-sm tracking-wide">
+          {estado.replace('_', ' ')}
+        </span>
       </div>
 
-      {/* Objetivo */}
-      <div className="mb-5 p-4 bg-indigo-50 rounded text-gray-800 text-center font-medium">
-        {goal.objetivo}
-      </div>
+      {/* Contenido principal */}
+      <div className="flex-1 w-full">
+        <h3 className="text-xl font-bold text-indigo-700 mb-4 text-center md:text-left tracking-wide">
+          {goal.objetivo}
+        </h3>
 
-      {/* Control antropométrico */}
-      <div className="grid grid-cols-2 gap-3 text-sm text-gray-700 mb-4">
-        <div>
-          <span className="font-semibold">Altura:</span> {goal.altura_cm ?? '—'}{' '}
-          cm
+        <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-gray-700 text-sm md:text-base">
+          <div>
+            <span className="font-semibold text-indigo-600">Mes:</span>{' '}
+            {goal.mes}
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">Año:</span>{' '}
+            {goal.anio}
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">Altura:</span>{' '}
+            {goal.altura_cm ?? '—'} cm
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">Peso:</span>{' '}
+            {goal.peso_kg ?? '—'} kg
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">Edad:</span>{' '}
+            {goal.edad ?? '—'} años
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">
+              Grasa Corporal:
+            </span>{' '}
+            {goal.grasa_corporal ?? '—'}%
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">Cintura:</span>{' '}
+            {goal.cintura_cm ?? '—'} cm
+          </div>
+          <div>
+            <span className="font-semibold text-indigo-600">IMC:</span>{' '}
+            {goal.imc ?? '—'}
+          </div>
+          <div className="col-span-2">
+            <span className="font-semibold text-indigo-600">
+              Control Antropométrico:
+            </span>{' '}
+            {goal.control_antropometrico ?? '—'}
+          </div>
         </div>
-        <div>
-          <span className="font-semibold">Peso:</span> {goal.peso_kg ?? '—'} kg
-        </div>
-        <div>
-          <span className="font-semibold">Edad:</span> {goal.edad ?? '—'} años
-        </div>
-        <div>
-          <span className="font-semibold">Grasa Corporal:</span>{' '}
-          {goal.grasa_corporal ?? '—'} %
-        </div>
-        <div>
-          <span className="font-semibold">Cintura:</span>{' '}
-          {goal.cintura_cm ?? '—'} cm
-        </div>
-        <div>
-          <span className="font-semibold">IMC:</span> {goal.imc ?? '—'}
-        </div>
-        <div className="col-span-2">
-          <span className="font-semibold">Control Antropométrico:</span>{' '}
-          {goal.control_antropometrico ?? '—'}
-        </div>
-      </div>
 
-      {/* Fechas */}
-      <div className="text-xs text-gray-400 text-right">
-        <div>Creado: {new Date(goal.created_at).toLocaleString()}</div>
-        <div>Actualizado: {new Date(goal.updated_at).toLocaleString()}</div>
+        <div className="mt-4 text-xs text-gray-400 text-right italic select-none">
+          <div>Creado: {new Date(goal.created_at).toLocaleString()}</div>
+          <div>Actualizado: {new Date(goal.updated_at).toLocaleString()}</div>
+        </div>
       </div>
     </div>
   );
