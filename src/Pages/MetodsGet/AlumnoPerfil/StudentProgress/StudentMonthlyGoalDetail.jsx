@@ -5,6 +5,7 @@ import {
   XCircleIcon,
   ClockIcon
 } from '@heroicons/react/24/solid';
+import dayjs from 'dayjs';
 
 const statusColors = {
   COMPLETADO: 'text-green-600 bg-green-100',
@@ -21,6 +22,9 @@ const statusIcons = {
 const StudentMonthlyGoalDetail = ({ studentId }) => {
   const [goal, setGoal] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [mostrarModalProgreso, setMostrarModalProgreso] = useState(false);
+  const [semanaSeleccionada, setSemanaSeleccionada] = useState(null);
 
   const fetchGoal = async () => {
     try {
@@ -53,6 +57,29 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
 
   const estado = goal.estado || 'EN_PROGRESO'; // Mueve esta línea aquí, después de la validación
 
+  const createdAt = dayjs(goal.created_at);
+  const hoy = dayjs();
+  const diasDesdeCreacion = hoy.diff(createdAt, 'day');
+
+  // Función para saber si ya existe un registro de progreso para una semana específica
+  const progresoYaRegistrado = (semana) => {
+    if (!goal.progressList) return false;
+
+    return goal.progressList.some(
+      (p) =>
+        dayjs(p.fecha).isSameOrAfter(createdAt.add((semana - 1) * 7, 'day')) &&
+        dayjs(p.fecha).isBefore(createdAt.add(semana * 7, 'day'))
+    );
+  };
+
+  // Calcular semanas que ya pasaron y no tienen progreso registrado aún
+  const semanasDisponibles = [];
+  for (let i = 1; i <= 4; i++) {
+    if (diasDesdeCreacion >= i * 7 && !progresoYaRegistrado(i)) {
+      semanasDisponibles.push(i);
+    }
+  }
+  
   return (
     <div
       className="max-w-md mx-auto mt-6 p-6 bg-white rounded-xl shadow-lg border border-gray-200
@@ -115,6 +142,19 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
             </span>{' '}
             {goal.control_antropometrico ?? '—'}
           </div>
+        </div>
+
+        {/* Botones disponibles */}
+        <div className="mt-6 space-y-2">
+          {semanasDisponibles.map((semana) => (
+            <button
+              key={semana}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition w-full"
+              onClick={() => setMostrarFormSemana(semana)}
+            >
+              Registrar progreso semana {semana}
+            </button>
+          ))}
         </div>
 
         <div className="mt-4 text-xs text-gray-400 text-right italic select-none">
