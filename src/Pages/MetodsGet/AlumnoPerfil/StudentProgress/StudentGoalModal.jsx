@@ -46,8 +46,9 @@ const StudentGoalModal = ({ studentId }) => {
 
         console.log(month);
 
+        console.log(month);
         const res = await axios.get(
-          `${URL}/student-monthly-goals?student_id=${studentId}&month=${month}&year=${year}`
+          `${URL}/student-monthly-goals?student_id=${studentId}&mes=${month}&anio=${year}`
         );
 
         if (!res.data || res.data.length === 0) {

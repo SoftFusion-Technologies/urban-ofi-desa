@@ -20,6 +20,7 @@ import RutinasConDuracion from './RutinasConDuracion';
 import { useNavigate } from 'react-router-dom';
 import StudentGoalModal from './StudentProgress/StudentGoalModal';
 import StudentMonthlyGoalDetail from './StudentProgress/StudentMonthlyGoalDetail';
+import StudentProgressComparison from './StudentProgress/StudentProgressComparison';
 
 function PerfilAlumno() {
   const { id } = useParams();
@@ -115,9 +116,11 @@ function PerfilAlumno() {
       <NavbarStaff />
       <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 min-h-screen pt-10 pb-10">
         <ParticlesBackground />
+
         {userLevel === '' && (
           <StudentGoalModal studentId={id}></StudentGoalModal>
         )}
+        {console.log(userLevel)}
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-start md:gap-6">
             {/* Perfil Alumno (card fija) */}
@@ -246,6 +249,7 @@ function PerfilAlumno() {
         <div className="px-4 md:px-46">
           <StudentMonthlyGoalDetail studentId={id} />
         </div>
+        <StudentProgressComparison studentId={id}></StudentProgressComparison>
         <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
           ESTADÍSTICAS
         </h2>

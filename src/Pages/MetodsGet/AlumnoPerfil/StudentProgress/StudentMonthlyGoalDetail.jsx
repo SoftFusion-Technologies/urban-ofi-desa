@@ -22,22 +22,23 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
   const [goal, setGoal] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchGoal = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:8080/student-monthly-goals/${studentId}`
-        );
-        setGoal(res.data);
-      } catch (error) {
-        console.error('Error al obtener el objetivo:', error);
-        setGoal(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchGoal = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/student-monthly-goals/${studentId}`
+      );
 
-    if (studentId) fetchGoal();
+      setGoal(res.data);
+    } catch (error) {
+      console.error('Error al obtener el objetivo:', error);
+      setGoal(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGoal();
   }, [studentId]);
 
   if (loading)
@@ -46,7 +47,7 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
   if (!goal)
     return (
       <div className="text-center mt-10 text-blue-900">
-        No se encontró el objetivo.
+        No cargo el objetivo aún.
       </div>
     );
 
