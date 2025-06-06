@@ -64,7 +64,7 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
         className={`flex flex-col items-center justify-center rounded-full p-5 ${statusColors[estado]}
                 shrink-0 w-20 h-20 md:w-24 md:h-24`}
       >
-        <div className="w-10 h-10 md:w-14 md:h-14">{statusIcons[estado]}</div>
+        <div className="w-6 h-12 md:w-6 md:h-16">{statusIcons[estado]}</div>
         <span className="mt-2 font-semibold text-xs md:text-sm tracking-wide">
           {estado.replace('_', ' ')}
         </span>
@@ -72,47 +72,44 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
 
       {/* Contenido principal */}
       <div className="flex-1 w-full">
-        <h3 className="text-xl font-bold text-indigo-700 mb-4 text-center md:text-left tracking-wide">
-          {goal.objetivo}
+        <h3 className="text-xl font-bold text-blue-700 mb-4 text-center md:text-left tracking-wide">
+          Objetivo {goal.objetivo}
         </h3>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-gray-700 text-sm md:text-base">
           <div>
-            <span className="font-semibold text-indigo-600">Mes:</span>{' '}
-            {goal.mes}
+            <span className="font-semibold text-blue-600">Mes:</span> {goal.mes}
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">Año:</span>{' '}
+            <span className="font-semibold text-blue-600">Año:</span>{' '}
             {goal.anio}
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">Altura:</span>{' '}
+            <span className="font-semibold text-blue-600">Altura:</span>{' '}
             {goal.altura_cm ?? '—'} cm
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">Peso:</span>{' '}
+            <span className="font-semibold text-blue-600">Peso:</span>{' '}
             {goal.peso_kg ?? '—'} kg
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">Edad:</span>{' '}
+            <span className="font-semibold text-blue-600">Edad:</span>{' '}
             {goal.edad ?? '—'} años
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">
-              Grasa Corporal:
-            </span>{' '}
+            <span className="font-semibold text-blue-600">Grasa Corporal:</span>{' '}
             {goal.grasa_corporal ?? '—'}%
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">Cintura:</span>{' '}
+            <span className="font-semibold text-blue-600">Cintura:</span>{' '}
             {goal.cintura_cm ?? '—'} cm
           </div>
           <div>
-            <span className="font-semibold text-indigo-600">IMC:</span>{' '}
+            <span className="font-semibold text-blue-600">IMC:</span>{' '}
             {goal.imc ?? '—'}
           </div>
           <div className="col-span-2">
-            <span className="font-semibold text-indigo-600">
+            <span className="font-semibold text-blue-600">
               Control Antropométrico:
             </span>{' '}
             {goal.control_antropometrico ?? '—'}
