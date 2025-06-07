@@ -59,11 +59,17 @@ const FeedbackList = ({ instructorId, studentId }) => {
       <p className="text-center mt-10 text-gray-300">Cargando feedbacks...</p>
     );
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+
   if (feedbacks.length === 0)
     return (
-      <p className="text-center mt-10 text-gray-400">
-        No hay feedbacks para mostrar.
-      </p>
+      <div className="flex flex-col items-center justify-center mt-24 text-center text-gray-500">
+        <div className="bg-gray-100 p-6 rounded-2xl shadow-inner">
+          <h3 className="text-xl font-semibold mb-1">Sin feedbacks aún</h3>
+          <p className="text-sm text-gray-400 mb-4">
+            Todavía no se ha recibido ningún comentario para este alumno.
+          </p>
+        </div>
+      </div>
     );
 
   return (

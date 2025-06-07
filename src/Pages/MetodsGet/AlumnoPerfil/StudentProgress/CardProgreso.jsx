@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 function ProgresoCard({ progreso }) {
-  const fechaFormateada = new Date(progreso.fecha).toLocaleDateString(undefined, {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const fechaFormateada = new Date(progreso.fecha).toLocaleDateString(
+    undefined,
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }
+  );
 
   // Parseamos valores que vienen como strings numéricos
   const peso = parseFloat(progreso.peso);
@@ -23,7 +26,8 @@ function ProgresoCard({ progreso }) {
         <span className="font-semibold">Altura:</span> {altura.toFixed(1)} cm
       </p>
       <p>
-        <span className="font-semibold">Grasa corporal:</span> {grasa.toFixed(2)} %
+        <span className="font-semibold">Grasa corporal:</span>{' '}
+        {grasa.toFixed(2)} %
       </p>
       <p>
         <span className="font-semibold">Cintura:</span> {cintura.toFixed(1)} cm
@@ -83,7 +87,7 @@ export default function CardProgreso({ studentId }) {
     objetivo,
     estadoObjetivo,
     mes,
-    anio,
+    anio
   } = progresoData.comparison[0];
 
   if (progresosDelMes.length === 0)
@@ -92,7 +96,9 @@ export default function CardProgreso({ studentId }) {
   return (
     <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6 border border-blue-700/30">
       <h2 className="text-2xl font-semibold text-blue-700 mb-4 border-b border-blue-700/40 pb-2">
-        Progresos del mes {mes}/{anio} - Objetivo: {objetivo} ({estadoObjetivo})
+        Listado de Progreso
+        {/* - Objetivo: {objetivo} */}
+        {/* ({estadoObjetivo}) */}
       </h2>
 
       {/* Contenedor horizontal con scroll para los progresos */}
@@ -113,13 +119,15 @@ export default function CardProgreso({ studentId }) {
           {totalProgresosEnMes}
         </p>
         <p>
-          <span className="font-semibold text-blue-700">Diferencia de peso:</span>{' '}
+          <span className="font-semibold text-blue-700">
+            Diferencia de peso:
+          </span>{' '}
           <span
             className={
               diferenciaPeso > 0
-                ? 'text-green-600'
-                : diferenciaPeso < 0
                 ? 'text-red-600'
+                : diferenciaPeso < 0
+                ? 'text-green-600'
                 : 'text-gray-700'
             }
           >
@@ -128,7 +136,9 @@ export default function CardProgreso({ studentId }) {
           </span>
         </p>
         <p>
-          <span className="font-semibold text-blue-700">Cumplió objetivo peso:</span>{' '}
+          <span className="font-semibold text-blue-700">
+            Cumplió objetivo peso:
+          </span>{' '}
           {cumplioObjetivoPeso ? 'Sí' : 'No'}
         </p>
         <p>
@@ -137,6 +147,36 @@ export default function CardProgreso({ studentId }) {
           </span>{' '}
           {pesoRestanteParaObjetivo} kg
         </p>
+      </div>
+      <div>
+        {cumplioObjetivoPeso ? (
+          <div className="mt-3 bg-green-100 border border-green-400 rounded p-3 flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            <span className="font-semibold text-green-700">
+              ¡Felicidades! Objetivo cumplido.
+            </span>
+          </div>
+        ) : (
+          <p>
+            <span className="font-semibold text-blue-700">
+              Cumplió objetivo peso:
+            </span>{' '}
+            No
+          </p>
+        )}
       </div>
     </div>
   );
