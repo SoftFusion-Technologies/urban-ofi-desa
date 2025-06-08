@@ -185,6 +185,37 @@ function PerfilAlumno() {
                 </div>
               )}
 
+              {userLevel === '' && (
+                <div className="mt-6 mb-6 flex flex-col sm:flex-row justify-around gap-4">
+                  <button
+                    onClick={() => {
+                      setMostrarCrearRutina(true);
+                      setMostrarProgramarRutina(false);
+                    }}
+                    className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Generar Dieta
+                  </button>
+                  <button
+                    onClick={() => {
+                      const instructorId = obtenerIdProfesor(alumno.user_id);
+                      const studentId = id;
+
+                      if (instructorId && studentId) {
+                        navigate(
+                          `/dashboard/feedbacks?instructor_id=${instructorId}&student_id=${studentId}`
+                        );
+                      } else {
+                        alert('Faltan datos para ver los feedbacks');
+                      }
+                    }}
+                    className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Gestionar Rm
+                  </button>
+                </div>
+              )}
+
               <div className="space-y-4 text-gray-700 text-lg">
                 <p className="flex items-center gap-3">
                   <FaChalkboardTeacher className="text-blue-500" />
@@ -260,7 +291,7 @@ function PerfilAlumno() {
         <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
           ESTADÍSTICAS
         </h2>
-        <EstadisticasRutinas studentId={id}  />
+        <EstadisticasRutinas studentId={id} />
       </div>
 
       <Modal

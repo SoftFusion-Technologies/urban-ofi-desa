@@ -113,17 +113,26 @@ function EstadisticasAlumno({ studentId }) {
         <div className="bg-gray-50 rounded-lg shadow-inner p-4">
           <ol className="space-y-2">
             {rankingToShow.map(
-              ({
-                student_id,
-                nomyape,
-                rutinas_asignadas,
-                rutinas_completadas
-              }) => (
+              (
+                { student_id, nomyape, rutinas_asignadas, rutinas_completadas },
+                index
+              ) => (
                 <li
                   key={student_id}
                   className="flex justify-between items-center border-b border-gray-200 pb-2"
                 >
-                  <span className="font-medium text-gray-700">{nomyape}</span>
+                  <span className="font-medium text-gray-700 flex items-center gap-2">
+                    {index === 0 && (
+                      <span
+                        role="img"
+                        aria-label="corona"
+                        className="text-yellow-500 text-xl"
+                      >
+                        👑
+                      </span>
+                    )}
+                    {nomyape}
+                  </span>
                   <span className="text-sm text-gray-600">
                     Asignadas: {rutinas_asignadas}, Completadas:{' '}
                     {rutinas_completadas}
