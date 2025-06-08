@@ -260,7 +260,7 @@ function PerfilAlumno() {
         <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
           ESTADÍSTICAS
         </h2>
-        {/* <EstadisticasRutinas studentId={id}  /> */}
+        <EstadisticasRutinas studentId={id}  />
       </div>
 
       <Modal
