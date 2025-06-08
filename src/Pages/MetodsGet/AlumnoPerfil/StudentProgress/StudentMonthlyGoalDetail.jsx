@@ -31,11 +31,25 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
 
   const fetchGoal = async () => {
     try {
+      const fechaActual = new Date();
+      const mes = fechaActual.getMonth() + 1;
+      const anio = fechaActual.getFullYear();
+
+      const queryString = new URLSearchParams({
+        student_id: studentId,
+        mes,
+        anio
+      }).toString();
+
       const res = await axios.get(
-        `http://localhost:8080/student-monthly-goals/${studentId}`
+        `http://localhost:8080/student-monthly-goals?${queryString}`
       );
 
-      setGoal(res.data);
+      // Si el endpoint devuelve un array (porque usas findAll), tomá el primer elemento o el que corresponda
+      const objetivo =
+        Array.isArray(res.data) && res.data.length > 0 ? res.data[0] : null;
+
+      setGoal(objetivo);
     } catch (error) {
       console.error('Error al obtener el objetivo:', error);
       setGoal(null);

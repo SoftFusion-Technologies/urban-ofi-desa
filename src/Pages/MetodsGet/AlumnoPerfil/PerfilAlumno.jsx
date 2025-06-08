@@ -24,6 +24,7 @@ import EstadisticasRutinas from './Estadisticas/EstadisticasRutinas';
 
 function PerfilAlumno() {
   const { id } = useParams();
+  console.log(id)
   const [alumno, setAlumno] = useState(null);
   const [usuarios, setUsuarios] = useState([]);
   const [recargarRutinas, setRecargarRutinas] = useState(false);

@@ -14,6 +14,7 @@ const StudentGoalModal = ({ studentId }) => {
   const [cinturaCm, setCinturaCm] = useState('');
   const [imc, setImc] = useState('');
   const [controlAntropometrico, setControlAntropometrico] = useState(null);
+  const [esRedefinicion, setEsRedefinicion] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -23,6 +24,77 @@ const StudentGoalModal = ({ studentId }) => {
   const { nomyape } = useAuth();
 
   const URL = 'http://localhost:8080';
+
+  useEffect(() => {
+    if (!studentId) return;
+
+    const fetchGoal = async () => {
+      setLoading(true);
+      try {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+
+        let res = await axios.get(
+          `${URL}/student-monthly-goals?student_id=${studentId}&mes=${month}&anio=${year}`
+        );
+
+        if (res.data && res.data.length > 0) {
+          const currentGoal = res.data[0];
+          setEsRedefinicion(true); // ✅ redefinición del objetivo actual
+          setGoal(currentGoal.objetivo || '');
+          setAlturaCm(currentGoal.altura_cm || '');
+          setPesoKg(currentGoal.peso_kg || '');
+          setEdad(currentGoal.edad || '');
+          setGrasaCorporal(currentGoal.grasa_corporal || '');
+          setCinturaCm(currentGoal.cintura_cm || '');
+          setControlAntropometrico(currentGoal.control_antropometrico || null);
+          setModalOpen(false);
+        } else {
+          // no hay datos actuales → buscar anterior
+          let prevMonth = month - 1;
+          let prevYear = year;
+          if (prevMonth === 0) {
+            prevMonth = 12;
+            prevYear = year - 1;
+          }
+
+          res = await axios.get(
+            `${URL}/student-monthly-goals?student_id=${studentId}&mes=${prevMonth}&anio=${prevYear}`
+          );
+
+          if (res.data && res.data.length > 0) {
+            const prevGoal = res.data[0];
+            setEsRedefinicion(false); // ✅ nuevo objetivo
+            setGoal('');
+            setAlturaCm(prevGoal.altura_cm || '');
+            setPesoKg(prevGoal.peso_kg || '');
+            setEdad(prevGoal.edad || '');
+            setGrasaCorporal(prevGoal.grasa_corporal || '');
+            setCinturaCm(prevGoal.cintura_cm || '');
+            setControlAntropometrico(prevGoal.control_antropometrico || null);
+          } else {
+            setEsRedefinicion(false); // ✅ nuevo objetivo sin datos previos
+            setGoal('');
+            setAlturaCm('');
+            setPesoKg('');
+            setEdad('');
+            setGrasaCorporal('');
+            setCinturaCm('');
+            setControlAntropometrico(null);
+          }
+
+          setModalOpen(true);
+        }
+      } catch (error) {
+        console.error('Error al consultar objetivo mensual:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGoal();
+  }, [studentId]);
 
   useEffect(() => {
     if (pesoKg && alturaCm && edad) {
@@ -101,17 +173,43 @@ const StudentGoalModal = ({ studentId }) => {
   const calcularGrasaBasadaEnIMC = (imc) => {
     return (1.39 * imc).toFixed(2); // Estimación simple sin sexo ni edad
   };
+
   const mensajes = {
-    1: '¡Hola {nomyape}! Empecemos por definir tu objetivo para este mes. ¿Qué te gustaría lograr?',
-    2: '{nomyape}, contanos cuál es tu altura en centímetros para personalizar tu plan.',
-    3: 'Perfecto, {nomyape}. Ahora ingresá tu peso actual en kilogramos.',
-    4: 'Gracias, {nomyape}. ¿Cuál es tu edad?',
-    5: '{nomyape}, ¿te gustaría realizar un control antropométrico? Esto nos ayuda a conocer mejor tu composición corporal.',
-    6: 'Por último, {nomyape}, ingresá el valor de tu cintura en centímetros (opcional).',
-    7: '¡Listo {nomyape}! Este es el resumen con toda la información que cargaste. ¡Gran trabajo!'
+    nuevo: {
+      1: '¡Hola {nomyape}! Empecemos por definir tu objetivo para este mes. ¿Qué te gustaría lograr?',
+      2: '{nomyape}, contanos cuál es tu altura en centímetros para personalizar tu plan.',
+      3: 'Perfecto, {nomyape}. Ahora ingresá tu peso actual en kilogramos.',
+      4: 'Gracias, {nomyape}. ¿Cuál es tu edad?',
+      5: '{nomyape}, ¿te gustaría realizar un control antropométrico? Esto nos ayuda a conocer mejor tu composición corporal.',
+      6: 'Por último, {nomyape}, ingresá el valor de tu cintura en centímetros (opcional).',
+      7: '¡Listo {nomyape}! Este es el resumen con toda la información que cargaste. ¡Gran trabajo!'
+    },
+    redefinir: {
+      1: 'Hola de nuevo {nomyape}, ¿querés actualizar tu objetivo mensual?',
+      2: '{nomyape}, podés modificar tu altura si cambió o continuar igual.',
+      3: '{nomyape}, ¿querés actualizar tu peso actual en kilogramos?',
+      4: '¿Tu edad sigue siendo la misma, {nomyape}?',
+      5: '{nomyape}, ¿querés repetir el control antropométrico o usar el anterior?',
+      6: '{nomyape}, si cambió tu cintura podés actualizar el valor en centímetros.',
+      7: 'Perfecto {nomyape}, actualizamos tu información. ¡Vamos por más!'
+    }
   };
 
+  function getMensaje(id, datos, esRedefinicion = false) {
+    const tipo = esRedefinicion ? 'redefinir' : 'nuevo';
+    let mensaje = mensajes[tipo][id] || '';
+
+    Object.keys(datos).forEach((key) => {
+      const regex = new RegExp(`{${key}}`, 'g');
+      mensaje = mensaje.replace(regex, datos[key]);
+    });
+
+    return mensaje;
+  }
+
   const primerNombre = nomyape.split(' ')[0];
+
+  const mensajeActual = mensajes[esRedefinicion ? 'redefinir' : 'nuevo'][step];
 
   if (loading) return null;
 
@@ -130,22 +228,23 @@ const StudentGoalModal = ({ studentId }) => {
             </button>
 
             <AnimatePresence mode="wait">
-              <motion.h2
-                key={step} // clave para que cambie con el paso
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="titulo text-xl  uppercase font-semibold mb-5 text-center text-gray-800"
-                dangerouslySetInnerHTML={{
-                  __html: mensajes[step].replace(
-                    '{nomyape}',
-                    `<span class="text-blue-700">${primerNombre}</span>`
-                  )
-                }}
-              />
+              {mensajeActual && (
+                <motion.h2
+                  key={step}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="titulo text-xl uppercase font-semibold mb-5 text-center text-gray-800"
+                  dangerouslySetInnerHTML={{
+                    __html: mensajeActual.replace(
+                      '{nomyape}',
+                      `<span class="text-blue-700">${primerNombre}</span>`
+                    )
+                  }}
+                />
+              )}
             </AnimatePresence>
-
             <div className="max-w-xl mx-auto">
               {/* Barra de progreso */}
               <div className="w-full bg-gray-200 h-3 rounded-full overflow-hidden mb-6">
