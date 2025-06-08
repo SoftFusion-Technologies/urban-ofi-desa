@@ -20,6 +20,7 @@ import RutinasConDuracion from './RutinasConDuracion';
 import { useNavigate } from 'react-router-dom';
 import StudentGoalModal from './StudentProgress/StudentGoalModal';
 import StudentMonthlyGoalDetail from './StudentProgress/StudentMonthlyGoalDetail';
+import EstadisticasRutinas from './Estadisticas/EstadisticasRutinas';
 
 function PerfilAlumno() {
   const { id } = useParams();
@@ -251,6 +252,7 @@ function PerfilAlumno() {
         <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
           ESTADÍSTICAS
         </h2>
+        {/* <EstadisticasRutinas studentId={id}  /> */}
       </div>
 
       <Modal

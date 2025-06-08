@@ -358,6 +358,30 @@ function ListaRutinas({ studentId, actualizar }) {
     }
   };
 
+  const handleCompletarRutina = async (rutinaId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/routines/${rutinaId}/completar`,
+        {
+          method: 'PUT'
+        }
+      );
+      const data = await res.json(); // si el back no devuelve JSON, esto fallará
+      if (data.success) {
+        setRutinas((prev) =>
+          prev.map((r) => (r.id === rutinaId ? { ...r, completada: true } : r))
+        );
+        setModalTexto('Rutina marcada como completada.');
+        setModalVisible(true);
+      } else {
+        throw new Error(data.message || 'Error al completar rutina');
+      }
+    } catch (error) {
+      setModalErrorTexto(error.message);
+      setModalErrorVisible(true);
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-100 rounded-lg max-w-xl mx-auto">
       <h2 className="titulo text-4xl font-bold mb-6 text-center text-gray-800">
@@ -554,20 +578,36 @@ function ListaRutinas({ studentId, actualizar }) {
                           )
                         )}
                       </ul>
+
                       {userLevel === '' && (
-                        <button
-                          type="button"
-                          aria-label={`Dar feedback para la rutina ${
-                            rutina.nombre || rutina.id
-                          }`}
-                          className="mt-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-                          onClick={() => {
-                            setRutinaFeedbackId(rutina.id);
-                            setFeedbackModalOpen(true);
-                          }}
-                        >
-                          Dar Feedback
-                        </button>
+                        <div className="mt-4 flex justify-center gap-4">
+                          {rutina.completada ? (
+                            <p className="text-green-600 font-semibold self-center">
+                              ✅ Rutina completada
+                            </p>
+                          ) : (
+                            <button
+                              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+                              onClick={() => handleCompletarRutina(rutina.id)}
+                            >
+                              Completar Rutina
+                            </button>
+                          )}
+
+                          <button
+                            type="button"
+                            aria-label={`Dar feedback para la rutina ${
+                              rutina.nombre || rutina.id
+                            }`}
+                            className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
+                            onClick={() => {
+                              setRutinaFeedbackId(rutina.id);
+                              setFeedbackModalOpen(true);
+                            }}
+                          >
+                            Dar Feedback
+                          </button>
+                        </div>
                       )}
                     </div>
                   )
