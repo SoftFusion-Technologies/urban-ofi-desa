@@ -24,7 +24,7 @@ import EstadisticasRutinas from './Estadisticas/EstadisticasRutinas';
 
 function PerfilAlumno() {
   const { id } = useParams();
-  console.log(id)
+  console.log(id);
   const [alumno, setAlumno] = useState(null);
   const [usuarios, setUsuarios] = useState([]);
   const [recargarRutinas, setRecargarRutinas] = useState(false);
@@ -32,6 +32,7 @@ function PerfilAlumno() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [reloadGoals, setReloadGoals] = useState(false);
   const [mostrarCrearRutina, setMostrarCrearRutina] = useState(false);
   const [mostrarProgramarRutina, setMostrarProgramarRutina] = useState(false);
   const { userLevel } = useAuth();
@@ -119,7 +120,10 @@ function PerfilAlumno() {
         <ParticlesBackground />
 
         {userLevel === '' && (
-          <StudentGoalModal studentId={id}></StudentGoalModal>
+          <StudentGoalModal
+            studentId={id}
+            onGoalCreated={() => setReloadGoals((prev) => !prev)}
+          />
         )}
         {console.log(userLevel)}
         <div className="container mx-auto px-4">
@@ -248,7 +252,10 @@ function PerfilAlumno() {
           OBJETIVO
         </h2>
         <div className="px-4 md:px-46">
-          <StudentMonthlyGoalDetail studentId={id} />
+          <StudentMonthlyGoalDetail
+            studentId={id}
+            reloadTrigger={reloadGoals}
+          />
         </div>
         <h2 className="text-center text-white titulo text-4xl mt-10 mb-10">
           ESTADÍSTICAS

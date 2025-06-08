@@ -51,12 +51,16 @@ export default function CardProgreso({ studentId }) {
       setLoading(true);
       setError(null);
       try {
+        const fechaActual = new Date();
+        const mesActual = fechaActual.getMonth() + 1; // enero = 1
+        const anioActual = fechaActual.getFullYear();
+
         const res = await fetch(
-          `http://localhost:8080/students/${studentId}/progress-comparison`
+          `http://localhost:8080/students/${studentId}/progress-comparison?mes=${mesActual}&anio=${anioActual}`
         );
         if (!res.ok) throw new Error('Error al cargar progreso');
         const data = await res.json();
-        setProgresoData(data);
+        setProgresoData(data); // Ya te viene filtrado del backend
       } catch (err) {
         setError(err.message);
       } finally {
@@ -66,7 +70,7 @@ export default function CardProgreso({ studentId }) {
 
     fetchProgreso();
   }, [studentId]);
-
+  
   if (loading) return <p>Cargando progreso...</p>;
   if (error) return <p className="text-red-600">Error: {error}</p>;
   if (

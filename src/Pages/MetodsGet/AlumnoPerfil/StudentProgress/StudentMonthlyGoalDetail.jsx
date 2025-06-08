@@ -21,7 +21,7 @@ const statusIcons = {
   NO_CUMPLIDO: <XCircleIcon className="w-6 h-6" />
 };
 
-const StudentMonthlyGoalDetail = ({ studentId }) => {
+const StudentMonthlyGoalDetail = ({ studentId, reloadTrigger }) => {
   const [goal, setGoal] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +60,7 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
 
   useEffect(() => {
     fetchGoal();
-  }, [studentId]);
+  }, [studentId, reloadTrigger]);
 
   if (loading)
     return <div className="text-center mt-10 text-gray-500">Cargando...</div>;
@@ -127,7 +127,7 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
       >
         {/* Objetivo mensual */}
         <div className="flex-1 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-          <div
+          {/* <div
             className={`flex flex-col items-center justify-center rounded-full p-5 ${statusColors[estado]}
            shrink-0 w-20 h-20 md:w-24 md:h-24 mb-4 md:mb-0`}
           >
@@ -135,7 +135,7 @@ const StudentMonthlyGoalDetail = ({ studentId }) => {
             <span className="mt-2 font-semibold text-xs md:text-sm tracking-wide text-center">
               {estado.replace('_', ' ')}
             </span>
-          </div>
+          </div> */}
 
           <h3 className="text-xl font-bold text-blue-700 mb-4 text-center md:text-left tracking-wide">
             Objetivo: {goal.objetivo}

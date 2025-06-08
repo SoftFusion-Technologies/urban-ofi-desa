@@ -4,7 +4,7 @@ import ParticlesBackground from '../../../../Components/ParticlesBackground';
 import { useAuth } from '../../../../AuthContext';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const StudentGoalModal = ({ studentId }) => {
+const StudentGoalModal = ({ studentId, onGoalCreated }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [goal, setGoal] = useState('');
   const [alturaCm, setAlturaCm] = useState('');
@@ -161,6 +161,11 @@ const StudentGoalModal = ({ studentId }) => {
 
       setModalOpen(false);
       setGoal('');
+
+      if (onGoalCreated) {
+        onGoalCreated(); // dispara la recarga
+      }
+
       alert('Objetivo guardado correctamente.');
     } catch (error) {
       console.error('Error al guardar objetivo mensual:', error);
