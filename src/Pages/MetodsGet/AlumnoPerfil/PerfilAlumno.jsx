@@ -188,10 +188,7 @@ function PerfilAlumno() {
               {userLevel === '' && (
                 <div className="mt-6 mb-6 flex flex-col sm:flex-row justify-around gap-4">
                   <button
-                    onClick={() => {
-                      setMostrarCrearRutina(true);
-                      setMostrarProgramarRutina(false);
-                    }}
+                    onClick={() => navigate('/dashboard/dietas')}
                     className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                   >
                     Generar Dieta
