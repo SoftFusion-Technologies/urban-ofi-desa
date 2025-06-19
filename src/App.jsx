@@ -47,6 +47,7 @@ import LeadsGet from './Pages/MetodsGet/LeadsGet';
 import PerfilAlumno from './Pages/MetodsGet/AlumnoPerfil/PerfilAlumno';
 import FeedbackPage from './Pages/MetodsGet/AlumnoPerfil/Feedbacks/FeedbackPage';
 import RMListWrapper from './Pages/MetodsGet/RM/RMListWrapper';
+import RoutinesGet from './Pages/MetodsGet/RoutinesGet';
 // COMPONENTE CONTENEDOR PARA CONTROLAR LO QUE SE MUESTRA SEGÚN LA RUTA
 function AppContent() {
   const { hideLayoutFooter, hideLayoutNav } = useLayoutVisibility();
@@ -76,6 +77,15 @@ function AppContent() {
             <ProtectedRoute>
               {' '}
               <UsersGet />{' '}
+            </ProtectedRoute>
+          }
+        />{' '}
+        <Ruta
+          path="/dashboard/routines"
+          element={
+            <ProtectedRoute>
+              {' '}
+              <RoutinesGet />{' '}
             </ProtectedRoute>
           }
         />{' '}
