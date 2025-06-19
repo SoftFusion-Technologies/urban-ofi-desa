@@ -446,7 +446,7 @@ function ListaRutinas({ studentId, actualizar }) {
                       className="bg-white p-4 rounded shadow mb-6"
                     >
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-bold text-lg text-indigo-600">
+                        <h3 className="font-bold text-lg text-blue-600">
                           {musculo.toUpperCase()}
                         </h3>
 
