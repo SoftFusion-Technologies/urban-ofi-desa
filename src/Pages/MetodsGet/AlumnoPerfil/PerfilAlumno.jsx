@@ -6,6 +6,9 @@ import {
   FaBullseye,
   FaCalendarAlt,
   FaEdit,
+  FaDumbbell,
+  FaUtensils,
+  FaFileAlt,
   FaChalkboardTeacher
 } from 'react-icons/fa';
 import NavbarStaff from '../../staff/NavbarStaff';
@@ -21,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import StudentGoalModal from './StudentProgress/StudentGoalModal';
 import StudentMonthlyGoalDetail from './StudentProgress/StudentMonthlyGoalDetail';
 import EstadisticasRutinas from './Estadisticas/EstadisticasRutinas';
+import { motion } from 'framer-motion';
 
 function PerfilAlumno() {
   const { id } = useParams();
@@ -130,41 +134,59 @@ function PerfilAlumno() {
           <div className="flex flex-col md:flex-row md:items-start md:gap-6">
             {/* Perfil Alumno (card fija) */}
             <div className="w-full md:max-w-md mx-auto md:mx-0 bg-white shadow-xl rounded-xl p-8 mt-10">
-              <div className="flex justify-center relative">
-                <div className="relative">
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      alumno.nomyape
-                    )}&background=4ade80&color=fff&size=128`}
-                    alt="Avatar Alumno"
-                    className="w-32 h-32 rounded-full object-cover border-4 border-green-400"
-                  />
-                  {/* de momento quitamos el boton editar, aun no se puede cargar img */}
-                  {/* <button
-                    className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 border-2 border-white shadow-lg"
-                    title="Editar imagen (próximamente)"
-                    disabled
-                  >
-                    <FaEdit size={18} />
-                  </button> */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {/* Imagen del alumno */}
+                <div className="flex justify-center relative">
+                  <div className="relative w-36 h-36">
+                    {/* Borde giratorio */}
+                    <div
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400 via-emerald-500 to-lime-400 z-0"
+                      style={{
+                        animation: 'spin-slow 4s linear infinite',
+                        maskImage:
+                          'radial-gradient(circle at center, transparent 60%, black 60%)',
+                        WebkitMaskImage:
+                          'radial-gradient(circle at center, transparent 60%, black 60%)'
+                      }}
+                    ></div>
+
+                    {/* Imagen del alumno */}
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        alumno.nomyape
+                      )}&background=4ade80&color=fff&size=128`}
+                      alt="Avatar Alumno"
+                      className="absolute inset-0 w-full h-full rounded-full object-cover border-4 border-white shadow-md z-10"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <h2 className="titulo uppercase text-3xl font-extrabold text-center mt-6 mb-4 text-gray-800">
-                {alumno.nomyape}
-              </h2>
+                {/* Nombre del alumno */}
+                <h2 className="text-center titulo text-2xl font-bold text-gray-800 uppercase tracking-wide mt-6 mb-2">
+                  {alumno.nomyape}
+                </h2>
 
-              {(userLevel === 'admin' || userLevel === 'instructor') && (
-                <div className="mt-6 mb-6 flex flex-col sm:flex-row justify-around gap-4">
-                  <button
-                    onClick={() => {
-                      setMostrarCrearRutina(true);
-                      setMostrarProgramarRutina(false);
-                    }}
-                    className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Crear rutina
-                  </button>
+                {/* Línea separadora */}
+                <div className="border-t border-gray-200 my-4 w-1/2 mx-auto"></div>
+
+                {/* Botones de acción según el rol */}
+                <div className="mb-6 flex flex-col sm:flex-row justify-center gap-4">
+                  {(userLevel === 'admin' || userLevel === 'instructor') && (
+                    <button
+                      onClick={() => {
+                        setMostrarCrearRutina(true);
+                        setMostrarProgramarRutina(false);
+                      }}
+                      className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-5 rounded-lg shadow-sm transition duration-200"
+                    >
+                      🏋️ Crear Rutina
+                    </button>
+                  )}
+
                   <button
                     onClick={() => {
                       const instructorId = obtenerIdProfesor(alumno.user_id);
@@ -178,88 +200,84 @@ function PerfilAlumno() {
                         alert('Faltan datos para ver los feedbacks');
                       }
                     }}
-                    className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 px-5 rounded-lg shadow-sm transition duration-200"
                   >
-                    Ver Feedbacks
+                    📝 Ver Feedbacks
                   </button>
+
+                  {userLevel === '' && (
+                    <button
+                      onClick={() => {
+                        const instructorId = obtenerIdProfesor(alumno.user_id);
+                        const studentId = id;
+
+                        if (instructorId && studentId) {
+                          navigate(`/dashboard/rm?student_id=${studentId}`);
+                        } else {
+                          alert('Faltan datos para gestionar la RM');
+                        }
+                      }}
+                      className="flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2.5 px-5 rounded-lg shadow-sm transition duration-200"
+                    >
+                      💪 Gestionar RM
+                    </button>
+                  )}
                 </div>
-              )}
 
-              {userLevel === '' && (
-                <div className="mt-6 mb-6 flex flex-col sm:flex-row justify-around gap-4">
-                  <button
-                    onClick={() => navigate('/dashboard/dietas')}
-                    className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Generar Dieta
-                  </button>
-                  <button
-                    onClick={() => {
-                      const instructorId = obtenerIdProfesor(alumno.user_id);
-                      const studentId = id;
-
-                      if (instructorId && studentId) {
-                        navigate(`/dashboard/rm?student_id=${studentId}`);
-                        // Opcionalmente podés pasar también instructorId si hace falta
-                        // `/dashboard/rm?student_id=${studentId}&instructor_id=${instructorId}`
-                      } else {
-                        alert('Faltan datos para gestionar la RM');
-                      }
-                    }}
-                    className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Gestionar RM
-                  </button>
+                {/* Datos personales */}
+                <div className="space-y-4 text-gray-700 text-[1.05rem]">
+                  <p className="flex items-center gap-2">
+                    <FaChalkboardTeacher className="text-blue-500 text-lg" />
+                    <span>
+                      <span className="text-gray-500 font-semibold">
+                        Profesor:
+                      </span>{' '}
+                      <span className="text-gray-800">
+                        {obtenerNombreProfesor(alumno.user_id) ||
+                          'No disponible'}
+                      </span>
+                    </span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaPhone className="text-blue-500 text-lg" />
+                    <span>
+                      <span className="text-gray-500 font-semibold">
+                        Teléfono:
+                      </span>{' '}
+                      <span className="text-gray-800">
+                        {alumno.telefono || 'No disponible'}
+                      </span>
+                    </span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaIdCard className="text-blue-500 text-lg" />
+                    <span>
+                      <span className="text-gray-500 font-semibold">DNI:</span>{' '}
+                      <span className="text-gray-800">
+                        {alumno.dni || 'No disponible'}
+                      </span>
+                    </span>
+                  </p>
                 </div>
-              )}
 
-              <div className="space-y-4 text-gray-700 text-lg">
-                <p className="flex items-center gap-3">
-                  <FaChalkboardTeacher className="text-blue-500" />
-                  <span>
-                    <strong>Profesor:</strong>{' '}
-                    {obtenerNombreProfesor(alumno.user_id) || 'No disponible'}
-                  </span>
-                </p>
-                <p className="flex items-center gap-3">
-                  <FaPhone className="text-blue-500" />
-                  <span>
-                    <strong>Teléfono:</strong>{' '}
-                    {alumno.telefono || 'No disponible'}
-                  </span>
-                </p>
-                <p className="flex items-center gap-3">
-                  <FaIdCard className="text-blue-500" />
-                  <span>
-                    <strong>DNI:</strong> {alumno.dni || 'No disponible'}
-                  </span>
-                </p>
-                {/* <p className="flex items-center gap-3">
-                  <FaBullseye className="text-blue-500" />
-                  <span>
-                    <strong>Objetivo:</strong>{' '}
-                    {alumno.objetivo || 'No especificado'}
-                  </span>
-                </p> */}
-                <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
-                  <FaCalendarAlt />
-                  <span>
+                {/* Fechas */}
+                <div className="text-gray-500 mt-6 text-sm space-y-2">
+                  <p className="flex items-center justify-center gap-2">
+                    <FaCalendarAlt />
                     Creado:{' '}
                     {alumno.created_at
                       ? new Date(alumno.created_at).toLocaleDateString()
                       : 'N/A'}
-                  </span>
-                </p>
-                <p className="flex items-center gap-3 text-sm text-gray-500 justify-center">
-                  <FaCalendarAlt />
-                  <span>
+                  </p>
+                  <p className="flex items-center justify-center gap-2">
+                    <FaCalendarAlt />
                     Actualizado:{' '}
                     {alumno.updated_at
                       ? new Date(alumno.updated_at).toLocaleDateString()
                       : 'N/A'}
-                  </span>
-                </p>
-              </div>
+                  </p>
+                </div>
+              </motion.div>
             </div>
 
             {/* Rutinas (ocupa el resto del espacio) */}
