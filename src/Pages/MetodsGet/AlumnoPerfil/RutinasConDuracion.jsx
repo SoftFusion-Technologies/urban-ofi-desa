@@ -21,7 +21,7 @@ function parseFechaSinZona(fechaStr) {
   // Si viene con formato ISO completo, tomar solo la parte de la fecha
   const soloFecha = fechaStr.split('T')[0];
   const [anio, mes, dia] = soloFecha.split('-').map(Number);
-  return new Date(anio, mes - 1, 1 + dia);
+  return new Date(anio, mes - 1,  dia);
 }
 
 function RutinasConDuracion({ studentId }) {
