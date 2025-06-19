@@ -9,7 +9,8 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  Legend
+  Legend,
+  ReferenceDot
 } from 'recharts';
 
 export default function HistorialRMModal({
@@ -18,18 +19,30 @@ export default function HistorialRMModal({
   historial,
   ejercicio
 }) {
-    const datos = historial.map((r) => ({
+  if (!historial || historial.length === 0) return null;
+
+  // Calcular máximo (PR) para mostrar con 🔥
+  const maxRM = Math.max(
+    ...historial.map((r) =>
+      r.rm_estimada !== null
+        ? parseFloat(r.rm_estimada)
+        : parseFloat(r.peso_levantado) * (1 + parseInt(r.repeticiones) / 30)
+    )
+  );
+
+  const datos = historial.map((r) => {
+    const rmEstimado =
+      r.rm_estimada !== null
+        ? parseFloat(r.rm_estimada)
+        : Math.round(
+            parseFloat(r.peso_levantado) * (1 + parseInt(r.repeticiones) / 30) * 100
+          ) / 100;
+    return {
       fecha: new Date(r.fecha).toLocaleDateString('es-AR'),
-      rm:
-        r.rm_estimada !== null
-          ? parseFloat(r.rm_estimada)
-          : Math.round(
-              parseFloat(r.peso_levantado) *
-                (1 + parseInt(r.repeticiones) / 30) *
-                100
-            ) / 100
-    }));
-      
+      rm: rmEstimado,
+      esPR: rmEstimado === maxRM
+    };
+  });
 
   return (
     <Dialog
@@ -75,9 +88,22 @@ export default function HistorialRMModal({
                 name="RM Estimado"
                 stroke="#6366f1"
                 strokeWidth={3}
-                dot={{ r: 6 }}
+                dot={{ r: 6, stroke: '#6366f1', strokeWidth: 2 }}
                 activeDot={{ r: 8 }}
               />
+              {datos.map(
+                (entry, index) =>
+                  entry.esPR && (
+                    <ReferenceDot
+                      key={`dot-${index}`}
+                      x={entry.fecha}
+                      y={entry.rm}
+                      r={10}
+                      fill="#ef4444"
+                      label={{ position: 'top', value: '🔥', fontSize: 18 }}
+                    />
+                  )
+              )}
             </LineChart>
           </ResponsiveContainer>
         ) : (
