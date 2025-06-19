@@ -360,12 +360,9 @@ function ListaRutinas({ studentId, actualizar }) {
 
   const handleCompletarRutina = async (rutinaId) => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/routines/${rutinaId}/completar`,
-        {
-          method: 'PUT'
-        }
-      );
+      const res = await fetch(`${URL}/${rutinaId}/completar`, {
+        method: 'PUT'
+      });
       const data = await res.json(); // si el back no devuelve JSON, esto fallará
       if (data.success) {
         setRutinas((prev) =>
@@ -378,6 +375,28 @@ function ListaRutinas({ studentId, actualizar }) {
       }
     } catch (error) {
       setModalErrorTexto(error.message);
+      setModalErrorVisible(true);
+    }
+  };
+
+  const handleEliminarRutina = async (routineId) => {
+    const confirmar = window.confirm(
+      '¿Estás seguro de eliminar esta rutina completa? Esta acción no se puede deshacer.'
+    );
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`${URL}/${routineId}`, {
+        method: 'DELETE'
+      });
+
+      if (!res.ok) throw new Error('No se pudo eliminar la rutina');
+
+      setModalTexto('Rutina eliminada correctamente');
+      setModalVisible(true);
+      fetchRutinas();
+    } catch (error) {
+      setModalErrorTexto(error.message || 'Error al eliminar rutina');
       setModalErrorVisible(true);
     }
   };
@@ -409,6 +428,17 @@ function ListaRutinas({ studentId, actualizar }) {
 
             return (
               <div key={rutina.id}>
+                {(userLevel === 'admin' || userLevel === 'instructor') && (
+                  <div className="flex justify-end mb-2">
+                    <button
+                      onClick={() => handleEliminarRutina(rutina.id)}
+                      className="text-red-500 hover:text-red-700 text-sm font-semibold underline"
+                    >
+                      🗑️ Eliminar rutina completa
+                    </button>
+                  </div>
+                )}
+
                 {Object.entries(ejerciciosPorMusculo).map(
                   ([musculo, ejercicios]) => (
                     <div

@@ -7,6 +7,8 @@ import RMForm from './RegistroRM';
 import NavbarStaff from '../../staff/NavbarStaff';
 import ParticlesBackground from '../../../Components/ParticlesBackground';
 import { RMCard } from './RMCard';
+import ButtonBack from '../../../Components/ButtonBack';
+
 export default function RMList({ studentId }) {
   const [rms, setRms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,8 +59,10 @@ export default function RMList({ studentId }) {
   return (
     <>
       <NavbarStaff />
+
       <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 min-h-screen pt-10 pb-10">
         <ParticlesBackground />
+        <ButtonBack></ButtonBack>
         <section className="max-w-7xl mx-auto px-4 py-10">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
             <h1 className="titulo w-full text-center md:text-5xl text-3xl font-bold text-white uppercase tracking-tight">

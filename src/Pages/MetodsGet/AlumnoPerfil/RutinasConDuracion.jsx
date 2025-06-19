@@ -21,7 +21,7 @@ function parseFechaSinZona(fechaStr) {
   // Si viene con formato ISO completo, tomar solo la parte de la fecha
   const soloFecha = fechaStr.split('T')[0];
   const [anio, mes, dia] = soloFecha.split('-').map(Number);
-  return new Date(anio, mes - 1,  dia);
+  return new Date(anio, mes - 1, dia);
 }
 
 function RutinasConDuracion({ studentId }) {
@@ -393,6 +393,28 @@ function RutinasConDuracion({ studentId }) {
     const y = fecha.getFullYear();
     return `${d}-${m}-${y}`;
   }
+
+  const handleEliminarRutina = async (routineId) => {
+    const confirmar = window.confirm(
+      '¿Estás seguro de eliminar esta rutina completa? Esta acción no se puede deshacer.'
+    );
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`${URL}/${routineId}`, {
+        method: 'DELETE'
+      });
+
+      if (!res.ok) throw new Error('No se pudo eliminar la rutina');
+
+      setModalTexto('Rutina eliminada correctamente');
+      setModalVisible(true);
+      fetchRutinas();
+    } catch (error) {
+      setModalErrorTexto(error.message || 'Error al eliminar rutina');
+      setModalErrorVisible(true);
+    }
+  };
   return (
     <div className="p-6 bg-gray-100 rounded-lg max-w-xl mx-auto">
       <h2 className="titulo uppercase text-4xl font-bold mb-6 text-center text-gray-800">
@@ -420,208 +442,223 @@ function RutinasConDuracion({ studentId }) {
           No hay ejercicios vigentes para esta fecha.
         </p>
       ) : (
-        rutinasFiltradas.map((rutina) => {
-          // Agrupar ejercicios por músculo dentro de cada rutina
-          const ejerciciosPorMusculo = {};
-          rutina.exercises.forEach((ej) => {
-            if (!ejerciciosPorMusculo[ej.musculo]) {
-              ejerciciosPorMusculo[ej.musculo] = [];
-            }
-            ejerciciosPorMusculo[ej.musculo].push(ej);
-          });
+        <div
+          className="overflow-y-auto pr-2 space-y-6"
+          style={{ maxHeight: '393px' }}
+        >
+          {rutinasFiltradas.map((rutina) => {
+            // Agrupar ejercicios por músculo dentro de cada rutina
+            const ejerciciosPorMusculo = {};
+            rutina.exercises.forEach((ej) => {
+              if (!ejerciciosPorMusculo[ej.musculo]) {
+                ejerciciosPorMusculo[ej.musculo] = [];
+              }
+              ejerciciosPorMusculo[ej.musculo].push(ej);
+            });
 
-          return (
-            <div key={rutina.id}>
-              {Object.entries(ejerciciosPorMusculo).map(
-                ([musculo, ejercicios]) => (
-                  <div
-                    key={musculo}
-                    className="bg-white p-4 rounded shadow mb-6"
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold text-lg text-indigo-600">
-                        {musculo.toUpperCase()}
-                      </h3>
+            return (
+              <div key={rutina.id}>
+                {(userLevel === 'admin' || userLevel === 'instructor') && (
+                  <div className="flex justify-end mb-2">
+                    <button
+                      onClick={() => handleEliminarRutina(rutina.id)}
+                      className="text-red-500 hover:text-red-700 text-sm font-semibold underline"
+                    >
+                      🗑️ Eliminar rutina completa
+                    </button>
+                  </div>
+                )}
+                {Object.entries(ejerciciosPorMusculo).map(
+                  ([musculo, ejercicios]) => (
+                    <div
+                      key={musculo}
+                      className="bg-white p-4 rounded shadow mb-6"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-bold text-lg text-indigo-600">
+                          {musculo.toUpperCase()}
+                        </h3>
 
-                      {(userLevel === 'admin' ||
-                        userLevel === 'instructor') && (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() =>
-                              handleEditarMusculo(rutina.id, musculo)
+                        {(userLevel === 'admin' ||
+                          userLevel === 'instructor') && (
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                handleEditarMusculo(rutina.id, musculo)
+                              }
+                              className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 px-2 py-1 rounded text-xs font-medium"
+                            >
+                              ✏️ Editar Músculo
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleEliminarMusculo(rutina.id, musculo)
+                              }
+                              className="bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded text-xs font-medium"
+                            >
+                              🗑️ Eliminar Músculo
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
+                        {ejercicios.map((ej) =>
+                          agruparLineas(ej.descripcion.split(/\r?\n/)).map(
+                            (linea, idx) => {
+                              const ejercicio = linea;
+                              // lo demás igual...
+
+                              if (!ejercicio) return null;
+
+                              // Para editar, guardamos el texto completo del ejercicio
+                              // Si el ejercicio está en edición, mostramos input, sino texto + botones
+                              const esEditando =
+                                editando &&
+                                editando.routineId === rutina.id &&
+                                editando.exerciseId === ej.id &&
+                                editando.lineaIndex === idx;
+
+                              // Limpiar texto para búsqueda (solo si no está editando)
+                              let busqueda = limpiarBusqueda(ejercicio);
+                              if (busqueda.split(' ').length < 3) {
+                                busqueda = musculo + ' ' + busqueda;
+                              }
+
+                              return (
+                                <li
+                                  key={idx}
+                                  className="flex justify-between items-center"
+                                >
+                                  {esEditando ? (
+                                    <div className="flex items-center w-full space-x-2">
+                                      <input
+                                        type="text"
+                                        value={textoEditado}
+                                        autoFocus
+                                        onChange={(e) =>
+                                          setTextoEditado(e.target.value)
+                                        }
+                                        className="border rounded px-2 py-1 flex-grow"
+                                      />
+                                      <button
+                                        onClick={() =>
+                                          handleGuardarEdicion(
+                                            rutina.id,
+                                            ej.id,
+                                            idx,
+                                            textoEditado
+                                          )
+                                        }
+                                        className="text-green-600 hover:text-green-800 text-lg"
+                                        title="Guardar"
+                                      >
+                                        ✅
+                                      </button>
+                                      <button
+                                        onClick={() => setEditando(null)}
+                                        className="text-red-600 hover:text-red-800 text-lg"
+                                        title="Cancelar"
+                                      >
+                                        ❌
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <span className="flex-grow">
+                                        {formatearLineaEnJSX(ejercicio)}
+                                      </span>
+                                      <div className="flex space-x-4 ml-4 flex-shrink-0">
+                                        {userLevel === '' && (
+                                          <>
+                                            <button
+                                              onClick={() =>
+                                                window.open(
+                                                  `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                                                    busqueda
+                                                  )}`,
+                                                  '_blank'
+                                                )
+                                              }
+                                              className="text-blue-600 hover:underline"
+                                            >
+                                              Ver video
+                                            </button>
+                                            <button
+                                              className="text-red-600 hover:underline"
+                                              onClick={() =>
+                                                handleNecesitoAyuda(
+                                                  rutina.id,
+                                                  ej.id,
+                                                  ejercicio
+                                                )
+                                              }
+                                            >
+                                              Necesito Ayuda
+                                            </button>
+                                          </>
+                                        )}
+
+                                        {(userLevel === 'admin' ||
+                                          userLevel === 'instructor') && (
+                                          <>
+                                            <button
+                                              onClick={() => {
+                                                setEditando({
+                                                  routineId: rutina.id,
+                                                  exerciseId: ej.id,
+                                                  lineaIndex: idx
+                                                });
+                                                setTextoEditado(ejercicio);
+                                              }}
+                                              className="text-yellow-600 hover:underline"
+                                            >
+                                              Editar
+                                            </button>
+                                            <button
+                                              className="text-red-600 hover:underline"
+                                              onClick={() =>
+                                                handleEliminarLinea(
+                                                  rutina.id,
+                                                  ej.id,
+                                                  idx
+                                                )
+                                              }
+                                            >
+                                              Eliminar
+                                            </button>
+                                          </>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
+                                </li>
+                              );
                             }
-                            className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 px-2 py-1 rounded text-xs font-medium"
-                          >
-                            ✏️ Editar Músculo
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleEliminarMusculo(rutina.id, musculo)
-                            }
-                            className="bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded text-xs font-medium"
-                          >
-                            🗑️ Eliminar Músculo
-                          </button>
-                        </div>
+                          )
+                        )}
+                      </ul>
+                      {userLevel === '' && (
+                        <button
+                          type="button"
+                          aria-label={`Dar feedback para la rutina ${
+                            rutina.nombre || rutina.id
+                          }`}
+                          className="mt-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
+                          onClick={() => {
+                            setRutinaFeedbackId(rutina.id);
+                            setFeedbackModalOpen(true);
+                          }}
+                        >
+                          Dar Feedback
+                        </button>
                       )}
                     </div>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-gray-800">
-                      {ejercicios.map((ej) =>
-                        agruparLineas(ej.descripcion.split(/\r?\n/)).map(
-                          (linea, idx) => {
-                            const ejercicio = linea;
-                            // lo demás igual...
-
-                            if (!ejercicio) return null;
-
-                            // Para editar, guardamos el texto completo del ejercicio
-                            // Si el ejercicio está en edición, mostramos input, sino texto + botones
-                            const esEditando =
-                              editando &&
-                              editando.routineId === rutina.id &&
-                              editando.exerciseId === ej.id &&
-                              editando.lineaIndex === idx;
-
-                            // Limpiar texto para búsqueda (solo si no está editando)
-                            let busqueda = limpiarBusqueda(ejercicio);
-                            if (busqueda.split(' ').length < 3) {
-                              busqueda = musculo + ' ' + busqueda;
-                            }
-
-                            return (
-                              <li
-                                key={idx}
-                                className="flex justify-between items-center"
-                              >
-                                {esEditando ? (
-                                  <div className="flex items-center w-full space-x-2">
-                                    <input
-                                      type="text"
-                                      value={textoEditado}
-                                      autoFocus
-                                      onChange={(e) =>
-                                        setTextoEditado(e.target.value)
-                                      }
-                                      className="border rounded px-2 py-1 flex-grow"
-                                    />
-                                    <button
-                                      onClick={() =>
-                                        handleGuardarEdicion(
-                                          rutina.id,
-                                          ej.id,
-                                          idx,
-                                          textoEditado
-                                        )
-                                      }
-                                      className="text-green-600 hover:text-green-800 text-lg"
-                                      title="Guardar"
-                                    >
-                                      ✅
-                                    </button>
-                                    <button
-                                      onClick={() => setEditando(null)}
-                                      className="text-red-600 hover:text-red-800 text-lg"
-                                      title="Cancelar"
-                                    >
-                                      ❌
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <>
-                                    <span className="flex-grow">
-                                      {formatearLineaEnJSX(ejercicio)}
-                                    </span>
-                                    <div className="flex space-x-4 ml-4 flex-shrink-0">
-                                      {userLevel === '' && (
-                                        <>
-                                          <button
-                                            onClick={() =>
-                                              window.open(
-                                                `https://www.youtube.com/results?search_query=${encodeURIComponent(
-                                                  busqueda
-                                                )}`,
-                                                '_blank'
-                                              )
-                                            }
-                                            className="text-blue-600 hover:underline"
-                                          >
-                                            Ver video
-                                          </button>
-                                          <button
-                                            className="text-red-600 hover:underline"
-                                            onClick={() =>
-                                              handleNecesitoAyuda(
-                                                rutina.id,
-                                                ej.id,
-                                                ejercicio
-                                              )
-                                            }
-                                          >
-                                            Necesito Ayuda
-                                          </button>
-                                        </>
-                                      )}
-
-                                      {(userLevel === 'admin' ||
-                                        userLevel === 'instructor') && (
-                                        <>
-                                          <button
-                                            onClick={() => {
-                                              setEditando({
-                                                routineId: rutina.id,
-                                                exerciseId: ej.id,
-                                                lineaIndex: idx
-                                              });
-                                              setTextoEditado(ejercicio);
-                                            }}
-                                            className="text-yellow-600 hover:underline"
-                                          >
-                                            Editar
-                                          </button>
-                                          <button
-                                            className="text-red-600 hover:underline"
-                                            onClick={() =>
-                                              handleEliminarLinea(
-                                                rutina.id,
-                                                ej.id,
-                                                idx
-                                              )
-                                            }
-                                          >
-                                            Eliminar
-                                          </button>
-                                        </>
-                                      )}
-                                    </div>
-                                  </>
-                                )}
-                              </li>
-                            );
-                          }
-                        )
-                      )}
-                    </ul>
-                    {userLevel === '' && (
-                      <button
-                        type="button"
-                        aria-label={`Dar feedback para la rutina ${
-                          rutina.nombre || rutina.id
-                        }`}
-                        className="mt-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-                        onClick={() => {
-                          setRutinaFeedbackId(rutina.id);
-                          setFeedbackModalOpen(true);
-                        }}
-                      >
-                        Dar Feedback
-                      </button>
-                    )}
-                  </div>
-                )
-              )}
-            </div>
-          );
-        })
+                  )
+                )}
+              </div>
+            );
+          })}
+        </div>
       )}
       <ModalSuccess
         isVisible={modalVisible}

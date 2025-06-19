@@ -5,12 +5,3 @@
   background-repeat: no-repeat;
   animation: zoomBackground 20s ease-in-out infinite;
 }
-
-@keyframes zoomBackground {
-  0%, 100% {
-    background-size: 100%;
-  }
-  50% {
-    background-size: 105%;
-  }
-}

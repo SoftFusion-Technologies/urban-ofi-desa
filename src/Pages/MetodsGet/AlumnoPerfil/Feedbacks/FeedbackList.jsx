@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import NavbarStaff from '../../../staff/NavbarStaff';
 import ParticlesBackground from '../../../../Components/ParticlesBackground';
-
+import SinFeedback from './SinFeedback';
+import ButtonBack from '../../../../Components/ButtonBack';
 const FeedbackList = ({ instructorId, studentId }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [error, setError] = useState(null);
@@ -62,14 +63,7 @@ const FeedbackList = ({ instructorId, studentId }) => {
 
   if (feedbacks.length === 0)
     return (
-      <div className="flex flex-col items-center justify-center mt-24 text-center text-gray-500">
-        <div className="bg-gray-100 p-6 rounded-2xl shadow-inner">
-          <h3 className="text-xl font-semibold mb-1">Sin feedbacks aún</h3>
-          <p className="text-sm text-gray-400 mb-4">
-            Todavía no se ha recibido ningún comentario para este alumno.
-          </p>
-        </div>
-      </div>
+      <SinFeedback mensaje="Aún no ha enviado feedback de sus rutinas." />
     );
 
   return (
@@ -77,6 +71,7 @@ const FeedbackList = ({ instructorId, studentId }) => {
       <NavbarStaff />
       <ParticlesBackground />
       <main className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 min-h-screen py-12 px-4 sm:px-8 md:px-12">
+        <ButtonBack></ButtonBack>
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <h2 className="text-3xl titulo uppercase font-extrabold text-white mb-12 tracking-wide text-center">
             Feedbacks de Rutinas de {studentName}
