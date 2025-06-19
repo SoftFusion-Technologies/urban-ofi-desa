@@ -199,16 +199,16 @@ function PerfilAlumno() {
                       const studentId = id;
 
                       if (instructorId && studentId) {
-                        navigate(
-                          `/dashboard/feedbacks?instructor_id=${instructorId}&student_id=${studentId}`
-                        );
+                        navigate(`/dashboard/rm?student_id=${studentId}`);
+                        // Opcionalmente podés pasar también instructorId si hace falta
+                        // `/dashboard/rm?student_id=${studentId}&instructor_id=${instructorId}`
                       } else {
-                        alert('Faltan datos para ver los feedbacks');
+                        alert('Faltan datos para gestionar la RM');
                       }
                     }}
                     className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   >
-                    Gestionar Rm
+                    Gestionar RM
                   </button>
                 </div>
               )}
