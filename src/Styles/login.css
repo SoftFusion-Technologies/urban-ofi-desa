@@ -1,6 +1,16 @@
 .loginbg{
   background-image: url('/src/Images/staff/urbansoft.svg');
-  background-repeat: no-repeat;
-  background-position: center;
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: zoomBackground 20s ease-in-out infinite;
+}
+
+@keyframes zoomBackground {
+  0%, 100% {
+    background-size: 100%;
+  }
+  50% {
+    background-size: 105%;
+  }
 }
