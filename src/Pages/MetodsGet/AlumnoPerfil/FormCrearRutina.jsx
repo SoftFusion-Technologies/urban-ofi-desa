@@ -21,10 +21,14 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
   const [ejerciciosProfesor, setEjerciciosProfesor] = useState([]); // array desde BD
   const [busquedaEjercicio, setBusquedaEjercicio] = useState('');
 
+  const [modalBloquesEjercicio, setModalBloquesEjercicio] = useState(null); // { index, nombre, bloques }
+
+  const [modoBloques, setModoBloques] = useState(false);
+
   // Cargar ejercicios del profe al montar
   useEffect(() => {
     // Reemplaza con tu endpoint y lógica de auth
-    fetch(`http://localhost:8080/ejercicios-profes?profesor_id=${userId}`)
+    fetch(`http://localhost:8080/ejercicios-profes`)
       .then((res) => res.json())
       .then(setEjerciciosProfesor)
       .catch(() => setEjerciciosProfesor([]));
@@ -38,6 +42,34 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
     setModalEjercicioIdx(idx);
     setBusquedaEjercicio('');
   }
+
+  const seleccionarEjercicioYDescripcion = async (index, ejercicio) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/ejercicios-profes/${ejercicio.id}/bloques`
+      );
+      const bloques = res.data;
+
+      // Setea el nombre del ejercicio
+      handleEjercicioChange(index, 'musculo', ejercicio.nombre);
+
+      if (bloques.length <= 1) {
+        // Insertar directamente si hay uno solo
+        handleEjercicioChange(
+          index,
+          'descripcion',
+          bloques[0]?.contenido || ''
+        );
+        setModalEjercicioIdx(null);
+      } else {
+        // Mostrar modal de selección de bloque
+        setModalEjercicioIdx(null); // cerramos el modal anterior
+        setModalBloquesEjercicio({ index, nombre: ejercicio.nombre, bloques });
+      }
+    } catch (error) {
+      console.error('Error al obtener bloques:', error);
+    }
+  };
 
   const [ejercicios, setEjercicios] = useState([
     {
@@ -386,6 +418,8 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
                 </div>
               </div>
 
+              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label
@@ -446,6 +480,7 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
             Guardar rutina
           </button>
         </div>
+        
       </form>
 
       {modalSuccess && (
@@ -595,20 +630,55 @@ const FormCrearRutina = ({ onClose, onRutinaCreada }) => {
                   <button
                     key={ej.id}
                     type="button"
-                    onClick={() => {
-                      handleEjercicioChange(
-                        modalEjercicioIdx,
-                        'musculo',
-                        ej.nombre
-                      );
-                      setModalEjercicioIdx(null);
-                    }}
-                    className="w-full text-left px-4 py-2 rounded-lg hover:bg-blue-100/80 text-blue-900 font-semibold transition"
+                    onClick={() =>
+                      seleccionarEjercicioYDescripcion(modalEjercicioIdx, ej)
+                    }
+                    className="w-full text-left px-4 py-2 rounded-lg hover:bg-blue-100/80 transition"
                   >
-                    {ej.nombre}
+                    <span className="text-blue-900 font-semibold">
+                      {ej.nombre}
+                    </span>{' '}
+                    <span className="text-gray-500">– {ej.profesor?.name}</span>
                   </button>
                 ))
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      {modalBloquesEjercicio && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
+          <div className="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl relative">
+            <button
+              className="absolute top-3 right-4 text-gray-400 hover:text-black text-xl"
+              onClick={() => setModalBloquesEjercicio(null)}
+            >
+              ✕
+            </button>
+            <h3 className="text-lg font-bold text-blue-900 mb-4">
+              Elegí un bloque para{' '}
+              <span className="text-pink-600">
+                {modalBloquesEjercicio.nombre}
+              </span>
+            </h3>
+
+            <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+              {modalBloquesEjercicio.bloques.map((bloque) => (
+                <div
+                  key={bloque.id}
+                  onClick={() => {
+                    handleEjercicioChange(
+                      modalBloquesEjercicio.index,
+                      'descripcion',
+                      bloque.contenido
+                    );
+                    setModalBloquesEjercicio(null);
+                  }}
+                  className="border border-blue-200 bg-blue-50 hover:bg-blue-100 cursor-pointer rounded-lg px-4 py-3 text-sm text-gray-800 whitespace-pre-wrap"
+                >
+                  {bloque.contenido}
+                </div>
+              ))}
             </div>
           </div>
         </div>
